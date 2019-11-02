@@ -16,7 +16,7 @@ const router = new Router({
           component: () => import(/* webpackChunkName: "layout" */ './layout/main.vue'),
           children: [
             {
-              path: '/home',
+              path: '/',
               name: '首页',
               component: () => import(/* webpackChunkName: "layout" */ './pages/home/home.vue'),
             },
@@ -28,6 +28,10 @@ const router = new Router({
           ],
         },
       ],
+    },
+    {
+      path: '/login',
+      component: () => import(/* webpackChunkName: "layout" */ './layout/index.vue'),
     },
   ],
 });

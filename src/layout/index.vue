@@ -31,4 +31,7 @@ export default class App extends Vue {}
 .el-aside {
   background: $--color-primary;
 }
+.el-main{
+  background: $--background-color-base;
+}
 </style>
