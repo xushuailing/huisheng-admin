@@ -5,20 +5,35 @@ import 'normalize.css/normalize.css';
 
 Vue.use(Router);
 
+const merchantRouter = Vue.extend({ render: (h) => h('router-view') });
+
 const router = new Router({
   routes: [
     {
       path: '/',
-      component: () => import(/* webpackChunkName: "layout" */ './layout/index.vue'),
+      component: () => import(/* webpackChunkName: "index" */ './layout/index.vue'),
       children: [
         {
           path: '/',
-          component: () => import(/* webpackChunkName: "layout" */ './layout/main.vue'),
+          component: () => import(/* webpackChunkName: "main" */ './layout/main.vue'),
           children: [
             {
               path: '/',
               name: '首页',
-              component: () => import(/* webpackChunkName: "layout" */ './pages/home/home.vue'),
+              component: () => import(/* webpackChunkName: "home" */ './pages/home/home.vue'),
+            },
+            {
+              path: '/merchant',
+              name: '首页',
+              redirect: '/merchant/list',
+              component: merchantRouter,
+              children: [
+                {
+                  path: 'list',
+                  name: '首页',
+                  component: () => import('./pages/merchant-admin/list.vue'),
+                },
+              ],
             },
             {
               path: '/goods',
