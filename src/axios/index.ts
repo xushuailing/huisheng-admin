@@ -7,8 +7,11 @@ interface Request {
   <T = any>(url: string, param?: object, custom?: AxiosRequestConfig): AxiosPromise<T>;
 }
 
-const Scid = () => {};
-const isDev = process.env.NODE_ENV === 'development';
+interface ResponseData {
+  data: any;
+  code: number;
+  msg: string;
+}
 
 const errorMessage = (message: string) => {
   Message({ type: 'error', message, duration: 2000 });
@@ -20,9 +23,9 @@ const Token = (): object => {
 };
 
 const successResponse = (res: AxiosResponse) => {
-  const { errcode, errmsg } = res.data;
+  const { code, msg } = res.data;
 
-  if (errcode !== '0000' && errmsg) errorMessage(errmsg);
+  if (Number(code) !== 0 && msg) errorMessage(msg);
 
   return res;
 };
@@ -41,14 +44,14 @@ const errorResponse = (err: AxiosError) => {
       default:
         errMag = `连接错误${status}`;
     }
-    if (status === 401) {
-      if (!isDev) {
-        utils._UserInfo._RemoveAll();
-        setTimeout(() => {
-          window.router.push('/login');
-        }, 800);
-      }
-    }
+    // if (status === 401) {
+    //   if (!isDev) {
+    //     utils._UserInfo._RemoveAll();
+    //     setTimeout(() => {
+    //       window.router.push('/login');
+    //     }, 800);
+    //   }
+    // }
   }
   errorMessage(errMag);
   return Promise.reject(err);
@@ -66,21 +69,21 @@ axios.defaults.headers = {
 axios.interceptors.request.use(
   (res) => {
     const config = res;
-    const scid = Scid();
-    const { headers } = config;
-    if (!headers.scid) {
-      headers.scid = scid;
-    }
-    if (headers.Authorization === null) {
-      return config;
-    }
-    const token = Token();
-    if (!Object.keys(token).length) {
-      delete headers.Authorization;
-    } else {
-      Object.assign(headers, token);
-    }
-    config.headers = headers;
+    // const scid = Scid();
+    // const { headers } = config;
+    // if (!headers.scid) {
+    //   headers.scid = scid;
+    // }
+    // if (headers.Authorization === null) {
+    //   return config;
+    // }
+    // const token = Token();
+    // if (!Object.keys(token).length) {
+    //   delete headers.Authorization;
+    // } else {
+    //   Object.assign(headers, token);
+    // }
+    // config.headers = headers;
     return config;
   },
   (error) => {
@@ -95,12 +98,13 @@ axios.interceptors.response.use(successResponse, errorResponse);
 const get: Request = (url, param = {}, custom = {}) => {
   return new Promise((resolve, reject) => {
     axios
-      .get(url, { params: param, ...custom })
-      .then((res: AxiosResponse) => {
-        if (res.data.errcode === '0000') {
-          resolve(res);
+      .get<ResponseData>(url, { params: param, ...custom })
+      .then((res) => {
+        // console.log('res :', res.data);
+        if (Number(res.data.code) === 0) {
+          resolve(res.data as any);
         } else {
-          reject(res);
+          reject(res.data);
         }
       })
       .catch((err: AxiosError) => {
@@ -112,44 +116,10 @@ const get: Request = (url, param = {}, custom = {}) => {
 const post: Request = (url, param = {}, custom = {}) => {
   return new Promise((resolve, reject) => {
     axios
-      .post(url, param, custom)
-      .then((res: AxiosResponse) => {
-        if (res.data.errcode === '0000') {
-          resolve(res);
-        } else {
-          reject(res);
-        }
-      })
-      .catch((err: AxiosError) => {
-        reject(err);
-      });
-  });
-};
-
-const spPost: Request = (url, data = {}, custom = {}) => {
-  return new Promise((resolve, reject) => {
-    axios
-      .post(url, data, custom)
-      .then((res: AxiosResponse) => {
-        if (res.status > 199 && res.status < 300) {
-          resolve(res);
-        } else {
-          reject(res);
-        }
-      })
-      .catch((err: AxiosError) => {
-        reject(err);
-      });
-  });
-};
-
-const spGet: Request = (url, param = {}, custom = {}) => {
-  return new Promise((resolve, reject) => {
-    axios
-      .get(url, { params: param, ...custom })
-      .then((res: AxiosResponse) => {
-        if (res.status > 199 && res.status < 300) {
-          resolve(res);
+      .post<ResponseData>(url, param, custom)
+      .then((res) => {
+        if (Number(res.data.code) === 0) {
+          resolve(res.data as any);
         } else {
           reject(res);
         }
@@ -165,16 +135,10 @@ export default {
   get,
   /** post请求 */
   post,
-  /** spPost请求 */
-  spPost,
-  /** spGet请求 */
-  spGet,
   /** axios请求 */
   axios<T = any>(custom: AxiosRequestConfig = {}): AxiosPromise<T> {
     return axios(custom);
   },
-  /** 获取scid */
-  getScid: Scid(),
   /** 获取token */
   getToken: Token(),
 };
