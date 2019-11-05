@@ -5,9 +5,9 @@ import { VueConstructor } from 'vue';
 // import MinTable from './components/MinTable';
 // import SmallTable from './components/SmallTable';
 
-// import AddForm from './components/AddForm';
-// import FormTag from './components/FormTag';
-// import Dialog from './components/Dialog';
+import AddForm from './components/AddForm';
+import FormTag from './components/FormTag';
+import Dialog from './components/Dialog';
 // import Map from './components/Map';
 // import Exports from './components/Exports';
 // import Tree from './components/Tree';
@@ -16,7 +16,7 @@ import { VueConstructor } from 'vue';
 // import DetailTable from './components/DetailTable';
 import Header from './components/Header';
 // import Search from './components/Search';
-// import Edit from './components/Edit';
+import Edit from './components/Edit';
 // import Upload from './components/Upload';
 // import Tag from './components/Tag';
 // import SettingTable from './components/SettingTable';
@@ -39,9 +39,9 @@ const components = [
   // { com: MinTable, name: MinTable.name },
   // { com: SmallTable, name: SmallTable.name },
   // { com: Table, name: Table.name },
-  // { com: AddForm, name: AddForm.name },
-  // { com: FormTag, name: FormTag.name },
-  // { com: Dialog, name: 'ScDialog' },
+  { com: AddForm, name: AddForm.name },
+  { com: FormTag, name: FormTag.name },
+  { com: Dialog, name: 'ScDialog' },
   // { com: Exports, name: Exports.name },
   // { com: Map, name: 'ScMap' },
   // { com: Tree, name: Tree.name },
@@ -50,7 +50,7 @@ const components = [
   // { com: DetailTable, name: DetailTable.name },
   { com: Header, name: Header.name },
   // { com: Search, name: Search.name },
-  // { com: Edit, name: Edit.name },
+  { com: Edit, name: Edit.name },
   // { com: Upload, name: Upload.name },
   // { com: Tag, name: 'ScTag' },
   // { com: SettingTable, name: SettingTable.name },
@@ -80,9 +80,9 @@ export default {
   //   SmallTable,
   //   Table,
   //   DetailTable,
-  //   FormTag,
-  //   Dialog,
-  //   AddForm,
+  FormTag,
+  Dialog,
+  AddForm,
   //   Exports,
   //   Map,
   //   Tree,
@@ -90,7 +90,7 @@ export default {
   //   Pagination,
   Header,
   //   Search,
-  //   Edit,
+  Edit,
   //   Upload,
   //   Tag,
   //   SettingTable,

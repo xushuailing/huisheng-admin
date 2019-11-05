@@ -67,25 +67,7 @@ axios.defaults.headers = {
 
 // 请求拦截器
 axios.interceptors.request.use(
-  (res) => {
-    const config = res;
-    // const scid = Scid();
-    // const { headers } = config;
-    // if (!headers.scid) {
-    //   headers.scid = scid;
-    // }
-    // if (headers.Authorization === null) {
-    //   return config;
-    // }
-    // const token = Token();
-    // if (!Object.keys(token).length) {
-    //   delete headers.Authorization;
-    // } else {
-    //   Object.assign(headers, token);
-    // }
-    // config.headers = headers;
-    return config;
-  },
+  (res) => res,
   (error) => {
     utils._ResponseError(error);
     return Promise.reject(error);
