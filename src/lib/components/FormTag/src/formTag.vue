@@ -160,7 +160,13 @@
               v-model="formData.value"
               v-on="listeners"
               v-bind="tagBind"
-              clearable />
+              clearable>
+      <template v-if="tagBind.slot">
+        <component :is="tagBind.slot.component"
+                     v-on="tagBind.slot.listeners"
+                     v-bind="tagBind.slot.attr" />
+      </template>
+    </el-input>
   </div>
 </template>
 

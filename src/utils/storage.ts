@@ -18,10 +18,11 @@ class Storages {
    *
    * @param {string} key 存储名称
    * @param {*} value 存储的值
+   * @param {number} time 有效时间
    * @memberof Storages
    */
-  public set(key: string, value: any, time: number = 1): void {
-    const H = time * 1000 * 60; // 默认1分钟
+  public set(key: string, value: any, time: number = 0): void {
+    const H = time * 1000 * 60;
     const now = new Date().getTime() + H;
     const data = JSON.stringify({ time: time ? String(now) : null, value });
 

@@ -6,7 +6,7 @@
               v-bind="btn.attrs"
               v-on="btn.listeners"></slot>
       </template>
-      <el-button v-else-if="isShowButton(btn.mode)"
+      <el-button v-else-if="isShowButton(btn)"
                  :key="btn.mode"
                  plain
                  type='primary'
@@ -68,12 +68,15 @@ export default {
       };
       return data[type] || defaultBtn;
     },
-    isShowButton(type) {
+    isShowButton(btn) {
+      const { mode: type, isShow } = btn;
       const { stepsActive, isTemporarily, dataLength, buttonList, mode } = this;
       const isShowSubmit = mode === 'edit' ? true : stepsActive === dataLength - 1;
       const flag = {
-        reset: true,
-        cancel: !stepsActive,
+        reset: isShow,
+        cancel: isShow,
+        // reset: true,
+        // cancel: !stepsActive,
         temporarily: Boolean(isTemporarily),
         return: stepsActive && stepsActive !== dataLength,
         next: stepsActive !== dataLength - 1,
@@ -107,7 +110,7 @@ export default {
             buttons[defaultIndex] = {};
             return;
           }
-          buttons[defaultIndex] = Object.assign({}, buttons[defaultIndex], v); // 合并配置
+          buttons[defaultIndex] = Object.assign({ isShow: true }, buttons[defaultIndex], v); // 合并配置
         } else {
           buttons.push(v);
         }
