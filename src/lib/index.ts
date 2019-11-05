@@ -17,7 +17,7 @@ import Dialog from './components/Dialog';
 import Header from './components/Header';
 // import Search from './components/Search';
 import Edit from './components/Edit';
-// import Upload from './components/Upload';
+import Upload from './components/Upload';
 // import Tag from './components/Tag';
 // import SettingTable from './components/SettingTable';
 // import Audio from './components/Audio';
@@ -51,7 +51,7 @@ const components = [
   { com: Header, name: Header.name },
   // { com: Search, name: Search.name },
   { com: Edit, name: Edit.name },
-  // { com: Upload, name: Upload.name },
+  { com: Upload, name: Upload.name },
   // { com: Tag, name: 'ScTag' },
   // { com: SettingTable, name: SettingTable.name },
   // { com: Audio, name: 'ScAudio' },
@@ -91,7 +91,7 @@ export default {
   Header,
   //   Search,
   Edit,
-  //   Upload,
+  Upload,
   //   Tag,
   //   SettingTable,
   //   Audio,
