@@ -8,6 +8,8 @@
       </template>
       <el-button v-else-if="isShowButton(btn.mode)"
                  :key="btn.mode"
+                 plain
+                 type='primary'
                  v-bind="btn.attrs"
                  v-on="btn.listeners">{{btn.text}}</el-button>
     </template>

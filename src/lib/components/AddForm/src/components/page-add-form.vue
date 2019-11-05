@@ -1,11 +1,11 @@
 <template>
   <div class="sc-add-form">
-    <slot name="addForm-header">
+    <!-- <slot name="addForm-header">
       <sc-header class="mb-30"
                  :header="config.header">
         <slot name="addForm-header-btn"></slot>
       </sc-header>
-    </slot>
+    </slot> -->
     <div v-if="form.data"
          :style="{ width: config.width || '50%' }"
          class="sc-add-form_center">

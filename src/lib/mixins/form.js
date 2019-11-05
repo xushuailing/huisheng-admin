@@ -24,7 +24,7 @@ export default {
     formBind() {
       const { type } = this.config;
       const attr = {
-        size: 'small',
+        // size: 'small',
         'label-width': '100px',
         'label-position': !type || type === 'plain' ? 'right' : 'top',
       };

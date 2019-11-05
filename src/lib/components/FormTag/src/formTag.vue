@@ -117,21 +117,21 @@
                type="file"
                class="inline-block">
     </sc-upload>
-    <sc-map v-else-if="tagType==='map-dot' || tagType==='map-fence'"
+    <!-- <sc-map v-else-if="tagType==='map-dot' || tagType==='map-fence'"
             v-bind="tagBind"
             v-on="listeners"
             v-model="formData.value"
             ref="scMap"
             :type="tagType">
-    </sc-map>
-    <sc-tag v-else-if="tagType==='add-tags'"
+    </sc-map> -->
+    <!-- <sc-tag v-else-if="tagType==='add-tags'"
             v-bind="tagBind"
             v-on="listeners"
             v-model="formData.value"
             ref="scTag"
             :type="tagType">
-    </sc-tag>
-    <sc-tree-select v-else-if="tagType==='tree-select'"
+    </sc-tag> -->
+    <!-- <sc-tree-select v-else-if="tagType==='tree-select'"
                     v-bind="tagBind"
                     v-on="listeners"
                     v-model="formData.value"
@@ -142,7 +142,7 @@
                v-on="listeners"
                v-model="formData.value"
                ref="scEditor">
-    </sc-editor>
+    </sc-editor> -->
     <component v-else-if="tagType==='component'"
                v-bind="tagBind"
                v-on="listeners"
@@ -201,7 +201,8 @@ export default class ScFormTag extends Vue {
 
   get tagBind() {
     const { attr = {}, tagType = 'input' } = this.data.tag || {};
-    const option: obj = { class: `w100 ${attr.class || ''}`, size: 'small' };
+    // , size: 'small'
+    const option: obj = { class: `w100 ${attr.class || ''}` };
     if (tagType === 'date-picker') {
       if (attr.type === 'date' || attr.type === 'daterange') {
         option['value-format'] = 'yyyy-MM-dd';
@@ -209,9 +210,9 @@ export default class ScFormTag extends Vue {
         option['value-format'] = 'yyyy-MM-dd HH:mm:ss';
       }
     }
-    if (tagType === 'tree-select') {
-      option['select-size'] = 'small';
-    }
+    // if (tagType === 'tree-select') {
+    //   option['select-size'] = 'small';
+    // }
     if (tagType === 'input-number') {
       option.class = '';
     }
@@ -249,7 +250,7 @@ export default class ScFormTag extends Vue {
 }
 </script>
 <style lang='scss'>
-  .sc-form-tag {
-    height: 100%;
-  }
+.sc-form-tag {
+  height: 100%;
+}
 </style>
