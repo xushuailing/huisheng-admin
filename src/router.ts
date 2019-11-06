@@ -6,6 +6,7 @@ import 'normalize.css/normalize.css';
 Vue.use(Router);
 
 const merchantRouter = Vue.extend({ render: (h) => h('router-view') });
+const layoutView = Vue.extend({ render: (h) => h('router-view') });
 
 const router = new Router({
   routes: [
@@ -39,6 +40,32 @@ const router = new Router({
               path: '/goods',
               name: '商品',
               component: () => import(/* webpackChunkName: "layout" */ './pages/goods/goods.vue'),
+            },
+            {
+              path: '/product',
+              name: '商品管理',
+              redirect: '/product/list',
+              component: layoutView,
+              children: [
+                {
+                  path: 'list',
+                  name: '首页',
+                  component: () => import('./pages/product/list.vue'),
+                },
+              ],
+            },
+            {
+              path: '/advertisement',
+              name: '广告管理',
+              redirect: '/advertisement/list',
+              component: layoutView,
+              children: [
+                {
+                  path: 'list',
+                  name: '首页',
+                  component: () => import('./pages/product/list.vue'),
+                },
+              ],
             },
           ],
         },
