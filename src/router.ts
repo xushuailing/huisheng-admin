@@ -77,7 +77,7 @@ const router = new Router({
         {
           path: 'list',
           name: '首页',
-          component: () => import('./pages/product/list.vue'),
+          component: () => import('./pages/advertisement/list.vue'),
         },
       ],
     },
