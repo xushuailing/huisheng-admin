@@ -1,0 +1,167 @@
+<template>
+  <div class='sc-min-table'>
+    <div class="pb-10">
+      <sc-search ref="scSearchCollapse"
+                 v-on="listeners.search"
+                 model="collapse"
+                 :config="this.searchConfig"
+                 @emitSearchSubmit="onTableSearchClick"
+                 :visible.sync="searchFormVisible">
+      </sc-search>
+      <!-- <el-row type="flex"
+              justify="space-between"
+              class="sc-min-table_header pb-5">
+
+        <el-col :span="12">
+
+        </el-col>
+        <el-col :span="12"
+                class="text-e">
+          <slot name="header-btn">
+            <el-button icon="el-icon-refresh"
+                       size="small"
+                       v-if="isRefresh"
+                       @click="onHeaderHandle('refresh')"></el-button>
+            <el-button @click="onHeaderHandle('add')"
+                       size="small"
+                       :limit="limit.add"
+                       v-if="addFormApi">新增</el-button>
+            <el-button @click="onHeaderHandle('del')"
+                       v-if="isDelete"
+                       :limit="limit.delete"
+                       size="small">删除</el-button>
+            <slot name="header-add-btn"></slot>
+          </slot>
+          <sc-exports ref="scExports"
+                      :limit="limit.exports"
+                      v-on="listeners.exports"
+                      class="ml-10 inline-block"
+                      v-if="exportApi"
+                      :api='exportApi'
+                      :totalElements="paginationConfig.total"
+                      :columns="columns"
+                      :params="tableConfig.exportParams"
+                      :selectTableData="selectTableData"
+                      :queryTable='query'>
+          </sc-exports>
+        </el-col>
+      </el-row> -->
+
+    </div>
+
+    <sc-table ref="scTable"
+              v-bind="$attrs"
+              v-loading="tableLoading"
+              v-on="listeners.table"
+              :page="pagination.page"
+              :size="pagination.size"
+              :columns="columns"
+              :columnsEvents="columnsEvents"
+              :columnsKeyMap="columnsKeyMap"
+              :columnsProps="columnsProps"
+              :columnsSchema="columnsSchema"
+              :columnsHandler="columnsHandler"
+              :columnsType="columnsType"
+              :api="api"
+              :tableData="tableData"
+              :storageKey="tableConfig.table.storageKey"
+              :slotAppend="slotAppend"
+              @select-all="onSelectionChange"
+              @select="onSelectionChange"
+              @emitGetEditData="onGetEditData"
+              @emitSwitchChange="updateDataTable"
+              @emitLienEditTableComplete="updateDataTable"
+              @emitTableHandlerClick="onTableHandlerClick"
+              @emitSortChange="onSortChange">
+      <template slot="expand"
+                slot-scope="props">
+        <slot name="expand"
+              v-bind="props"></slot>
+      </template>
+      <template slot="append">
+        <slot name="append"></slot>
+      </template>
+    </sc-table>
+    <sc-pagination ref="scPagination"
+                   v-if="tableConfig.isPagination!==false"
+                   v-bind="paginationConfig"
+                   @size-change="handleSizeChange"
+                   @current-change="handleCurrentChange"
+                   v-on="listeners.pagination">
+    </sc-pagination>
+
+    <sc-add-form ref="scAddForm"
+                 v-on="listeners.add"
+                 :visible.sync="addDialogShow"
+                 v-if="addFormApi"
+                 :api="addFormApi"
+                 @emitAddComplete="onAddComplete"
+                 :config="formAddConfig">
+      <template v-for="slot in formButtonSlot.add">
+        <slot :slot="slot.slotName"
+              :name="slot.slotName"></slot>
+      </template>
+    </sc-add-form>
+
+    <sc-edit ref="scEdit"
+             v-on="listeners.edit"
+             :visible.sync="editDialogShow"
+             v-if="editApi"
+             :api="editApi"
+             @emitEditComplete="onEditComplete"
+             :config="editConfig">
+      <template v-for="slot in formButtonSlot.edit">
+        <slot :slot="slot.slotName"
+              :name="slot.slotName"></slot>
+      </template>
+    </sc-edit>
+  </div>
+</template>
+<script>
+import mixins from '../js/mixins';
+
+export default {
+  name: 'ScMinTable',
+  mixins: [mixins],
+
+  data() {
+    return {
+      searchFormVisible: false,
+      btnText: false,
+    };
+  },
+
+  computed: {
+    exportApi() {
+      const { isExports } = this.tableConfig;
+      const api = isExports ? this.api.export : null;
+      return api;
+    },
+
+    isDialog() {
+      return this.searchConfig.model === 'dialog';
+    },
+    isCollapse() {
+      return this.searchConfig.model === 'collapse';
+    },
+
+    isOrdinary() {
+      const { isSearch } = this.tableConfig;
+      return isSearch !== false;
+    },
+
+    isSetting() {
+      const { isSetting } = this.tableConfig;
+      return isSetting;
+    },
+  },
+  methods: {
+    onOpenCollapse() {
+      this.searchFormVisible = !this.searchFormVisible;
+      if (this.isCollapse) {
+        this.btnText = !this.btnText;
+      }
+    },
+  },
+};
+</script>
