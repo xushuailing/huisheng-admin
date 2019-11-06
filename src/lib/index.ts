@@ -1,8 +1,8 @@
 import { VueConstructor } from 'vue';
 
-// import Table from './components/Table';
+import Table from './components/Table';
 // import MaxTable from './components/MaxTable';
-// import MinTable from './components/MinTable';
+import MinTable from './components/MinTable';
 // import SmallTable from './components/SmallTable';
 
 import AddForm from './components/AddForm';
@@ -12,10 +12,10 @@ import Dialog from './components/Dialog';
 // import Exports from './components/Exports';
 // import Tree from './components/Tree';
 // import TreeSelect from './components/TreeSelect';
-// import Pagination from './components/Pagination';
+import Pagination from './components/Pagination';
 // import DetailTable from './components/DetailTable';
 import Header from './components/Header';
-// import Search from './components/Search';
+import Search from './components/Search';
 import Edit from './components/Edit';
 import Upload from './components/Upload';
 // import Tag from './components/Tag';
@@ -36,9 +36,9 @@ const components = [
   // { com: AppLayout, name: AppLayout.name },
   // { com: AppMain, name: AppMain.name },
   // { com: MaxTable, name: MaxTable.name },
-  // { com: MinTable, name: MinTable.name },
+  { com: MinTable, name: MinTable.name },
   // { com: SmallTable, name: SmallTable.name },
-  // { com: Table, name: Table.name },
+  { com: Table, name: Table.name },
   { com: AddForm, name: AddForm.name },
   { com: FormTag, name: FormTag.name },
   { com: Dialog, name: 'ScDialog' },
@@ -46,10 +46,10 @@ const components = [
   // { com: Map, name: 'ScMap' },
   // { com: Tree, name: Tree.name },
   // { com: TreeSelect, name: 'ScTreeSelect' },
-  // { com: Pagination, name: Pagination.name },
+  { com: Pagination, name: Pagination.name },
   // { com: DetailTable, name: DetailTable.name },
   { com: Header, name: Header.name },
-  // { com: Search, name: Search.name },
+  { com: Search, name: Search.name },
   { com: Edit, name: Edit.name },
   { com: Upload, name: Upload.name },
   // { com: Tag, name: 'ScTag' },
@@ -76,9 +76,9 @@ export default {
   //   AppLayout,
   //   AppMain,
   //   MaxTable,
-  //   MinTable,
+  MinTable,
   //   SmallTable,
-  //   Table,
+  Table,
   //   DetailTable,
   FormTag,
   Dialog,
@@ -87,9 +87,9 @@ export default {
   //   Map,
   //   Tree,
   //   TreeSelect,
-  //   Pagination,
+  Pagination,
   Header,
-  //   Search,
+  Search,
   Edit,
   Upload,
   //   Tag,

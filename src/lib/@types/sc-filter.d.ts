@@ -1,5 +1,5 @@
 import ScTags from './sc-form-tags.d';
-import { obj, Query, Sorts, OperateType } from './sc-param.d';
+import { obj, Query, Sorts } from './sc-param.d';
 // eslint-disable-next-line import/no-cycle
 import { ScSearch } from './sc-search.d';
 
@@ -64,7 +64,7 @@ interface FilterConfig {
 /** 筛选 */
 export interface ScFilter {}
 
-export namespace ScFilter {
+declare namespace ScFilter {
   /** 配置项 */
   type Config = FilterConfig;
 

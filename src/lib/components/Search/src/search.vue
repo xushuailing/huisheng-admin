@@ -10,7 +10,6 @@
 <script>
 import CCollapse from './search-collapse.vue';
 import CDialog from './search-dialog.vue';
-import COrdinary from './search-ordinary.vue';
 import mixins from '../mixins';
 
 export default {
@@ -25,12 +24,10 @@ export default {
   computed: {
     isComponent() {
       let is = null;
-      if (this.model === 'collapse') {
-        is = CCollapse;
-      } else if (this.model === 'dialog') {
+      if (this.model === 'dialog') {
         is = CDialog;
       } else {
-        is = COrdinary;
+        is = CCollapse;
       }
       return is;
     },

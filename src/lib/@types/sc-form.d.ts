@@ -301,7 +301,7 @@ export interface ScForm {
   getItemPropValue<T = any>(prop: string): T;
 }
 
-export namespace ScForm {
+declare namespace ScForm {
   class Add extends FormConfig {
     /** 表单步骤属性(参考 `Element steps`) */
     public stepsAttr?: obj;

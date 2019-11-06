@@ -15,7 +15,7 @@ export interface ScUpload {
   input?: () => void;
 }
 
-export namespace ScUpload {
+declare namespace ScUpload {
   interface Config {
     /** 上传接口 默认 /service-file/file/upload */
     action?: string;

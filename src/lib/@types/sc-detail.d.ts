@@ -60,7 +60,7 @@ export type ScDetailSetColumn = [
   (string | null)?,
   (string | number | boolean | null)?,
   (TagType | null)?,
-  (boolean)?
+  (boolean)?,
 ];
 
 interface ScDetailConfig {
@@ -85,7 +85,7 @@ export interface ScDetail {
   init?(): void;
 }
 
-export namespace ScDetail {
+declare namespace ScDetail {
   /** 详情组件配置 */
   type Config = ScDetailConfig;
 

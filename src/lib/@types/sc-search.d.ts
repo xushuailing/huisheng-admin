@@ -1,6 +1,6 @@
 import { VueConstructor } from 'vue';
 import ScTags from './sc-form-tags.d';
-import { OperateType, Query } from './sc-param.d';
+import { Query } from './sc-param.d';
 // eslint-disable-next-line import/no-cycle
 import { ScFilter } from './sc-filter.d';
 
@@ -52,7 +52,7 @@ interface SearchConfigData {
   prop: string;
 
   /** 操作符(默认值: `string`) */
-  operateType?: OperateType;
+  // operateType?: OperateType;
 
   /** 是否使用简易搜索(默认值: `false`) */
   isSelect?: boolean;
@@ -99,7 +99,7 @@ export interface ScSearch {
   config?: SearchConfig;
 }
 
-export namespace ScSearch {
+declare namespace ScSearch {
   /** 搜索模式 (`简易` / `弹框` / `伸缩`) */
   type Model = ModelType;
 

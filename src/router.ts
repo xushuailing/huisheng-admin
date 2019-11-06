@@ -25,14 +25,19 @@ const router = new Router({
             },
             {
               path: '/merchant',
-              name: '首页',
-              redirect: '/merchant/list',
+              name: '商家管理',
+              redirect: '/merchant/inject',
               component: merchantRouter,
               children: [
                 {
-                  path: 'list',
-                  name: '首页',
-                  component: () => import('./pages/merchant-admin/list.vue'),
+                  path: 'inject',
+                  name: '商家入驻审核列表页',
+                  component: () => import('./pages/merchant/inject-list.vue'),
+                },
+                {
+                  path: 'shop',
+                  name: '商家店铺管理',
+                  component: () => import('./pages/merchant/shop-list.vue'),
                 },
               ],
             },

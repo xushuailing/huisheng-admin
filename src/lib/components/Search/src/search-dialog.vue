@@ -121,7 +121,7 @@
   </div>
 </template>
 <script>
-import { LR, OPERATE } from '../../../config/operate';
+// import { LR, OPERATE } from '../../../config/operate';
 import mixins from '../mixins';
 
 export default {
@@ -129,10 +129,7 @@ export default {
   name: 'ScSearchDialog',
   data() {
     return {
-      searchFormVisible: this.visible,
       searchConfig: this.config,
-      LR,
-      OPERATE,
       form: {},
       columns: [],
     };
@@ -148,37 +145,18 @@ export default {
       const arr = [];
       this.columns = data.filter((v, i) => num > i && !v.isHide);
       this.columns.forEach((e, i) => {
-        if (type === 'plain') {
-          obj[e.prop] = {
-            value: e.default,
-            prop: e.prop,
-            operate: OPERATE(e.operateType)[0].value,
-            lr: !i ? undefined : this.LR[0].prop,
-          };
-        } else if (type === 'senior') {
-          obj[e.prop] = {
-            value: e.default,
-            prop: e.prop,
-            operate: OPERATE(e.operateType)[0].value,
-            lr: !i ? undefined : this.LR[0].prop,
-          };
-        } else if (type === 'specialty') {
-          obj[e.prop] = {
-            value: e.default,
-            lr: !i ? undefined : this.LR[0].prop,
-            prop: e.prop,
-            operate: this.OPERATE(e.operateType)[0].value,
-          };
-          arr.push(obj[e.prop]);
-        }
+        obj[e.prop] = {
+          value: e.default,
+          prop: e.prop,
+        };
       });
-      this.form = type === 'specialty' ? { data: arr } : obj;
+      this.form = obj;
     },
     // 提交搜索表单
     async onSearchSubmit() {
       const { type } = this.searchConfig;
 
-      const data = type === 'specialty' ? this.form.data : this.form;
+      const data = this.form;
       let formData = this.handleNullObject(data);
 
       this.searchFormVisible = false;
@@ -215,9 +193,6 @@ export default {
 
       this.$set(this.form.data[index], 'prop', obj.prop);
       // this.form.data[index].prop = obj.prop
-
-      this.$set(this.form.data[index], 'operate', this.OPERATE(obj.operateType)[0].value);
-      // this.form.data[index].operate = this.OPERATE(obj.operateType)[0].value
     },
 
     // 处理空字段

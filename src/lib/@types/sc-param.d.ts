@@ -1,5 +1,3 @@
-import { _OperateType } from '@/lib/config/operate';
-
 export interface ScLimit {
   /** 权限标识符 (空则有权限) */
   key: string | string[];
@@ -46,5 +44,3 @@ export interface Sorts {
   /** 筛选类型 */
   orderType: 'DESC' | 'ASC' | string;
 }
-
-export type OperateType = _OperateType;
