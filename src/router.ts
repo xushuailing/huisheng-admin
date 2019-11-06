@@ -79,6 +79,21 @@ const router = new Router({
           name: '首页',
           component: () => import('./pages/advertisement/list.vue'),
         },
+        {
+          path: 'banner-detail',
+          name: 'banner详情',
+          component: () => import('./pages/advertisement/banner-detail.vue'),
+        },
+        {
+          path: 'banner-detail1',
+          name: 'banner介绍',
+          component: () => import('./pages/advertisement/banner-detail1.vue'),
+        },
+        {
+          path: 'today-detail',
+          name: '今日上新',
+          component: () => import('./pages/advertisement/today-detail.vue'),
+        },
       ],
     },
     {
