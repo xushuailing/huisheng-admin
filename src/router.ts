@@ -80,6 +80,11 @@ const router = new Router({
           component: () => import('./pages/advertisement/list.vue'),
         },
         {
+          path: 'mine-banner',
+          name: '我的推广',
+          component: () => import('./pages/advertisement/mine-banner.vue'),
+        },
+        {
           path: 'banner-detail',
           name: 'banner详情',
           component: () => import('./pages/advertisement/banner-detail.vue'),
