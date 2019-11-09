@@ -34,7 +34,7 @@ export default class App extends Vue {
   }
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .el-container {
   height: 100%;
 }
@@ -48,5 +48,10 @@ export default class App extends Vue {
 .el-main-p {
   padding-top: 70px;
   position: relative;
+}
+
+.el-main-p .sc-breadcrumb {
+  position: absolute;
+  top: 20px;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-jsb flex-jc">
+  <div class="sc-breadcrumb flex flex-jsb flex-ac">
     <div class="flex-1">
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item v-for="(item, index) in breadcrumb"
@@ -20,10 +20,11 @@ export default class ScBreadcrumb extends Vue {
   }
 }
 </script>
-<style lang="scss" >
+<style lang="scss" scoped>
+.sc-breadcrumb {
+  height: 40px;
+}
 .el-breadcrumb {
-  position: absolute;
-  top: 20px;
   font-size: 18px;
   line-height: 30px;
 }
