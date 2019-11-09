@@ -1,21 +1,14 @@
 <template>
   <div class='setting-username-list'>
-    <el-button @click="addFormShow=true">添加</el-button>
     <sc-min-table stripe
                   ref="table"
                   :columns-type="['selection']"
                   :columns-handler="columnsHandler"
                   :columns="columns"
                   :editConfig="editConfig"
+                  :formAddConfig="formAddConfig"
                   :table-config="tableConfig">
     </sc-min-table>
-
-    <sc-add-form :visible.sync="addFormShow"
-                 :api="addApi"
-                 :config="formAddConfig"
-                 @emitAddComplete="onAddComplete">
-
-    </sc-add-form>
   </div>
 </template>
 <script lang='ts'>
@@ -33,24 +26,17 @@ const columns: ScTable.SetColumns = [
 
 @Component
 export default class SettingUsernameList extends Vue {
-  addFormShow = false;
-
   columns = this.$utils._SetTableColumns(columns);
 
   columnsHandler = ['edit', 'del'];
 
-  // paginationConfig = {
-  //   slotAttr: {
-  //     isCheckbox: true,
-  //     text: '通过',
-  //   },
-  // };
-
   tableConfig = {
     api: this.$api.platform,
+    breadcrumbButtons: ['add'],
   };
 
   formAddConfig: ScForm.Config = {
+    header: { title: '添加账号', desc: '添加平台管理员账号' },
     rules: [
       {
         nickname: { value: [{ required: true, message: '昵称不能为空', trigger: 'blur' }] },
@@ -68,7 +54,7 @@ export default class SettingUsernameList extends Vue {
             },
           ],
         },
-        role_id: {
+        role: {
           value: [{ required: true, message: '请选择一个角色', trigger: 'change' }],
         },
         login_name: { value: [{ required: true, message: '账号不能为空', trigger: 'blur' }] },
@@ -99,7 +85,7 @@ export default class SettingUsernameList extends Vue {
         },
         {
           label: '角色',
-          prop: 'role_id',
+          prop: 'role',
           tag: {
             tagType: 'select',
             attr: { placeholder: '请选择角色' },
@@ -318,30 +304,16 @@ export default class SettingUsernameList extends Vue {
     ],
   };
 
-  get addApi() {
-    return this.$api.platform.create;
-  }
-
   mounted() {
     this.getRole();
   }
 
-  onAddComplete() {
-    console.log('成功');
-  }
-
   getRole() {
-    this.$http
-      .get<any[]>(this.$api.role.index, { limit: 1e5 })
-      .then((res) => {
-        const options = res.data.map((v) => ({ ...v, label: v.role_name, value: v.id }));
-        const item = this.$utils._GetConfigItemData(this.formAddConfig.data, 'role_id');
-        if (item) item.tag!.options = options;
-        console.log('item', item);
-      })
-      .catch((err) => {
-        console.log('err', err);
-      });
+    this.$http.get<any[]>(this.$api.role.index, { limit: 1e5 }).then((res) => {
+      const options = res.data.map((v) => ({ ...v, label: v.role_name, value: v.id }));
+      const item = this.$utils._GetConfigItemData(this.formAddConfig.data, 'role');
+      if (item) item.tag!.options = options;
+    });
   }
 }
 </script>

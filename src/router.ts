@@ -49,12 +49,16 @@ const router = new Router({
           component: () => import('./pages/admin/setting/index.vue'),
         },
         {
-          path: 'usernameList',
+          path: 'username-list',
           name: '平台管理员账号',
+          meta: {
+            breadcrumbHide: true,
+            breadcrumb: [{ title: '系统管理' }, { title: '平台管理员账号' }],
+          },
           component: () => import('./pages/admin/setting/platform-username-list.vue'),
         },
         {
-          path: 'roleList',
+          path: 'role-list',
           name: '角色管理',
           component: () => import('./pages/admin/setting/platform-role-list.vue'),
         },
