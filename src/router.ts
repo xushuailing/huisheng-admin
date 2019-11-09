@@ -63,7 +63,7 @@ const router = new Router({
       children: [
         {
           path: 'list',
-          name: '首页',
+          name: '商品列表',
           component: () => import('./pages/product/list.vue'),
         },
       ],
@@ -76,28 +76,33 @@ const router = new Router({
       children: [
         {
           path: 'list',
-          name: '首页',
+          name: '广告推广',
           component: () => import('./pages/advertisement/list.vue'),
+          meta: { breadcrumb: [{ title: '广告管理' }, { title: '广告推广' }] },
         },
         {
           path: 'mine-banner',
           name: '我的推广',
           component: () => import('./pages/advertisement/mine-banner.vue'),
+          meta: { breadcrumb: [{ title: '广告管理' }, { title: '我的推广' }] },
         },
         {
           path: 'banner-detail',
           name: 'banner详情',
           component: () => import('./pages/advertisement/banner-detail.vue'),
+          meta: { breadcrumb: [{ title: '广告管理' }, { title: 'banner详情' }] },
         },
         {
           path: 'banner-detail1',
           name: 'banner介绍',
           component: () => import('./pages/advertisement/banner-detail1.vue'),
+          meta: { breadcrumb: [{ title: '广告管理' }, { title: 'banner介绍' }] },
         },
         {
           path: 'today-detail',
           name: '今日上新',
           component: () => import('./pages/advertisement/today-detail.vue'),
+          meta: { breadcrumb: [{ title: '广告管理' }, { title: '今日上新' }] },
         },
       ],
     },
@@ -111,6 +116,7 @@ const router = new Router({
           path: 'list',
           name: '投诉列表',
           component: () => import('./pages/complaint/list.vue'),
+          meta: { breadcrumb: [{ title: '投诉管理' }] },
         },
       ],
     },
