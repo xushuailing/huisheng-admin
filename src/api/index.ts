@@ -14,4 +14,10 @@ export default {
       show: `${url}/service-uaa/sys/user/show`,
     },
   },
+  admin: {
+    index: `${url}/admin/getAdminLists`,
+    create: `${url}/admin/getAdminLists`,
+    delete: `${url}/admin/getAdminLists`,
+    show: `${url}/admin/getAdminLists`,
+  },
 };

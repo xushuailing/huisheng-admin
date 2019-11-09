@@ -191,6 +191,10 @@ export default {
       return this.tableConfig.isRefresh !== false;
     },
 
+    isSearch() {
+      return this.searchConfig && Object.keys(this.searchConfig).length;
+    },
+
     // 获取修改表单api
     editApi() {
       const data = this.editConfig && this.editConfig.data;
@@ -214,8 +218,8 @@ export default {
     },
   },
   created() {
-    this.pagination.size = this.paginationConfig.size || 10;
-    this.pagination.page = this.paginationConfig.page || 0;
+    this.pagination.limit = this.paginationConfig.size || 10;
+    this.pagination.page = this.paginationConfig.page || 1;
   },
   mounted() {
     this.clearFilter();
@@ -249,8 +253,8 @@ export default {
 
     // 选择每页的条数
     handleSizeChange(val) {
-      this.pagination.page = 0;
-      this.pagination.size = val;
+      this.pagination.page = 1;
+      this.pagination.limit = val;
       this.paginationConfig.currentPage = 0;
       this.getDataTable();
       // this.$emit('emitPaginationSizeChange', val);
@@ -258,7 +262,7 @@ export default {
 
     // 选择页数
     handleCurrentChange(val) {
-      this.pagination.page = val - 1;
+      this.pagination.page = val;
       this.paginationConfig.currentPage = val;
       this.getDataTable();
       // this.$emit('emitPaginationCurrentChange', val);
@@ -284,9 +288,9 @@ export default {
 
     // 添加表格数据
     addTable() {
-      this.paginationConfig.currentPage = 0;
+      this.paginationConfig.currentPage = 1;
       // this.pagination.size = 10;
-      this.pagination.page = 0;
+      this.pagination.page = 1;
       this.sort = null;
       this.query = null;
 
@@ -295,9 +299,9 @@ export default {
 
     // 搜索
     onTableSearchClick(data) {
-      this.paginationConfig.currentPage = 0;
+      this.paginationConfig.currentPage = 1;
       // this.pagination.size = 10;
-      this.pagination.page = 0;
+      this.pagination.page = 1;
       this.sort = [];
       this.query = data;
       // this.$emit('emitTableSearchClick', data, type);
@@ -307,7 +311,7 @@ export default {
     onTreeNodeClick(data) {
       const { disableTreeClickRequest, index } = this.tableConfig;
       // this.pagination.size = 10;
-      this.pagination.page = 0;
+      this.pagination.page = 1;
       this.sort = [];
 
       if (disableTreeClickRequest) return;
@@ -363,9 +367,8 @@ export default {
     // 设置表格调用参数
     setDataTable(option = {}) {
       const pagination = option.pagination || {};
-      pagination.size = pagination.size || this.pagination.size;
-      pagination.page =
-        pagination.page || pagination.page === 0 ? pagination.page : this.pagination.page;
+      pagination.limit = pagination.limit || this.pagination.limit;
+      pagination.page = pagination.page || this.pagination.page;
 
       const sorts = option.sorts || this.sorts;
 
@@ -404,18 +407,20 @@ export default {
       const api = this.api.index;
 
       this.$http
-        .post(api, param)
-        .then((res) => {
-          const { data } = res.data;
+        .get(api, param)
+        .then((data) => {
+          const limit = Number(data.limit);
+          const page = Number(data.page);
+          const count = Number(data.count);
 
           /** 全部删除最后一页数据时,再次调用接口并且 page-1 */
-          if (data.number > 0 && !data.content.length) {
+          if (page > 1 && !data.data.length) {
             this.pagination.page = this.pagination.page - 1;
             this.getDataTable();
             return;
           }
 
-          const content = data.content.map((v) => {
+          const content = data.data.map((v) => {
             const obj = v;
             this.columns.forEach((e) => {
               if (obj[e.prop] === undefined) obj[e.prop] = '';
@@ -423,12 +428,12 @@ export default {
             return obj;
           });
 
-          this.paginationConfig.pageSize = data.size; // 分页配置页面数量
-          this.paginationConfig.currentPage = data.number + 1; // 分页配置当前页面
-          this.paginationConfig.total = data.totalElements; // 分页配置页面总数
+          this.paginationConfig.pageSize = limit; // 分页配置页面数量
+          this.paginationConfig.currentPage = page; // 分页配置当前页面
+          this.paginationConfig.total = count; // 分页配置页面总数
 
-          this.pagination.page = data.number; // 请求当前页数
-          this.pagination.size = data.size; // 请求页面数量
+          this.pagination.page = page; // 请求当前页数
+          this.pagination.limit = limit; // 请求页面数量
 
           this.tableData = content;
 
