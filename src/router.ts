@@ -49,9 +49,9 @@ const router = new Router({
           component: () => import(/* webpackChunkName: "setting" */ './pages/admin/setting/index.vue'),
         },
         {
-          path: 'rootname',
-          name: '总账号管理',
-          component: () => import(/* webpackChunkName: "setting" */ './pages/admin/setting/root-name.vue'),
+          path: 'rootnamelist',
+          name: '平台管理员账号',
+          component: () => import('./pages/admin/setting/root-username-list.vue'),
         },
       ],
     },
