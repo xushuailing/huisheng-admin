@@ -102,6 +102,19 @@ const router = new Router({
       ],
     },
     {
+      path: '/complaint',
+      name: '投诉管理',
+      redirect: '/complaint/list',
+      component: layoutView,
+      children: [
+        {
+          path: 'list',
+          name: '投诉列表',
+          component: () => import('./pages/complaint/list.vue'),
+        },
+      ],
+    },
+    {
       path: '/login',
       component: () => import('./pages/login/login.vue'),
     },
