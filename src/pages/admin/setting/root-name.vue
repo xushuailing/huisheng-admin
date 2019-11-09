@@ -77,56 +77,6 @@ export default class AdminRootName extends Vue {
     ],
   };
 
-  /** 系统管理 > 平台管理员账号 > 添加账号 */
-  confi3 = {
-    data: [
-      [
-        {
-          label: '昵称',
-          prop: 'none1',
-          tag: {
-            attr: { placeholder: '请输入昵称' },
-          },
-        },
-        {
-          label: 'ID',
-          prop: 'none2',
-          tag: {
-            attr: { type: 'number', placeholder: '请输入ID' },
-          },
-        },
-        {
-          label: '手机号',
-          prop: 'none3',
-          tag: {
-            attr: { type: 'number', placeholder: '请输入手机号' },
-          },
-        },
-        {
-          label: '角色',
-          prop: 'none4',
-          tag: {
-            attr: { placeholder: '请输入角色' },
-          },
-        },
-        {
-          label: '账号',
-          prop: 'none5',
-          tag: {
-            attr: { placeholder: '请输入账号', max: 6 },
-          },
-        },
-        {
-          label: '密码',
-          prop: 'none6',
-          tag: {
-            attr: { placeholder: '请输入密码', 'show-password': true },
-          },
-        },
-      ],
-    ],
-  };
-
   /** 系统管理 > 角色管理 */
   config4 = {
     buttons: [

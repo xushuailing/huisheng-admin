@@ -93,7 +93,8 @@ export default {
 <style lang="scss" scoped>
   .sc-add-form {
     &_center {
-      margin: 0 auto;
+      // margin: 0 auto;
+      padding: 0 10px;
     }
     &_footer {
       &.center {

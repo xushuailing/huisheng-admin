@@ -46,12 +46,17 @@ const router = new Router({
         {
           path: 'setting',
           name: '平台管理',
-          component: () => import(/* webpackChunkName: "setting" */ './pages/admin/setting/index.vue'),
+          component: () => import('./pages/admin/setting/index.vue'),
         },
         {
-          path: 'rootnamelist',
+          path: 'usernameList',
           name: '平台管理员账号',
-          component: () => import('./pages/admin/setting/root-username-list.vue'),
+          component: () => import('./pages/admin/setting/platform-username-list.vue'),
+        },
+        {
+          path: 'roleList',
+          name: '角色管理',
+          component: () => import('./pages/admin/setting/platform-role-list.vue'),
         },
       ],
     },
