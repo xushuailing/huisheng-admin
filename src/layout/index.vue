@@ -8,7 +8,11 @@
       <!-- <el-aside width="200px">
         <Aside></Aside>
       </el-aside> -->
-      <el-main>
+      <el-main
+        :class="{
+          'el-main-p': $route.meta && $route.meta.breadcrumb && $route.meta.breadcrumb.length,
+        }"
+      >
         <template v-if="$route.meta && $route.meta.breadcrumb && $route.meta.breadcrumb.length">
           <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item v-for="(item, index) in $route.meta.breadcrumb" :key="index">{{
@@ -40,6 +44,8 @@ export default class App extends Vue {}
 }
 .el-main {
   background: $--background-color-base;
+}
+.el-main-p {
   padding-top: 70px;
   position: relative;
 }
