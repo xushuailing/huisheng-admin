@@ -1,0 +1,11 @@
+#app {
+  @for $i from 10 through 40 {
+    .font-#{$i} {
+      font-size: $i + px;
+    }
+  }
+
+  .font-bold {
+    font-weight: bold;
+  }
+}

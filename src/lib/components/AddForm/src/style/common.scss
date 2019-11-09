@@ -1,0 +1,39 @@
+.sc-add-form {
+  .sc-dialog_isFull {
+    .el-form {
+      height: 100%;
+    }
+  }
+
+  &_center {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &_form {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .el-form {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-row-gap: 5px;
+  }
+
+  .el-form-item {
+
+    &.isFull {
+      grid-column-start: 1;
+      grid-column-end: -1;
+    }
+
+    &.vertical {
+      .el-form-item__content {
+        margin-left: 0 !important;
+      }
+    }
+  }
+}

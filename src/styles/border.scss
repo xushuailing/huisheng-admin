@@ -1,0 +1,29 @@
+$types: top, bottom, left, right;
+
+#app {
+  .border {
+    @for $i from 0 through 8 {
+      &-radius-#{$i * 4} {
+        border-radius: $i * 4 + px;
+      }
+    }
+    &-radius-100 {
+      border-radius: 100%;
+    }
+
+    @each $type in $types {
+      &-#{$type} {
+        border-#{$type}: 1px solid $--border-color-base;
+      }
+    }
+
+    &-horizontal {
+      border-left: 1px solid $--border-color-base;
+      border-right: 1px solid $--border-color-base;
+    }
+    &-vertical {
+      border-top: 1px solid $--border-color-base;
+      border-bottom: 1px solid $--border-color-base;
+    }
+  }
+}

@@ -18,10 +18,15 @@ class Storages {
    *
    * @param {string} key 存储名称
    * @param {*} value 存储的值
+   * @param {number} time 有效时间
    * @memberof Storages
    */
-  public set(key: string, value: any) {
-    this.storage.setItem(this.prefix + key, JSON.stringify(value));
+  public set(key: string, value: any, time: number = 0): void {
+    const H = time * 1000 * 60;
+    const now = new Date().getTime() + H;
+    const data = JSON.stringify({ time: time ? String(now) : null, value });
+
+    return this.storage.setItem(this.prefix + key, data);
   }
 
   /**
@@ -32,65 +37,26 @@ class Storages {
    * @returns {*} 存储的值
    * @memberof Storages
    */
-  public get(key: string, fun?: (res: any) => void): any {
-    let value: any = this.storage.getItem(this.prefix + key);
+  public get<T = any>(key: string): T | null {
     try {
-      value = JSON.parse(value);
-      if (!value && (value !== false && value !== 0)) {
-        value = null;
+      const data = this.storage.getItem(this.prefix + key);
+
+      const value = data ? JSON.parse(data) : null;
+
+      if (!value) return null;
+
+      if (value.time) {
+        const now = new Date().getTime(); // 当前时间
+        if (Number(value.time) < now) {
+          this.storage.removeItem(this.prefix + key);
+          return null;
+        }
+        return value.value;
       }
-    } catch (e) {
-      value = null;
+      return value.value;
+    } catch (error) {
+      return null;
     }
-    return fun ? fun.call(this, value) : value;
-  }
-
-  /**
-   * 可以失效的存数据
-   *
-   * @param {string} key 存储名称
-   * @param {*} value 存储的值
-   * @param {number} [time=1] 有效时间，默认(1分钟)
-   * @memberof Storages
-   */
-  public setTime(key: string, value: any, time: number = 1) {
-    const H = time * 1000 * 60; // 默认1分钟
-    const now = new Date().getTime() + H;
-    const data = JSON.stringify({ time: String(now), value });
-    this.storage.setItem(this.prefix + key, data);
-  }
-
-  /**
-   * 取带时间的数据,时间过期则删除本条存储
-   *
-   * @param {string} key 存储名称
-   * @param {Function} [fun] 获取存储后的回调
-   * @returns {*} 存储的值
-   * @memberof Storages
-   */
-  public getTime(key: string, fun?: (res: any) => void): any {
-    let value = null;
-    let data = null;
-    try {
-      data = this.storage.getItem(this.prefix + key) || null; // 获取储存
-      value = data ? JSON.parse(data) : null;
-      if (!value) {
-        return null;
-      }
-      if (value.value && !value.time) {
-        throw new Error('获取的存储没有time字段!使用get方法!');
-      }
-
-      const now = new Date().getTime(); // 当前时间
-
-      if (Number(value.time) < now) {
-        this.storage.removeItem(this.prefix + key);
-        return null;
-      }
-    } catch (e) {
-      value = {};
-    }
-    return fun ? fun.call(this, value.value) : value.value;
   }
 
   /**

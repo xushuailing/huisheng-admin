@@ -1,0 +1,115 @@
+$types: bg, font;
+
+@function mode($type) {
+  @if $type == font {
+    @return color;
+  } @else {
+    @return background;
+  }
+}
+
+#app {
+  @each $type in $types {
+    .#{$type} {
+      &-white {
+        #{mode($type)}: $--color-white;
+      }
+      &-black {
+        #{mode($type)}: $--color-black;
+      }
+      &-primary {
+        #{mode($type)}: $--color-primary;
+      }
+      &-primary-light-1 {
+        #{mode($type)}: $--color-primary-light-1;
+      }
+      &-primary-light-2 {
+        #{mode($type)}: $--color-primary-light-2;
+      }
+      &-primary-light-3 {
+        #{mode($type)}: $--color-primary-light-3;
+      }
+      &-primary-light-4 {
+        #{mode($type)}: $--color-primary-light-4;
+      }
+      &-primary-light-5 {
+        #{mode($type)}: $--color-primary-light-5;
+      }
+      &-primary-light-6 {
+        #{mode($type)}: $--color-primary-light-6;
+      }
+      &-primary-light-7 {
+        #{mode($type)}: $--color-primary-light-7;
+      }
+      &-primary-light-8 {
+        #{mode($type)}: $--color-primary-light-8;
+      }
+      &-primary-light-9 {
+        #{mode($type)}: $--color-primary-light-9;
+      }
+      &-success {
+        #{mode($type)}: $--color-success;
+      }
+      &-warning {
+        #{mode($type)}: $--color-warning;
+      }
+      &-danger {
+        #{mode($type)}: $--color-danger;
+      }
+      &-info {
+        #{mode($type)}: $--color-info;
+      }
+      &-success-light {
+        #{mode($type)}: $--color-success-light;
+      }
+      &-warning-light {
+        #{mode($type)}: $--color-warning-light;
+      }
+      &-danger-light {
+        #{mode($type)}: $--color-danger-light;
+      }
+      &-info-light {
+        #{mode($type)}: $--color-info-light;
+      }
+      &-success-lighter {
+        #{mode($type)}: $--color-success-lighter;
+      }
+      &-warning-lighter {
+        #{mode($type)}: $--color-warning-lighter;
+      }
+      &-danger-lighter {
+        #{mode($type)}: $--color-danger-lighter;
+      }
+      &-info-lighter {
+        #{mode($type)}: $--color-info-lighter;
+      }
+      &-text-primary {
+        #{mode($type)}: $--color-text-primary;
+      }
+      &-text-regular {
+        #{mode($type)}: $--color-text-regular;
+      }
+      &-text-secondary {
+        #{mode($type)}: $--color-text-secondary;
+      }
+      &-text-placeholder {
+        #{mode($type)}: $--color-text-placeholder;
+      }
+      &-border-color-base {
+        #{mode($type)}: $--border-color-base;
+      }
+      &-border-color-light {
+        #{mode($type)}: $--border-color-light;
+      }
+      &-border-color-lighter {
+        #{mode($type)}: $--border-color-lighter;
+      }
+      &-border-color-extra-light {
+        #{mode($type)}: $--border-color-extra-light;
+      }
+      &-background-color-base {
+        #{mode($type)}: $--background-color-base;
+      }
+    }
+  }
+}

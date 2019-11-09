@@ -46,6 +46,11 @@
   justify-content: space-around;
 }
 
+.flex-wrap {
+  @extend .flex;
+  flex-wrap: wrap;
+}
+
 .flex-jc-ac {
   @extend .flex-jc;
   @extend .flex-ac;

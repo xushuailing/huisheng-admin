@@ -37,14 +37,6 @@
     }
   }
 
-  // 字体大小 10-30 基数为1
-  // 如:font-11
-
-  @for $i from 10 through 30 {
-    .font-#{$i} {
-      font-size: $i + px;
-    }
-  }
   .w100 {
     width: 100%;
   }
