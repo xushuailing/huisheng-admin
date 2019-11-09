@@ -14,10 +14,18 @@ export default {
       show: `${url}/service-uaa/sys/user/show`,
     },
   },
-  admin: {
+
+  /** 系统管理 平台管理员 */
+  platform: {
     index: `${url}/admin/getAdminLists`,
-    create: `${url}/admin/getAdminLists`,
+    create: `${url}/admin/setAdmin`,
     delete: `${url}/admin/getAdminLists`,
     show: `${url}/admin/getAdminLists`,
+  },
+
+  /** 系统管理 角色 */
+  role: {
+    index: `${url}/admin/getUserRoleList`,
+    create: `${url}/admin/setUserRole`,
   },
 };
