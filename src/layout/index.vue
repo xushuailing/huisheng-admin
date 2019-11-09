@@ -8,17 +8,11 @@
       <!-- <el-aside width="200px">
         <Aside></Aside>
       </el-aside> -->
-      <el-main
-        :class="{
-          'el-main-p': $route.meta && $route.meta.breadcrumb && $route.meta.breadcrumb.length,
-        }"
-      >
-        <template v-if="$route.meta && $route.meta.breadcrumb && $route.meta.breadcrumb.length">
-          <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item v-for="(item, index) in $route.meta.breadcrumb" :key="index">{{
-              item.title
-            }}</el-breadcrumb-item>
-          </el-breadcrumb>
+      <el-main :class="{
+          'el-main-p': breadcrumb,
+        }">
+        <template v-if="breadcrumb">
+          <sc-breadcrumb></sc-breadcrumb>
         </template>
         <Main></Main>
       </el-main>
@@ -32,7 +26,13 @@ import Header from './header.vue';
 import Aside from './aside.vue';
 
 @Component({ components: { Main, Header, Aside } })
-export default class App extends Vue {}
+export default class App extends Vue {
+  get breadcrumb() {
+    const { $route } = this;
+    const { breadcrumb, breadcrumbHide } = $route.meta;
+    return $route.meta && breadcrumb && breadcrumb.length && !breadcrumbHide;
+  }
+}
 </script>
 <style lang="scss" scoped>
 .el-container {
@@ -48,11 +48,5 @@ export default class App extends Vue {}
 .el-main-p {
   padding-top: 70px;
   position: relative;
-}
-.el-breadcrumb {
-  position: absolute;
-  top: 20px;
-  font-size: 18px;
-  line-height: 30px;
 }
 </style>

@@ -25,6 +25,7 @@ import Upload from './components/Upload';
 // import Qrcode from './components/Qrcode';
 // import Editor from './components/Editor';
 // import Filter from './components/Filter';
+import Breadcrumb from './components/Breadcrumb';
 
 // import directives from './directive';
 // import utils from './utils';
@@ -52,6 +53,7 @@ const components = [
   { com: Search, name: Search.name },
   { com: Edit, name: Edit.name },
   { com: Upload, name: Upload.name },
+  { com: Breadcrumb, name: 'ScBreadcrumb' },
   // { com: Tag, name: 'ScTag' },
   // { com: SettingTable, name: SettingTable.name },
   // { com: Audio, name: 'ScAudio' },
@@ -92,6 +94,7 @@ export default {
   Search,
   Edit,
   Upload,
+  Breadcrumb,
   //   Tag,
   //   SettingTable,
   //   Audio,
