@@ -1,3 +1,5 @@
+import icon from './icon';
+
 const component = {
   functional: true,
   props: ['row', 'col', 'column'],
@@ -20,6 +22,7 @@ const component = {
   },
 };
 
+export const COLUMNS_HANDLER = icon;
 export const COLUMN_PROPS = { component };
 export const TYPES = ['selection', 'expand', 'index'];
 export const BOOLEAN_KEYS = [

@@ -59,23 +59,6 @@
                         v-on="col.listeners"
                         class="mr-5">{{ tag }}</el-tag>
               </div>
-              <div v-else-if="col.special === 'audio'">
-                <sc-audio :url="scope.row[col.prop]"
-                          v-on="col.listeners"
-                          v-bind="getCptBind(scope, col)">
-                </sc-audio>
-              </div>
-
-              <div v-else-if="col.special === 'video'">
-                <span class="sc-bg-black inline-block"
-                      v-bind="getCptBind(scope, col)">
-                  <el-button type="text"
-                             @click="onVideoClick(scope, col)"
-                             class="p0">
-                    <i class="iconfont icon-bofang font-25"></i>
-                  </el-button>
-                </span>
-              </div>
               <div v-else>
                 <component :is="col.component"
                            v-on="col.listeners"
@@ -92,22 +75,14 @@
           <template slot-scope="scope">
             <div style="display: flex;justify-content: space-around;">
               <template v-for="(item, index) in columnsHandlerType.content">
-                <el-tooltip effect="dark"
-                            v-if="item.title"
-                            :content="item.title"
-                            :key="index"
-                            placement="top">
-                  <el-button @click="onHandlerClick(scope, item.name)"
-                             size="mini"
-                             v-authority="item.limit"
-                             :class="item.icon" />
-                </el-tooltip>
-                <el-button v-else
-                           @click="onHandlerClick(scope, item.name)"
-                           size="mini"
-                           v-authority="item.limit"
-                           :key="index"
-                           :class="item.icon" />
+
+                <el-link @click="onHandlerClick(scope, item.name)"
+                         :key="index"
+                         :underline="false"
+                         :type="item.type||'primary'">
+                  {{item.title}}
+                </el-link>
+
               </template>
             </div>
           </template>
@@ -138,7 +113,7 @@
   </div>
 </template>
 <script>
-import { COLUMN_PROPS, TYPES, BOOLEAN_KEYS } from '../../../config/table';
+import { COLUMN_PROPS, TYPES, BOOLEAN_KEYS, COLUMNS_HANDLER } from '../../../config/table';
 import { tableMethods } from '../../../mixins/methods';
 
 export default {
@@ -183,12 +158,6 @@ export default {
     // Table Slot
     slotAppend: Boolean,
 
-    // 存储唯一标识符
-    storageKey: {
-      type: String,
-      default: '',
-    },
-
     // 当前页数
     page: {
       type: Number,
@@ -219,7 +188,15 @@ export default {
       tableList: [],
     };
   },
+
   created() {},
+  watch: {
+    tableData(val) {
+      if (val) {
+        this.getImgUrl(val);
+      }
+    },
+  },
   computed: {
     tableBind() {
       const { $attrs } = this;
@@ -243,11 +220,21 @@ export default {
 
       // 一个操作
       if (typeof name === 'string') {
-        handler.content.push(name);
+        handler.content = COLUMNS_HANDLER.filter((v) => v.name === name);
       } else if (Array.isArray(name) && name.length) {
         for (const key of name) {
           if (typeof key === 'string') {
-            handler.content.push(key);
+            handler.content.push(COLUMNS_HANDLER.find((it) => it.name === key));
+          } else if (this.$utils._DataTypeJudge(key) === '[object Object]') {
+            const buttons = [];
+            if (key.name && key.title) {
+              buttons.push(key);
+            } else {
+              const btn = COLUMNS_HANDLER.find((e) => e.name === key.name);
+
+              buttons.push(btn);
+            }
+            handler.content.push(...buttons);
           }
         }
       } else {
@@ -267,26 +254,43 @@ export default {
       this.handlerSpecial();
     },
 
+    // 获取图片路径
+    getImgUrl(list) {
+      // 获取 img 对应的字段
+      const prop = this.columns.filter((v) => v.special === 'img').map((v) => v.prop);
+
+      // 复制列表数据
+      const tableList = list;
+      if (prop.length && list.length) {
+        const ids = [];
+        const position = [];
+        prop.forEach((e) => {
+          // 把 img 的值为 id 的删除掉
+          tableList.forEach((ee, index) => {
+            if (Number(ee[e])) {
+              position.push({ index, prop: e }); // 当前 img 为 id 对应的列表下标和字段
+              ids.push(ee[e]); // img 为 id 值得集合
+              delete ee[e]; // 删除 img 为 id 的 字段
+            }
+          });
+        });
+      }
+      console.log('tableList', tableList);
+      this.tableList = tableList;
+    },
+
     // 处理渲染表格的格式
     handlerRender() {
-      const STORAGE = this.storageKey + this.$route.path;
       // 赋值
       const { columnsKeyMap, columnsProps: props, columnsSchema: schema } = this;
 
-      let column = this.$utils._Clone(this.column);
-
-      let data = this.$utils._Storage.get(`tableTable-${STORAGE}`);
-      if (data) {
-        // 处理本地获取数据不能正常渲染
-        column = data;
-        this.columnsRender = [];
-      }
+      const column = this.$utils._Clone(this.column);
 
       // 合并默认渲染的 label prop 和自定义的 label prop
       const map = Object.assign({}, { label: 'label', prop: 'prop' }, columnsKeyMap);
 
       const option = { width: 'auto', 'show-overflow-tooltip': true };
-      data = column.map((col, i) => {
+      const data = column.map((col, i) => {
         const mix = (schema && schema[col[map.label]]) || {};
         const item = this.columns.find((v) => v.prop === col[map.prop]) || {};
         const { width, isHide } = col;
@@ -317,22 +321,6 @@ export default {
     handlerSpecial() {
       const { columnsType: type, columnsEvents: prop } = this;
       this.columnsSpecial = [];
-      const STORAGE = this.storageKey + this.$route.path;
-      let data = this.$utils._Storage.get(`tableTypes-${STORAGE}`);
-
-      if (data) {
-        // 处理函数不能存在本地 重新赋值
-        const map = prop || {};
-        data = data.map((v) => {
-          const obj = v;
-          obj.props = { ...map[obj.type], ...obj.props };
-          return obj;
-        });
-        setTimeout(() => {
-          this.columnsSpecial = data;
-        }, 0);
-        return;
-      }
 
       let typeColums = [];
       if (typeof type === 'string' && ~TYPES.indexOf(type)) {
@@ -362,7 +350,7 @@ export default {
       const index = { label: '序号' }; // 序号默认属性
       const common = { width: 50 }; // 公共属性
 
-      data = typeColums.map((t) => {
+      const data = typeColums.map((t) => {
         const attr = t === 'index' ? index : t === 'selection' ? selection : {};
         return {
           type: t,

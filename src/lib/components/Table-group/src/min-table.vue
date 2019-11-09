@@ -1,6 +1,7 @@
 <template>
   <div class='sc-min-table'>
-    <div class="pb-10">
+    <div class="pb-10"
+         v-if="isSearch">
       <sc-search ref="scSearchCollapse"
                  v-on="listeners.search"
                  model="collapse"
@@ -8,44 +9,6 @@
                  @emitSearchSubmit="onTableSearchClick"
                  :visible.sync="searchFormVisible">
       </sc-search>
-      <!-- <el-row type="flex"
-              justify="space-between"
-              class="sc-min-table_header pb-5">
-
-        <el-col :span="12">
-
-        </el-col>
-        <el-col :span="12"
-                class="text-e">
-          <slot name="header-btn">
-            <el-button icon="el-icon-refresh"
-                       size="small"
-                       v-if="isRefresh"
-                       @click="onHeaderHandle('refresh')"></el-button>
-            <el-button @click="onHeaderHandle('add')"
-                       size="small"
-                       :limit="limit.add"
-                       v-if="addFormApi">新增</el-button>
-            <el-button @click="onHeaderHandle('del')"
-                       v-if="isDelete"
-                       :limit="limit.delete"
-                       size="small">删除</el-button>
-            <slot name="header-add-btn"></slot>
-          </slot>
-          <sc-exports ref="scExports"
-                      :limit="limit.exports"
-                      v-on="listeners.exports"
-                      class="ml-10 inline-block"
-                      v-if="exportApi"
-                      :api='exportApi'
-                      :totalElements="paginationConfig.total"
-                      :columns="columns"
-                      :params="tableConfig.exportParams"
-                      :selectTableData="selectTableData"
-                      :queryTable='query'>
-          </sc-exports>
-        </el-col>
-      </el-row> -->
 
     </div>
 
@@ -64,7 +27,6 @@
               :columnsType="columnsType"
               :api="api"
               :tableData="tableData"
-              :storageKey="tableConfig.table.storageKey"
               :slotAppend="slotAppend"
               @select-all="onSelectionChange"
               @select="onSelectionChange"

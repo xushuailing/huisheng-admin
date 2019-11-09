@@ -12,6 +12,11 @@ interface ResponseData {
   code: number;
   msg: string;
 }
+interface ResponseData {
+  data: any;
+  status: number;
+  message: string;
+}
 
 const errorMessage = (message: string) => {
   Message({ type: 'error', message, duration: 2000 });
@@ -82,8 +87,7 @@ const get: Request = (url, param = {}, custom = {}) => {
     axios
       .get<ResponseData>(url, { params: param, ...custom })
       .then((res) => {
-        // console.log('res :', res.data);
-        if (Number(res.data.code) === 0) {
+        if (Number(res.data.code) === 0 || res.data.status) {
           resolve(res.data as any);
         } else {
           reject(res.data);
@@ -100,7 +104,7 @@ const post: Request = (url, param = {}, custom = {}) => {
     axios
       .post<ResponseData>(url, param, custom)
       .then((res) => {
-        if (Number(res.data.code) === 0) {
+        if (Number(res.data.code) === 0 || res.data.status) {
           resolve(res.data as any);
         } else {
           reject(res);
