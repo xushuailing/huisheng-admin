@@ -99,7 +99,7 @@ export default {
   },
   created() {
     const FILE_OPTION = ['fileType', 'fileSize'];
-    const action = this.action || this.$api.common.files.upload;
+    const action = this.action || 'this.$api.common.files.upload';
     const bind = {};
     const file = {};
     let config = {};

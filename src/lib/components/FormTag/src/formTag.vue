@@ -136,19 +136,13 @@
                     v-on="listeners"
                     v-model="formData.value"
                     ref="scTreeSelect">
-    </sc-tree-select>
+    </sc-tree-select> -->
     <sc-editor v-else-if="tagType==='editor'"
                v-bind="tagBind"
                v-on="listeners"
                v-model="formData.value"
                ref="scEditor">
-    </sc-editor> -->
-    <editor v-else-if="tagType==='editor'"
-            v-bind="tagBind"
-            v-on="listeners"
-            v-model="formData.value"
-            ref="editor">
-    </editor>
+    </sc-editor>
     <component v-else-if="tagType==='component'"
                v-bind="tagBind"
                v-on="listeners"
@@ -178,7 +172,6 @@
 
 <script lang="ts">
 import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
-import Editor from '@tinymce/tinymce-vue';
 import { ScFormData } from '@/lib/@types/sc-form.d';
 import { obj } from '@/lib/@types/sc-param.d';
 
@@ -187,7 +180,7 @@ interface FormData {
   value: any;
 }
 
-@Component({ name: 'ScFormTag', components: { Editor } })
+@Component({ name: 'ScFormTag' })
 export default class ScFormTag extends Vue {
   /** 表单项配置 */
   @Prop({ type: Object })

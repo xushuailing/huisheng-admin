@@ -1,10 +1,7 @@
 <template>
-  <div class='admin-rootName bg-white p-15'>
+  <div class="admin-rootName bg-white p-15">
     <div class="p-20">
-      <sc-add-form mode="page"
-                   api="http://baidu.com"
-                   :config="config9">
-      </sc-add-form>
+      <sc-add-form mode="page" api="http://baidu.com" :config="config9"> </sc-add-form>
     </div>
     <!-- <el-button @click="dialogShow=true">显示</el-button> -->
     <!-- <div class="p-20">
@@ -15,7 +12,7 @@
     </div> -->
   </div>
 </template>
-<script lang='ts'>
+<script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
 @Component
 export default class AdminRootName extends Vue {
@@ -289,7 +286,7 @@ export default class AdminRootName extends Vue {
           prop: 'none0',
           tag: {
             tagType: 'editor',
-            attr: { placeholder: '请输入优惠券名称' },
+            attr: {},
           },
         },
         {

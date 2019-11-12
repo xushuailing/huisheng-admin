@@ -23,7 +23,7 @@ import Upload from './components/Upload';
 // import Audio from './components/Audio';
 // import Video from './components/Video';
 // import Qrcode from './components/Qrcode';
-// import Editor from './components/Editor';
+import Editor from './components/Editor';
 // import Filter from './components/Filter';
 import Breadcrumb from './components/Breadcrumb';
 
@@ -59,7 +59,7 @@ const components = [
   // { com: Audio, name: 'ScAudio' },
   // { com: Video, name: 'ScVideo' },
   // { com: Qrcode, name: 'ScQrcode' },
-  // { com: Editor, name: 'ScEditor' },
+  { com: Editor, name: 'ScEditor' },
   // { com: Filter, name: 'ScFilter' },
 ];
 
@@ -100,6 +100,6 @@ export default {
   //   Audio,
   //   Video,
   //   Qrcode,
-  //   Editor,
+  Editor,
   //   Filter,
 };
