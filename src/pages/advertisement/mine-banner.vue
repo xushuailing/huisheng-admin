@@ -1,14 +1,35 @@
 <template>
   <div class="advdetail">
     <el-row :gutter="20">
-      <el-col  v-for="item in 12" :key="item" :span="12">
-        <div class="bg-white border-radius-8 p-15 mt-20">
-          <div class="font-bold font-28">标题标题标题标题</div>
-          <div class="font-bold font-22 mt-10">&yen;120.00 - &yen;200.00</div>
-          <div class="mt-10 mb-10">
-            介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍
+      <el-col v-for="item in 12"
+              :key="item"
+              :span="12">
+        <div class="bg-white border-radius-8 p-15 mt-20 banner">
+          <div class="banner-item mt-10">
+            <span class="label">推广名称:</span>
+            <span class="content">首页banner</span>
           </div>
-          <el-button type="primary">购买</el-button>
+          <div class="banner-item mt-10">
+            <span class="label">推广种类:</span>
+            <span class="content">首页banner</span>
+          </div>
+          <div class="banner-item mt-10">
+            <span class="label">价格:</span>
+            <span class="content">首页banner</span>
+          </div>
+          <div class="banner-item mt-10">
+            <span class="label">有效期:</span>
+            <span class="content">首页banner</span>
+          </div>
+          <div class="banner-item mt-10">
+            <span class="label">banner图片:</span>
+            <span class="content">首页banner</span>
+          </div>
+          <div class="banner-item mt-10">
+            <span class="label">商品ID:</span>
+            <span class="content">首页banner</span>
+          </div>
+          <el-button class="mt-10" type="primary">上传信息</el-button>
         </div>
       </el-col>
     </el-row>
@@ -20,3 +41,24 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 @Component
 export default class Advertisement extends Vue {}
 </script>
+<style lang="scss" scoped>
+.banner {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.banner-item {
+  width: 100%;
+  display: flex;
+}
+.label {
+  width: 50%;
+  text-align: right;
+  padding-right: 5px;
+}
+.content {
+  width: 50%;
+  padding-left: 5px;
+}
+</style>

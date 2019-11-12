@@ -102,10 +102,10 @@ const router = new Router({
           meta: { breadcrumb: [{ title: '广告管理' }, { title: '我的推广' }] },
         },
         {
-          path: 'banner-detail',
-          name: 'banner详情',
-          component: () => import('./pages/advertisement/banner-detail.vue'),
-          meta: { breadcrumb: [{ title: '广告管理' }, { title: 'banner详情' }] },
+          path: 'banner-active',
+          name: '活动banner',
+          component: () => import('./pages/advertisement/banner-active.vue'),
+          meta: { breadcrumb: [{ title: '广告管理' }, { title: '活动banner' }] },
         },
         {
           path: 'banner-detail1',

@@ -1,5 +1,5 @@
 <template>
-  <div class='admin-rootName bg-white p-15'>
+  <div class='admin-rootName bg-white p-15 container'>
     完全呃呃呃呃呃呃
   </div>
 </template>
@@ -10,3 +10,8 @@ export default class ShopAuth extends Vue {
 
 }
 </script>
+<style lang="scss" scoped>
+.container{
+  height: 100%;
+}
+</style>
