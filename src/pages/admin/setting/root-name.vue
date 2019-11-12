@@ -286,6 +286,14 @@ export default class AdminRootName extends Vue {
       [
         {
           label: '优惠券名称：',
+          prop: 'none0',
+          tag: {
+            tagType: 'editor',
+            attr: { placeholder: '请输入优惠券名称' },
+          },
+        },
+        {
+          label: '优惠券名称：',
           prop: 'none1',
           tag: {
             attr: { placeholder: '请输入优惠券名称' },

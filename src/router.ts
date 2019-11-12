@@ -56,7 +56,8 @@ const router = new Router({
             breadcrumbHide: true,
             breadcrumb: [{ title: '系统管理' }, { title: '平台管理员账号' }],
           },
-          component: () => import('./pages/admin/setting/platform-username-list.vue'),
+          component: () => import('./pages/admin/setting/root-name.vue'),
+          // component: () => import('./pages/admin/setting/platform-username-list.vue'),
         },
         {
           path: 'role-list',
