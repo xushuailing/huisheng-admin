@@ -121,6 +121,26 @@ const router = new Router({
       ],
     },
     {
+      path: '/shop',
+      name: '店铺管理',
+      redirect: '/complaint/baseinfo',
+      component: layoutView,
+      children: [
+        {
+          path: 'baseinfo',
+          name: '信息修改',
+          component: () => import('./pages/shop/baseinfo.vue'),
+          meta: { breadcrumb: [{ title: '店铺管理' }, { title: '信息修改' }] },
+        },
+        {
+          path: 'auth',
+          name: '店铺认证',
+          component: () => import('./pages/shop/auth.vue'),
+          meta: { breadcrumb: [{ title: '店铺管理' }, { title: '店铺认证' }] },
+        },
+      ],
+    },
+    {
       path: '/login',
       component: () => import('./pages/login/login.vue'),
     },
