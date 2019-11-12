@@ -46,6 +46,7 @@ const router = new Router({
         {
           path: 'setting',
           name: '平台管理',
+          meta: { breadcrumb: [{ title: '系统管理' }, { title: '平台管理' }] },
           component: () => import('./pages/admin/setting/index.vue'),
         },
         {
@@ -61,6 +62,10 @@ const router = new Router({
           path: 'role-list',
           name: '角色管理',
           component: () => import('./pages/admin/setting/platform-role-list.vue'),
+          meta: {
+            breadcrumbHide: true,
+            breadcrumb: [{ title: '系统管理' }, { title: '角色管理' }],
+          },
         },
       ],
     },

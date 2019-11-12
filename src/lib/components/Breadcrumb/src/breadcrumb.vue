@@ -1,5 +1,5 @@
 <template>
-  <div class="sc-breadcrumb flex flex-jsb flex-ac">
+  <div class="sc-breadcrumb flex flex-jsb flex-ac pl-5">
     <div class="flex-1">
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item v-for="(item, index) in breadcrumb"

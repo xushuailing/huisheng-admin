@@ -77,34 +77,6 @@ export default class AdminRootName extends Vue {
     ],
   };
 
-  /** 系统管理 > 角色管理 */
-  config4 = {
-    buttons: [
-      {
-        mode: 'submit',
-        text: '确认添加',
-      },
-    ],
-    data: [
-      [
-        {
-          label: '角色',
-          prop: 'none1',
-          tag: {
-            attr: { placeholder: '请输入角色' },
-          },
-        },
-        {
-          label: '权限',
-          prop: 'none2',
-          tag: {
-            attr: { placeholder: '请输入权限' },
-          },
-        },
-      ],
-    ],
-  };
-
   /** 会员管理 > 代理会员列表 > 修改 */
   config5 = {
     type: 'senior',
