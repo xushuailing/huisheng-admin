@@ -46,12 +46,27 @@ const router = new Router({
         {
           path: 'setting',
           name: '平台管理',
-          component: () => import(/* webpackChunkName: "setting" */ './pages/admin/setting/index.vue'),
+          meta: { breadcrumb: [{ title: '系统管理' }, { title: '平台管理' }] },
+          component: () => import('./pages/admin/setting/index.vue'),
         },
         {
-          path: 'rootnamelist',
+          path: 'username-list',
           name: '平台管理员账号',
-          component: () => import('./pages/admin/setting/root-username-list.vue'),
+          meta: {
+            breadcrumbHide: true,
+            breadcrumb: [{ title: '系统管理' }, { title: '平台管理员账号' }],
+          },
+          component: () => import('./pages/admin/setting/root-name.vue'),
+          // component: () => import('./pages/admin/setting/platform-username-list.vue'),
+        },
+        {
+          path: 'role-list',
+          name: '角色管理',
+          component: () => import('./pages/admin/setting/platform-role-list.vue'),
+          meta: {
+            breadcrumbHide: true,
+            breadcrumb: [{ title: '系统管理' }, { title: '角色管理' }],
+          },
         },
       ],
     },

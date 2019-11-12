@@ -1,4 +1,5 @@
-import { Dictionary } from '@/@types/index.d';
+import { ScForm, ScFormData } from '@/lib/@types/sc-form.d';
+import { obj } from '@/lib/@types/sc-param.d';
 
 /**
  * 深拷贝
@@ -71,6 +72,30 @@ export const _DataTypeChange = (data: any[] | string, sign: string = ','): any[]
 export const _DataTypeJudge = (data: any): string => Object.prototype.toString.call(data);
 
 /**
+ * 获取到配置的某一项
+ *
+ * @param {ScForm.Data} data
+ * @param {string} prop
+ *
+ * @example
+ * const add = this.$utils._GetConfigItemData(this.formAddConfig.data, 'xxx');
+ * if (add) {
+ *  add.tag.options = [xxx];
+ *  add.default = [0];
+ * }
+ *
+ * @returns {(ScFormData | null)}
+ *
+ */
+export const _GetConfigItemData = (data: ScForm.Data, prop: string): ScFormData | null => {
+  for (const val of data) {
+    const item = val.find((k) => prop === k.prop);
+    if (item) return item;
+  }
+  return null;
+};
+
+/**
  * 处理 `tree` 的 `children:[]` 时
  *
  * 设置为 `children:null`
@@ -78,7 +103,7 @@ export const _DataTypeJudge = (data: any): string => Object.prototype.toString.c
  * @param {obj[]} data
  * @returns obj[]
  */
-export const _HandlerTreeChildren = (data: Dictionary[]) => {
+export const _HandlerTreeChildren = (data: obj[]) => {
   data.forEach((e) => {
     if (e.children) {
       if (e.children.length) {
@@ -92,3 +117,16 @@ export const _HandlerTreeChildren = (data: Dictionary[]) => {
   });
   return data;
 };
+/**
+ * 驼峰命名转换
+ *
+ * @param {string} val
+ *
+ * @template
+ * ```
+ *  this.$utils._HandlerToLowerCase('aB') ==> 'a-b'
+ * ```
+ *
+ * @returns {string}
+ */
+export const _HandlerToLowerCase = (val: string): string => val.replace(/([A-Z])/g, '-$1').toLowerCase();

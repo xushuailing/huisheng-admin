@@ -216,6 +216,11 @@ export default {
         settingTable,
       };
     },
+
+    breadcrumbButtons() {
+      const { breadcrumbButtons } = this.tableConfig || [];
+      return breadcrumbButtons;
+    },
   },
   created() {
     this.pagination.limit = this.paginationConfig.size || 10;

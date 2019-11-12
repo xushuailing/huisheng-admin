@@ -37,4 +37,11 @@ module.exports = {
     AMap: true,
     require: true,
   },
+  settings: {
+    'import/resolver': {
+      node: {
+        extensions: ['.ts', '.tsx', '.js', '.jsx', '.d.ts'],
+      },
+    },
+  },
 };

@@ -7,15 +7,14 @@
                   :columns="columns"
                   :editConfig="editConfig"
                   :formAddConfig="formAddConfig"
-                  :table-config="tableConfig"
-                  @pagination-onSlotClick="onSlotClick"
-                  @emitTableHandlerClick="onTableHandlerClick">
+                  :table-config="tableConfig">
     </sc-min-table>
   </div>
 </template>
 <script lang='ts'>
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
+import { ScForm } from '../../../lib/@types/sc-form.d';
 
 const columns: ScTable.SetColumns = [
   // ['头像', 'avatar', null, null, 'img'],
@@ -29,133 +28,82 @@ const columns: ScTable.SetColumns = [
 export default class SettingUsernameList extends Vue {
   columns = this.$utils._SetTableColumns(columns);
 
-  columnsHandler = ['del', 'edit'];
-
-  // paginationConfig = {
-  //   slotAttr: {
-  //     isCheckbox: true,
-  //     text: '通过',
-  //   },
-  // };
+  columnsHandler = ['edit', 'del'];
 
   tableConfig = {
-    api: this.$api.admin,
+    api: this.$api.platform,
+    breadcrumbButtons: ['add'],
   };
 
-  formAddConfig = {
-    type: 'senior', // plain senior specialty
-    width: '70%',
-    header: {
-      title: '新增数据',
-      desc: '文字文字',
-    },
-    steps: [
-      {
-        title: '步骤 1',
-        // icon: 'el-icon-edit'
-      },
-      {
-        title: '步骤 2',
-        // icon: 'el-icon-upload'
-      },
-    ],
+  formAddConfig: ScForm.Config = {
+    header: { title: '添加账号', desc: '添加平台管理员账号' },
     rules: [
       {
-        displayName: {
+        nickname: { value: [{ required: true, message: '昵称不能为空', trigger: 'blur' }] },
+        phone: {
           value: [
-            { required: true, message: '请输入展示名', trigger: 'blur' },
+            { required: true, message: '手机号不能为空', trigger: 'blur' },
             {
-              min: 3,
-              max: 5,
-              message: '长度在 3 到 5 个字符',
               trigger: 'blur',
+              validator: (rule, value: string, callback) => {
+                if (!this.$utils._ValidatePhone(value)) {
+                  return callback(new Error('手机号格式错误'));
+                }
+                return callback();
+              },
             },
           ],
         },
-        status: {
-          value: [
-            {
-              required: true,
-              message: '请选择状态',
-              trigger: 'change',
-            },
-          ],
+        role: {
+          value: [{ required: true, message: '请选择一个角色', trigger: 'change' }],
         },
+        login_name: { value: [{ required: true, message: '账号不能为空', trigger: 'blur' }] },
+        login_pass: { value: [{ required: true, message: '密码不能为空', trigger: 'blur' }] },
+      },
+    ],
+    buttons: [
+      {
+        mode: 'submit',
+        text: '确认添加',
       },
     ],
     data: [
       [
         {
-          label: '姓名：',
-          prop: 'name',
-          tooltip: '帮助',
+          label: '昵称',
+          prop: 'nickname',
           tag: {
-            attr: {
-              placeholder: '请输入姓名',
-            },
+            attr: { placeholder: '请输入昵称' },
           },
         },
         {
-          label: '创建日期：',
-          prop: 'createdAt',
+          label: '手机号',
+          prop: 'phone',
           tag: {
-            tagType: 'date-picker',
-            attr: {
-              type: 'datetime',
-              placeholder: '请选择日期',
-            },
+            attr: { placeholder: '请输入手机号' },
           },
         },
-
         {
-          label: '状态：',
-          prop: 'status',
+          label: '角色',
+          prop: 'role',
           tag: {
             tagType: 'select',
-            attr: {
-              placeholder: '请选择状态',
-            },
-            options: [
-              {
-                value: 1,
-                label: '启用',
-              },
-              {
-                value: 0,
-                label: '不启用',
-              },
-            ],
+            attr: { placeholder: '请选择角色' },
+            options: [],
           },
         },
         {
-          label: '任务名：',
-          prop: 'displayName',
+          label: '账号',
+          prop: 'login_name',
           tag: {
-            attr: {
-              placeholder: '请选择状态',
-            },
+            attr: { placeholder: '请输入账号', max: 6 },
           },
         },
         {
-          label: '备注：',
-          prop: 'memo',
-          isFull: true,
+          label: '密码',
+          prop: 'login_pass',
           tag: {
-            attr: {
-              type: 'textarea',
-              placeholder: '备注',
-            },
-          },
-        },
-        {
-          label: '上传图片：',
-          prop: 'url',
-          isFull: true,
-          tag: {
-            tagType: 'upload-img',
-            attr: {
-              fileSize: 1,
-            },
+            attr: { placeholder: '请输入密码', 'show-password': true },
           },
         },
       ],
@@ -356,10 +304,16 @@ export default class SettingUsernameList extends Vue {
     ],
   };
 
-  onTableHandlerClick() {}
+  mounted() {
+    this.getRole();
+  }
 
-  onSlotClick() {
-    console.log('1', 1);
+  getRole() {
+    this.$http.get<any[]>(this.$api.role.index, { limit: 1e5 }).then((res) => {
+      const options = res.data.map((v) => ({ ...v, label: v.role_name, value: v.id }));
+      const item = this.$utils._GetConfigItemData(this.formAddConfig.data, 'role');
+      if (item) item.tag!.options = options;
+    });
   }
 }
 </script>

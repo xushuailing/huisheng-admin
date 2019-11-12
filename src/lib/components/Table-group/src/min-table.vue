@@ -1,5 +1,17 @@
 <template>
   <div class='sc-min-table'>
+    <div v-if="breadcrumbButtons.length"
+         class="pb-30">
+      <sc-breadcrumb>
+        <el-button icon="el-icon-refresh"
+                   v-if="isRefresh&&breadcrumbButtons.includes('refresh')"
+                   @click="onHeaderHandle('refresh')"></el-button>
+        <el-button @click="onHeaderHandle('add')"
+                   v-if="addFormApi&&breadcrumbButtons.includes('add')">新增</el-button>
+        <el-button @click="onHeaderHandle('del')"
+                   v-if="isDelete&&breadcrumbButtons.includes('del')">删除</el-button>
+      </sc-breadcrumb>
+    </div>
     <div class="pb-10"
          v-if="isSearch">
       <sc-search ref="scSearchCollapse"

@@ -899,6 +899,11 @@
     error-stack-parser "^2.0.0"
     string-width "^2.0.0"
 
+"@tinymce/tinymce-vue@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@tinymce/tinymce-vue/-/tinymce-vue-3.0.1.tgz#c606b5d6b0704a7fc1efdf96ef6080cdc23c88f3"
+  integrity sha512-UnS1YTmzlASA/G23v8zZFgmjR34BSzMkYDSkGOe4ZqWDkz2uwHmiC1sNQj/70DVWG9br8cTPVjUhgOn/b+3ygQ==
+
 "@types/echarts@^4.4.1":
   version "4.4.1"
   resolved "https://registry.npmjs.org/@types/echarts/-/echarts-4.4.1.tgz#d5b257d38d7af62b7bba8cca952e814f610b1f03"
@@ -9710,6 +9715,11 @@ timsort@^0.3.0:
   version "0.3.0"
   resolved "https://registry.npmjs.org/timsort/-/timsort-0.3.0.tgz#405411a8e7e6339fe64db9a234de11dc31e02bd4"
   integrity sha1-QFQRqOfmM5/mTbmiNN4R3DHgK9Q=
+
+tinymce@^5.1.1:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/tinymce/-/tinymce-5.1.1.tgz#fd0d2ad1d07e9aa60a88d391b1cdcaa6402f3104"
+  integrity sha512-gdIt9kMNkQrDA0vm9mLcqnDBMMwDV6xsIaug0UzbRUnLpcOjR8JnE0P12GwrA/+9/p8IZiHcolGN9xAD/XxDzw==
 
 tmp@^0.0.33:
   version "0.0.33"

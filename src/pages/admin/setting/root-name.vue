@@ -1,10 +1,7 @@
 <template>
-  <div class='admin-rootName bg-white p-15'>
+  <div class="admin-rootName bg-white p-15">
     <div class="p-20">
-      <sc-add-form mode="page"
-                   api="http://baidu.com"
-                   :config="config9">
-      </sc-add-form>
+      <sc-add-form mode="page" api="http://baidu.com" :config="config9"> </sc-add-form>
     </div>
     <!-- <el-button @click="dialogShow=true">显示</el-button> -->
     <!-- <div class="p-20">
@@ -15,7 +12,7 @@
     </div> -->
   </div>
 </template>
-<script lang='ts'>
+<script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
 @Component
 export default class AdminRootName extends Vue {
@@ -71,84 +68,6 @@ export default class AdminRootName extends Vue {
           prop: 'none2',
           tag: {
             attr: { placeholder: '请输入新密码' },
-          },
-        },
-      ],
-    ],
-  };
-
-  /** 系统管理 > 平台管理员账号 > 添加账号 */
-  confi3 = {
-    data: [
-      [
-        {
-          label: '昵称',
-          prop: 'none1',
-          tag: {
-            attr: { placeholder: '请输入昵称' },
-          },
-        },
-        {
-          label: 'ID',
-          prop: 'none2',
-          tag: {
-            attr: { type: 'number', placeholder: '请输入ID' },
-          },
-        },
-        {
-          label: '手机号',
-          prop: 'none3',
-          tag: {
-            attr: { type: 'number', placeholder: '请输入手机号' },
-          },
-        },
-        {
-          label: '角色',
-          prop: 'none4',
-          tag: {
-            attr: { placeholder: '请输入角色' },
-          },
-        },
-        {
-          label: '账号',
-          prop: 'none5',
-          tag: {
-            attr: { placeholder: '请输入账号', max: 6 },
-          },
-        },
-        {
-          label: '密码',
-          prop: 'none6',
-          tag: {
-            attr: { placeholder: '请输入密码', 'show-password': true },
-          },
-        },
-      ],
-    ],
-  };
-
-  /** 系统管理 > 角色管理 */
-  config4 = {
-    buttons: [
-      {
-        mode: 'submit',
-        text: '确认添加',
-      },
-    ],
-    data: [
-      [
-        {
-          label: '角色',
-          prop: 'none1',
-          tag: {
-            attr: { placeholder: '请输入角色' },
-          },
-        },
-        {
-          label: '权限',
-          prop: 'none2',
-          tag: {
-            attr: { placeholder: '请输入权限' },
           },
         },
       ],
@@ -362,6 +281,14 @@ export default class AdminRootName extends Vue {
     ],
     data: [
       [
+        {
+          label: '优惠券名称：',
+          prop: 'none0',
+          tag: {
+            tagType: 'editor',
+            attr: {},
+          },
+        },
         {
           label: '优惠券名称：',
           prop: 'none1',
