@@ -3,6 +3,9 @@ const url = process.env.NODE_ENV === 'development' ? '/api' : 'https://restauran
 
 export default {
   login: `${url}/admin/admin_login`,
+  files: {
+    upload: `${url}/api/insert_img`,
+  },
 
   merchant: {
     inject: {

@@ -1,30 +1,29 @@
 <template>
   <div class="upload-container">
-    <el-button icon="el-icon-upload" size="mini" type="primary" @click="dialogVisible = true">
+    <el-button icon="el-icon-upload"
+               size="mini"
+               type="primary"
+               @click="dialogVisible = true">
       本地图片
     </el-button>
-    <el-dialog :visible.sync="dialogVisible">
-      <el-upload
-        ref="ElUpload"
-        :file-list="defaultFileList"
-        show-file-lis
-        :on-remove="handleRemove"
-        :on-success="handleSuccess"
-        :before-upload="beforeUpload"
-        class="editor-slide-upload"
-        :action="action"
-        list-type="picture-card"
-      >
-        <el-button size="small" type="primary">
-          点击上传
+    <el-dialog :visible.sync="dialogVisible"
+               title="请上传本地图片">
+      <sc-upload ref="ElUpload"
+                 :limit="5"
+                 :fileType="[]"
+                 v-model="defaultFileList">
+
+      </sc-upload>
+
+      <div slot="footer">
+        <el-button @click="dialogVisible = false">
+          取消
         </el-button>
-      </el-upload>
-      <el-button size="small" @click="dialogVisible = false">
-        取消
-      </el-button>
-      <el-button size="small" type="primary" @click="handleSubmit">
-        确定
-      </el-button>
+        <el-button type="primary"
+                   @click="handleSubmit">
+          确定
+        </el-button>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -33,102 +32,23 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { ElUploadInternalRawFile, ElUpload } from 'element-ui/types/upload';
 
-export interface IUploadObject {
-  hasSuccess: boolean;
-  uid: number;
-  url: string;
-  width: number;
-  height: number;
-}
-
 @Component({
   name: 'EditorImageUpload',
 })
 export default class extends Vue {
-  // @Prop({ required: true }) private color!: string;
-
   $refs!: {
     ElUpload: ElUpload;
   };
 
   private dialogVisible = false;
 
-  private listObj: { [key: string]: IUploadObject } = {};
-
-  private defaultFileList = [];
-
-  get action() {
-    return '';
-  }
-
-  private checkAllSuccess() {
-    return Object.keys(this.listObj).every((item) => this.listObj[item].hasSuccess);
-  }
+  private defaultFileList = '';
 
   private handleSubmit() {
-    const arr = Object.keys(this.listObj).map((v) => this.listObj[v]);
-    if (!this.checkAllSuccess()) {
-      this.$message(
-        'Please wait for all images to be uploaded successfully. If there is a network problem, please refresh the page and upload again!',
-      );
-      return;
-    }
+    const arr = this.$utils._DataTypeChange(this.defaultFileList).map((v) => ({ url: v }));
     this.$emit('successCBK', arr);
-    this.listObj = {};
-    this.defaultFileList = [];
+    this.defaultFileList = '';
     this.dialogVisible = false;
-  }
-
-  private handleSuccess(response: any, file: ElUploadInternalRawFile) {
-    const uid = file.uid;
-    const objKeyArr = Object.keys(this.listObj);
-    for (let i = 0, len = objKeyArr.length; i < len; i++) {
-      if (this.listObj[objKeyArr[i]].uid === uid) {
-        this.listObj[objKeyArr[i]].url = response.files.file;
-        this.listObj[objKeyArr[i]].hasSuccess = true;
-        return;
-      }
-    }
-  }
-
-  private handleRemove(file: ElUploadInternalRawFile) {
-    const uid = file.uid;
-    const objKeyArr = Object.keys(this.listObj);
-    for (let i = 0, len = objKeyArr.length; i < len; i++) {
-      if (this.listObj[objKeyArr[i]].uid === uid) {
-        delete this.listObj[objKeyArr[i]];
-        return;
-      }
-    }
-  }
-
-  private beforeUpload(file: ElUploadInternalRawFile) {
-    const fileName = file.uid;
-    const img = new Image();
-    img.src = window.URL.createObjectURL(file);
-    img.onload = () => {
-      this.listObj[fileName] = {
-        hasSuccess: false,
-        uid: file.uid,
-        url: '',
-        width: img.width,
-        height: img.height,
-      };
-    };
   }
 }
 </script>
-
-<style lang="scss">
-.editor-slide-upload {
-  .el-upload--picture-card {
-    width: 100%;
-  }
-}
-</style>
-
-<style lang="scss" scoped>
-.editor-slide-upload {
-  margin-bottom: 20px;
-}
-</style>
