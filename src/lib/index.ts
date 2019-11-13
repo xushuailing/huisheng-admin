@@ -26,7 +26,7 @@ import Upload from './components/Upload';
 import Editor from './components/Editor';
 // import Filter from './components/Filter';
 import Breadcrumb from './components/Breadcrumb';
-
+import Sku from './components/SKU';
 // import directives from './directive';
 // import utils from './utils';
 // import axios from './axios';
@@ -60,6 +60,7 @@ const components = [
   // { com: Video, name: 'ScVideo' },
   // { com: Qrcode, name: 'ScQrcode' },
   { com: Editor, name: 'ScEditor' },
+  { com: Sku, name: 'ScSku' },
   // { com: Filter, name: 'ScFilter' },
 ];
 
@@ -101,5 +102,6 @@ export default {
   //   Video,
   //   Qrcode,
   Editor,
+  Sku,
   //   Filter,
 };
