@@ -15,6 +15,9 @@ interface Handler {
   /** 按钮提示 */
   title?: string;
 
+  /** 颜色 */
+  type?: 'primary' | 'success' | 'warning' | 'danger' | 'info';
+
   /** 按钮权限配置 */
   limit?: string | string[] | ScLimit;
 }
@@ -138,7 +141,7 @@ export interface ScTableColumn {
 
   需要返回处理后的数据
  */
-  propsHandler?(data: { row: obj; col: obj; column: obj }): { row: obj; col: obj; column: obj };
+  propsHandler?(data: { row: obj; col: obj; column: obj }): obj;
 
   /**
    * 当前列编辑表单配置项

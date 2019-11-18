@@ -136,6 +136,70 @@ const router = new Router({
       ],
     },
     {
+      path: '/activity',
+      name: '活动管理',
+      redirect: '/activity/index',
+      component: layoutView,
+      children: [
+        {
+          path: 'index',
+          name: '首页活动',
+          component: () => import('./pages/activity/index.vue'),
+          meta: { breadcrumb: [{ title: '活动管理' }, { title: '首页活动' }] },
+        },
+        {
+          path: 'ads-list',
+          name: '广告管理',
+          component: () => import('./pages/activity/ads-list.vue'),
+          meta: { breadcrumb: [{ title: '活动管理' }, { title: '广告管理' }] },
+        },
+        {
+          path: 'ads-sorts',
+          name: '广告分类',
+          component: () => import('./pages/activity/ads-sorts.vue'),
+          meta: { breadcrumb: [{ title: '活动管理' }, { title: '广告分类' }] },
+        },
+        {
+          path: 'new',
+          name: '今日上新',
+          component: () => import('./pages/activity/new-list.vue'),
+          meta: { breadcrumb: [{ title: '活动管理' }, { title: '今日上新' }] },
+        },
+        {
+          path: 'famous',
+          name: '大牌榜单',
+          component: () => import('./pages/activity/famous-list.vue'),
+          meta: { breadcrumb: [{ title: '活动管理' }, { title: '大牌榜单' }] },
+        },
+        {
+          path: 'good',
+          name: '发现好物',
+          component: () => import('./pages/activity/good-list.vue'),
+          meta: { breadcrumb: [{ title: '活动管理' }, { title: '发现好物' }] },
+        },
+        {
+          path: 'preferential',
+          name: '优惠活动',
+          component: () => import('./pages/activity/preferential-list.vue'),
+          meta: { breadcrumb: [{ title: '活动管理' }, { title: '优惠活动' }] },
+        },
+        {
+          path: 'preferential-add',
+          name: '新增优惠券',
+          component: () => import('./pages/activity/preferential-add.vue'),
+          meta: {
+            breadcrumb: [{ title: '活动管理' }, { title: '优惠活动' }, { title: '新增优惠券' }],
+          },
+        },
+        {
+          path: 'audit',
+          name: '审核列表',
+          component: () => import('./pages/activity/audit-list.vue'),
+          meta: { breadcrumb: [{ title: '活动管理' }, { title: '审核列表' }] },
+        },
+      ],
+    },
+    {
       path: '/login',
       component: () => import('./pages/login/login.vue'),
     },
