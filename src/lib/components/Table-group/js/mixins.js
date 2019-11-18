@@ -218,8 +218,8 @@ export default {
     },
 
     breadcrumbButtons() {
-      const { breadcrumbButtons } = this.tableConfig || [];
-      return breadcrumbButtons;
+      const { breadcrumbButtons } = this.tableConfig;
+      return breadcrumbButtons || [];
     },
   },
   created() {

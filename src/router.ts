@@ -71,6 +71,26 @@ const router = new Router({
       ],
     },
     {
+      path: '/vip',
+      name: '会员管理',
+      component: layoutView,
+      redirect: '/vip/list',
+      children: [
+        {
+          path: 'list',
+          name: '列表',
+          meta: { breadcrumb: [{ title: '会员管理' }, { title: '列表' }] },
+          component: () => import('./pages/vip-manage/list.vue'),
+        },
+        {
+          path: 'check-list',
+          name: '审核列表',
+          meta: { breadcrumb: [{ title: '会员管理' }, { title: '审核列表' }] },
+          component: () => import('./pages/vip-manage/check-list.vue'),
+        },
+      ],
+    },
+    {
       path: '/product',
       name: '商品管理',
       redirect: '/product/list',
