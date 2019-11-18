@@ -1,7 +1,7 @@
 <template>
   <div class='app-header'>
     <div class="flex flex-ac h100 app-header-title">
-      欢迎来到莱赶集商家后台管理系统~
+      <!-- 欢迎来到莱赶集商家后台管理系统~ -->
     </div>
   </div>
 </template>

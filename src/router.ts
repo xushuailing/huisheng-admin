@@ -151,7 +151,10 @@ const router = new Router({
           path: 'auth',
           name: '店铺认证',
           component: () => import('./pages/shop/auth.vue'),
-          meta: { breadcrumb: [{ title: '店铺管理' }, { title: '店铺认证' }] },
+          meta: {
+            breadcrumbHide: true,
+            breadcrumb: [{ title: '店铺管理' }, { title: '店铺认证' }],
+          },
         },
       ],
     },
