@@ -20,7 +20,7 @@
 </template>
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
-import GoodsInfo from './components/goods-info';
+import GoodsInfo from './components/img-name';
 import { ScTable, Scope } from '@/lib/@types/sc-table.d';
 import { ScForm } from '../../lib/@types/sc-form.d';
 import { obj } from '@/lib/@types/sc-param.d';
@@ -48,9 +48,7 @@ export default class ActvNew extends Vue {
 
   tableConfig: ScTable.TableConfig = {
     api: this.$api.merchant.inject,
-    table: { storageKey: 'ActvNewTable' },
-    isSetting: true,
-    isExports: true,
+    breadcrumbButtons: [],
   };
 
   searchConfig: ScTable.Search = {
