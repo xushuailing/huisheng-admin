@@ -71,6 +71,7 @@
         <el-table-column v-if="columnsHandlerType"
                          :width="columnsHandlerType.width"
                          label="操作"
+                         header-align='center'
                          fixed="right">
           <template slot-scope="scope">
             <div style="display: flex;justify-content: space-around;">
@@ -289,7 +290,12 @@ export default {
       // 合并默认渲染的 label prop 和自定义的 label prop
       const map = Object.assign({}, { label: 'label', prop: 'prop' }, columnsKeyMap);
 
-      const option = { width: 'auto', 'show-overflow-tooltip': true };
+      const option = {
+        width: 'auto',
+        'show-overflow-tooltip': true,
+        align: 'center',
+        'header-align': 'center',
+      };
       const data = column.map((col, i) => {
         const mix = (schema && schema[col[map.label]]) || {};
         const item = this.columns.find((v) => v.prop === col[map.prop]) || {};
@@ -346,9 +352,9 @@ export default {
         isAdd: true,
         fixed: 'left',
       };
-      const selection = { 'reserve-selection': true, align: 'center' }; // 选择框默认属性
+      const selection = { 'reserve-selection': true }; // 选择框默认属性
       const index = { label: '序号' }; // 序号默认属性
-      const common = { width: 50 }; // 公共属性
+      const common = { width: 50, 'header-align': 'center', align: 'center' }; // 公共属性
 
       const data = typeColums.map((t) => {
         const attr = t === 'index' ? index : t === 'selection' ? selection : {};

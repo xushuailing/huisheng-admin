@@ -28,12 +28,12 @@ const router = new Router({
         {
           path: 'inject',
           name: '商家入驻审核列表页',
-          component: () => import('./pages/merchant/inject-list.vue'),
+          component: () => import('./pages/admin/merchant/inject-list.vue'),
         },
         {
           path: 'shop',
           name: '商家店铺管理',
-          component: () => import('./pages/merchant/shop-list.vue'),
+          component: () => import('./pages/admin/merchant/shop-list.vue'),
         },
       ],
     },

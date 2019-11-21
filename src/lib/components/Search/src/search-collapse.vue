@@ -68,12 +68,18 @@ export default {
       this.form = obj;
     },
     async onSearchSubmit(form) {
+      console.log('form', form);
       const data = form || this.form;
 
       let formData = form || this.handleNullObject(data);
       // this.onResetFields()
 
       const { handleSubmit: handle } = this.searchConfig;
+
+      formData = formData.reduce((p, s) => {
+        if (s && s.prop) p[s.prop] = s.value;
+        return p;
+      }, {});
 
       formData = handle ? await handle(formData, this) : formData;
 
