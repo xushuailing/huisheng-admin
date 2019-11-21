@@ -159,6 +159,26 @@ const router = new Router({
       ],
     },
     {
+      path: '/management',
+      name: '经营管理',
+      redirect: '/management/data',
+      component: layoutView,
+      children: [
+        {
+          path: 'data',
+          name: '实时数据',
+          component: () => import('./pages/management/data.vue'),
+          meta: { breadcrumb: [{ title: '经营管理' }, { title: '实时数据' }] },
+        },
+        {
+          path: 'account',
+          name: '账房',
+          component: () => import('./pages/management/account.vue'),
+          meta: { breadcrumb: [{ title: '经营管理' }, { title: '账房' }] },
+        },
+      ],
+    },
+    {
       path: '/login',
       component: () => import('./pages/login/login.vue'),
     },
