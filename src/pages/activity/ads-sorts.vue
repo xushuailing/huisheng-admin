@@ -37,9 +37,7 @@ export default class ActvAdsSorts extends Vue {
 
   tableConfig: ScTable.TableConfig = {
     api: this.$api.merchant.inject,
-    table: { storageKey: 'ActvAdsSortsTable' },
-    isSetting: true,
-    isExports: true,
+    breadcrumbButtons: [],
   };
 
   searchConfig: ScTable.Search = {

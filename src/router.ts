@@ -220,6 +220,84 @@ const router = new Router({
       ],
     },
     {
+      path: '/thirdpartnar',
+      name: '代运营管理',
+      redirect: '/thirdpartnar/index',
+      component: layoutView,
+      children: [
+        {
+          path: 'index',
+          name: '奶爸代运营列表',
+          component: () => import('./pages/thirdpartnar/index.vue'),
+          meta: { breadcrumb: [{ title: '代运营管理' }, { title: '奶爸代运营列表' }] },
+        },
+        {
+          path: 'detail',
+          name: '奶爸代运营详情',
+          component: () => import('./pages/thirdpartnar/details/index.vue'),
+          meta: {
+            breadcrumb: [{ title: '代运营管理' }, { title: '奶爸代运营列表' }, { title: '详情' }],
+          },
+        },
+        {
+          path: 'shops',
+          name: '店铺诊断',
+          component: () => import('./pages/thirdpartnar/details/data/shop/index.vue'),
+          meta: {
+            breadcrumb: [
+              { title: '代运营管理' },
+              { title: '奶爸代运营列表' },
+              { title: '店铺诊断' },
+            ],
+          },
+        },
+        {
+          path: 'market',
+          name: '营销策划',
+          component: () => import('./pages/thirdpartnar/details/data/market/index.vue'),
+          meta: {
+            breadcrumb: [
+              { title: '代运营管理' },
+              { title: '奶爸代运营列表' },
+              { title: '营销策划' },
+            ],
+          },
+        },
+        {
+          path: 'promotion',
+          name: '推广计划表',
+          component: () => import('./pages/thirdpartnar/details/data/promotion/index.vue'),
+          meta: {
+            breadcrumb: [
+              { title: '代运营管理' },
+              { title: '奶爸代运营列表' },
+              { title: '推广计划表' },
+            ],
+          },
+        },
+        {
+          path: 'setting',
+          name: '代运营设置',
+          component: () => import('./pages/thirdpartnar/setting/index.vue'),
+          meta: { breadcrumb: [{ title: '代运营管理' }, { title: '代运营设置' }] },
+        },
+        {
+          path: 'service',
+          name: '运营客服列表',
+          component: () => import('./pages/thirdpartnar/service/list.vue'),
+          meta: { breadcrumb: [{ title: '客服管理' }, { title: '运营客服列表' }] },
+        },
+        {
+          path: 'service-detail',
+          name: '运营客服详情',
+          component: () => import('./pages/thirdpartnar/service/detail.vue'),
+          meta: {
+            breadcrumb: [{ title: '客服管理' }, { title: '运营客服列表' }, { title: '查看' }],
+          },
+        },
+      ],
+    },
+    {
       path: '/login',
       component: () => import('./pages/login/login.vue'),
     },
