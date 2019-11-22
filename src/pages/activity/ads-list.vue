@@ -7,6 +7,7 @@
                   :columns-props="{align:'center'}"
                   :table-config="tableConfig"
                   :search-config="searchConfig"
+                  :form-add-config="addConfig"
                   @table-emitTableHandlerClick="onTableHandlerClick">
     </sc-min-table>
   </div>
@@ -35,7 +36,6 @@ export default class ActvAdsList extends Vue {
 
   tableConfig: ScTable.TableConfig = {
     api: this.$api.merchant.inject,
-    breadcrumbButtons: [],
   };
 
   searchConfig: ScTable.Search = {

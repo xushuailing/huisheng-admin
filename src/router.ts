@@ -298,6 +298,38 @@ const router = new Router({
       ],
     },
     {
+      path: '/operate',
+      name: '运营小知识',
+      redirect: '/operate/praise',
+      component: layoutView,
+      children: [
+        {
+          path: 'praise',
+          name: '评价模板',
+          component: () => import('./pages/operate/praise.vue'),
+          meta: { breadcrumb: [{ title: '运营小知识' }, { title: '评价模板' }] },
+        },
+        {
+          path: 'poster',
+          name: '海报专场',
+          component: () => import('./pages/operate/poster.vue'),
+          meta: { breadcrumb: [{ title: '运营小知识' }, { title: '海报专场' }] },
+        },
+        {
+          path: 'featured',
+          name: '图片精选',
+          component: () => import('./pages/operate/featured.vue'),
+          meta: { breadcrumb: [{ title: '运营小知识' }, { title: '图片精选' }] },
+        },
+        {
+          path: 'takeaway',
+          name: '外卖学院',
+          component: () => import('./pages/operate/takeaway.vue'),
+          meta: { breadcrumb: [{ title: '运营小知识' }, { title: '外卖学院' }] },
+        },
+      ],
+    },
+    {
       path: '/login',
       component: () => import('./pages/login/login.vue'),
     },

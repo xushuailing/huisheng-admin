@@ -6,7 +6,8 @@
                   :columns="columns"
                   :columns-props="{align:'center'}"
                   :table-config="tableConfig"
-                  :search-config="searchConfig">
+                  :search-config="searchConfig"
+                  :form-add-config="addConfig">
     </sc-min-table>
   </div>
 </template>
@@ -39,7 +40,6 @@ export default class ActvFamous extends Vue {
 
   tableConfig: ScTable.TableConfig = {
     api: this.$api.merchant.inject,
-    breadcrumbButtons: [],
   };
 
   searchConfig: ScTable.Search = {

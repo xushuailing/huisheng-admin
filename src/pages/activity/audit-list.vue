@@ -46,7 +46,6 @@ export default class ActvAdsList extends Vue {
 
   tableConfig: ScTable.TableConfig = {
     api: this.$api.merchant.inject,
-    breadcrumbButtons: [],
   };
 
   searchConfig: ScTable.Search = {
