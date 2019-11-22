@@ -71,6 +71,26 @@ const router = new Router({
       ],
     },
     {
+      path: '/vip',
+      name: '会员管理',
+      component: layoutView,
+      redirect: '/vip/list',
+      children: [
+        {
+          path: 'list',
+          name: '列表',
+          meta: { breadcrumb: [{ title: '会员管理' }, { title: '列表' }] },
+          component: () => import('./pages/vip-manage/list.vue'),
+        },
+        {
+          path: 'check-list',
+          name: '审核列表',
+          meta: { breadcrumb: [{ title: '会员管理' }, { title: '审核列表' }] },
+          component: () => import('./pages/vip-manage/check-list.vue'),
+        },
+      ],
+    },
+    {
       path: '/product',
       name: '商品管理',
       redirect: '/product/list',
@@ -80,6 +100,39 @@ const router = new Router({
           path: 'list',
           name: '商品列表',
           component: () => import('./pages/product/list.vue'),
+          meta: { breadcrumb: [{ title: '商品管理' }, { title: '全部商品' }] },
+        },
+      ],
+    },
+    {
+      path: '/member',
+      name: '会员管理',
+      redirect: '/member/member',
+      component: layoutView,
+      children: [
+        {
+          path: 'member',
+          name: '会员',
+          component: () => import('./pages/member/member.vue'),
+          meta: { breadcrumb: [{ title: '会员管理' }, { title: '会员' }] },
+        },
+        {
+          path: 'agent',
+          name: '代理',
+          component: () => import('./pages/member/agent.vue'),
+          meta: { breadcrumb: [{ title: '会员管理' }, { title: '代理' }] },
+        },
+        {
+          path: 'agent-detail',
+          name: '代理明细',
+          component: () => import('./pages/member/agent-detail.vue'),
+          meta: { breadcrumb: [{ title: '会员管理' }, { title: '代理明细' }] },
+        },
+        {
+          path: 'member-detail',
+          name: '会员明细',
+          component: () => import('./pages/member/member-detail.vue'),
+          meta: { breadcrumb: [{ title: '会员管理' }, { title: '会员明细' }] },
         },
       ],
     },
@@ -138,7 +191,7 @@ const router = new Router({
     {
       path: '/shop',
       name: '店铺管理',
-      redirect: '/complaint/baseinfo',
+      redirect: '/shop/baseinfo',
       component: layoutView,
       children: [
         {
@@ -154,6 +207,15 @@ const router = new Router({
           meta: {
             breadcrumbHide: true,
             breadcrumb: [{ title: '店铺管理' }, { title: '店铺认证' }],
+          },
+        },
+        {
+          path: 'kefu',
+          name: '客服',
+          component: () => import('./pages/shop/kefu.vue'),
+          meta: {
+            breadcrumbHide: true,
+            breadcrumb: [{ title: '店铺管理' }, { title: '客服' }],
           },
         },
       ],
@@ -175,6 +237,76 @@ const router = new Router({
           name: '账房',
           component: () => import('./pages/management/account.vue'),
           meta: { breadcrumb: [{ title: '经营管理' }, { title: '账房' }] },
+        },
+        {
+          path: 'recode',
+          name: '提现记录',
+          component: () => import('./pages/management/recode.vue'),
+          meta: { breadcrumb: [{ title: '经营管理' }, { title: '提现记录' }] },
+        },
+      ],
+    },
+    {
+      path: '/activity',
+      name: '活动管理',
+      redirect: '/activity/index',
+      component: layoutView,
+      children: [
+        {
+          path: 'index',
+          name: '首页活动',
+          component: () => import('./pages/activity/index.vue'),
+          meta: { breadcrumb: [{ title: '活动管理' }, { title: '首页活动' }] },
+        },
+        {
+          path: 'ads-list',
+          name: '广告管理',
+          component: () => import('./pages/activity/ads-list.vue'),
+          meta: { breadcrumb: [{ title: '活动管理' }, { title: '广告管理' }] },
+        },
+        {
+          path: 'ads-sorts',
+          name: '广告分类',
+          component: () => import('./pages/activity/ads-sorts.vue'),
+          meta: { breadcrumb: [{ title: '活动管理' }, { title: '广告分类' }] },
+        },
+        {
+          path: 'new',
+          name: '今日上新',
+          component: () => import('./pages/activity/new-list.vue'),
+          meta: { breadcrumb: [{ title: '活动管理' }, { title: '今日上新' }] },
+        },
+        {
+          path: 'famous',
+          name: '大牌榜单',
+          component: () => import('./pages/activity/famous-list.vue'),
+          meta: { breadcrumb: [{ title: '活动管理' }, { title: '大牌榜单' }] },
+        },
+        {
+          path: 'good',
+          name: '发现好物',
+          component: () => import('./pages/activity/good-list.vue'),
+          meta: { breadcrumb: [{ title: '活动管理' }, { title: '发现好物' }] },
+        },
+        {
+          path: 'preferential',
+          name: '优惠活动',
+          component: () => import('./pages/activity/preferential-list.vue'),
+          meta: { breadcrumb: [{ title: '活动管理' }, { title: '优惠活动' }] },
+        },
+        {
+          path: 'preferential-add',
+          name: '新增优惠券',
+          component: () => import('./pages/activity/preferential-add.vue'),
+          meta: {
+            breadcrumb: [{ title: '活动管理' }, { title: '优惠活动' }, { title: '新增优惠券' }],
+          },
+        },
+        {
+          path: 'audit',
+          name: '审核列表',
+          component: () => import('./pages/activity/audit-list.vue'),
+          meta: { breadcrumb: [{ title: '活动管理' }, { title: '审核列表' }] },
         },
       ],
     },

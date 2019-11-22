@@ -107,7 +107,7 @@ const post: Request = (url, param = {}, custom = {}) => {
         if (Number(res.data.code) === 0 || res.data.status) {
           resolve(res.data as any);
         } else {
-          reject(res);
+          reject(res.data);
         }
       })
       .catch((err: AxiosError) => {

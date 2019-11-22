@@ -1,8 +1,8 @@
 <template>
   <div>
-    <!-- <sc-breadcrumb class="mb-10">
+    <sc-breadcrumb class="mb-10">
       <el-button type="primary">修改</el-button>
-    </sc-breadcrumb> -->
+    </sc-breadcrumb>
     <div class='bg-white border-radius-8 container'>
       <div class="color-ebeef5 font-22">
         <img class="img"

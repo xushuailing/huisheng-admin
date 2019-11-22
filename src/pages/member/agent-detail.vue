@@ -2,6 +2,7 @@
   <div class='test-min'>
     <sc-min-table stripe
                   ref="table"
+                  :columns-type="['selection']"
                   :columns="columns"
                   :search-config="searchConfig"
                   :table-config="tableConfig"
@@ -15,14 +16,16 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 import { ScTable } from '../../lib/@types/sc-table.d';
 
 const columns: ScTable.SetColumns = [
-  ['日期', 'nickname'],
-  ['支出项目', 'name'],
-  ['本月交易额', 'phone'],
-  ['项目类别', 'idCard'],
+  ['会员头像', 'avatar', null, null, 'img'],
+  ['名称', 'nickname', 200],
+  ['会员费用', 'idCard', 220],
+  ['会员类型', 'name', 120],
+  ['创建时间', 'phone', 150],
+  ['获得返利', 'pnum', 150],
 ];
 
 @Component
-export default class ManagementAccount extends Vue {
+export default class AgentDetail extends Vue {
   columns = this.$utils._SetTableColumns(columns);
 
   tableConfig = {
@@ -39,42 +42,27 @@ export default class ManagementAccount extends Vue {
 
 
   searchConfig = {
-    num: 3,
+    num: 4,
     param: {},
     attr: { 'label-width': '120px' },
     data: [
       {
-        label: '日期',
-        prop: 'none2',
+        label: '下线名称',
+        prop: 'none1',
+        default: '',
         tag: {
-          tagType: 'date-picker',
           attr: {
-            type: 'datetime',
-            placeholder: '开始时间',
+            placeholder: '请输入下线名称',
           },
         },
       },
+
       {
-        label: '至',
-        prop: 'none2',
-        tag: {
-          tagType: 'date-picker',
-          attr: {
-            type: 'datetime',
-            placeholder: '结束时间',
-          },
-        },
-      },
-      {
-        label: '项目类别',
+        label: '会员类型：',
         prop: 'none3',
         tag: {
           tagType: 'select',
           options: [
-            {
-              value: 2,
-              label: '全部',
-            },
             {
               value: 1,
               label: '启用',
@@ -85,7 +73,18 @@ export default class ManagementAccount extends Vue {
             },
           ],
           attr: {
-            placeholder: '项目类别',
+            placeholder: '请选择会员类型：',
+          },
+        },
+      },
+      {
+        label: '选择时间：',
+        prop: 'none2',
+        tag: {
+          tagType: 'date-picker',
+          attr: {
+            type: 'datetime',
+            placeholder: '时间',
           },
         },
       },

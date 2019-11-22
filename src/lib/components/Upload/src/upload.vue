@@ -60,12 +60,6 @@ export default {
       default: 'img',
     },
 
-    // 返回类型
-    returnType: {
-      type: String,
-      default: 'id',
-    },
-
     // 自定义接口配置
     custom: {
       type: Object,
@@ -99,7 +93,7 @@ export default {
   },
   created() {
     const FILE_OPTION = ['fileType', 'fileSize'];
-    const action = this.action || 'this.$api.common.files.upload';
+    const action = this.action || this.$api.files.upload;
     const bind = {};
     const file = {};
     let config = {};
@@ -163,29 +157,7 @@ export default {
           const name = arr[arr.length - 1];
           this.fileList.push({ name, url: e });
         });
-        return;
       }
-
-      const storageFile = [];
-      ids.forEach((id, i) => {
-        const tempFile = this.storageFileId.find((v) => v.id === id);
-        if (tempFile) {
-          ids[i] = null;
-          storageFile.push(tempFile);
-        }
-      });
-      ids = ids.filter((v) => v);
-      if (!ids.length) {
-        this.fileList = storageFile;
-        return;
-      }
-
-      this.$http.post(this.$api.common.files.show, { ids }).then((res) => {
-        const { data } = res.data;
-        const files = data.map((v) => ({ name: v.name, url: v.remoteUrl, id: v.id }));
-        this.storageFileId.push(...files);
-        this.fileList = [].concat(storageFile, files);
-      });
     },
 
     BeforeAvatarUpload(file) {
@@ -245,14 +217,8 @@ export default {
     },
 
     emitUploadFile(list) {
-      let type = null;
-      if (this.returnType === 'id') {
-        type = 'id';
-      } else {
-        type = 'url';
-      }
       this.uploadFileList = [].concat(list);
-      const data = list.map((v) => v.id || (v.response && v.response[type]) || v.url).join(',');
+      const data = list.map((v) => (v.response && v.response.url) || v.url).join(',');
       this.$emit('input', data);
     },
 
@@ -268,7 +234,7 @@ export default {
       const { CancelToken } = axios;
       this.source = CancelToken.source();
       this.isSource = false;
-      const { action, file, onSuccess, onError, headers, filename, onProgress } = data;
+      const { action, file, onSuccess, onError, headers, onProgress } = data;
       const onUploadProgress = (event) => {
         const { loaded, total } = event;
         const num = Math.floor((loaded / total) * 100);
@@ -290,16 +256,17 @@ export default {
         formData.append('disposition', 'attachment;filename=');
       }
 
-      formData.append(filename, file);
+      formData.append('img', file);
 
       this.$http
         .post(action, formData, custom)
         .then((res) => {
-          if (Array.isArray(res.data.data)) {
-            onSuccess(res.data.data[0]);
-          } else {
-            onSuccess(res.data.data);
-          }
+          onSuccess({ url: res.data[0], uid: file.uid, name: file.name });
+          // if (Array.isArray(res.data)) {
+          //   onSuccess(res.data[0]);
+          // } else {
+          //   onSuccess(res.data);
+          // }
         })
         .catch((err) => {
           let msg = '上传失败';

@@ -15,14 +15,12 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 import { ScTable } from '../../lib/@types/sc-table.d';
 
 const columns: ScTable.SetColumns = [
-  ['日期', 'nickname'],
-  ['支出项目', 'name'],
-  ['本月交易额', 'phone'],
-  ['项目类别', 'idCard'],
+  ['提现金额', 'nickname'],
+  ['创建时期', 'name'],
 ];
 
 @Component
-export default class ManagementAccount extends Vue {
+export default class ManagementRecode extends Vue {
   columns = this.$utils._SetTableColumns(columns);
 
   tableConfig = {
@@ -39,53 +37,18 @@ export default class ManagementAccount extends Vue {
 
 
   searchConfig = {
-    num: 3,
+    num: 1,
     param: {},
     attr: { 'label-width': '120px' },
     data: [
       {
-        label: '日期',
+        label: '创建时间',
         prop: 'none2',
         tag: {
           tagType: 'date-picker',
           attr: {
             type: 'datetime',
-            placeholder: '开始时间',
-          },
-        },
-      },
-      {
-        label: '至',
-        prop: 'none2',
-        tag: {
-          tagType: 'date-picker',
-          attr: {
-            type: 'datetime',
-            placeholder: '结束时间',
-          },
-        },
-      },
-      {
-        label: '项目类别',
-        prop: 'none3',
-        tag: {
-          tagType: 'select',
-          options: [
-            {
-              value: 2,
-              label: '全部',
-            },
-            {
-              value: 1,
-              label: '启用',
-            },
-            {
-              value: 0,
-              label: '不启用',
-            },
-          ],
-          attr: {
-            placeholder: '项目类别',
+            placeholder: '时间',
           },
         },
       },
