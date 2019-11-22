@@ -33,9 +33,7 @@ export default class ActvIndex extends Vue {
 
   tableConfig: ScTable.TableConfig = {
     api: this.$api.merchant.inject,
-    table: { storageKey: 'ActvTable' },
-    isSetting: true,
-    isExports: true,
+    breadcrumbButtons: [],
   };
 
   onTableHandlerClick({ row, type }: { row: obj; type: string }) {

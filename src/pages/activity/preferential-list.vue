@@ -2,7 +2,7 @@
   <div class="preferential">
     <div v-for="item in list"
          :key="item.id"
-         class="flex-column bg-white mr-30 p-25 border-radius">
+         class="flex-column bg-white mr-30 p-25 border-radius-4">
       <h2 class="m-0">{{item.title}}</h2>
       <div class="pt-15 pb-15 flex-1 font-text-secondary">{{item.desc}}</div>
       <div>

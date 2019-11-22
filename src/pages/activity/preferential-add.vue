@@ -35,7 +35,7 @@ export default class ActvPreferentialAdd extends Vue {
                 attr: { slot: 'append' },
                 component: Vue.extend({
                   render(h) {
-                    return h('div', {}, '元');
+                    return h('span', {}, '元');
                   },
                 }),
               },

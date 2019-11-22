@@ -7,7 +7,12 @@ export default {
     upload: `${url}/api/insert_img`,
   },
 
+  /** 商家管理 */
   merchant: {
+    /** 商家店铺管理 */
+    shop: {
+      index: `${url}/admin/getUserShopList`,
+    },
     inject: {
       index: `${url}/service-uaa/sys/user/index`,
       create: `${url}/service-uaa/sys/user/create`,

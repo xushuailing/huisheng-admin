@@ -307,7 +307,7 @@ export default {
       this.paginationConfig.currentPage = 1;
       // this.pagination.size = 10;
       this.pagination.page = 1;
-      this.sort = [];
+      // this.sort = [];
       this.query = data;
       // this.$emit('emitTableSearchClick', data, type);
       this.getDataTable();
@@ -395,9 +395,9 @@ export default {
     getDataTable(
       param = {
         ...this.tableConfig.index,
-        sorts: this.sorts,
+        // sorts: this.sorts,
         ...this.pagination,
-        query: this.query,
+        ...this.query,
       },
     ) {
       if (this.tableConfig.disableDefaultRequest || this.disableEveryRequest) {

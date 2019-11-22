@@ -240,6 +240,8 @@ interface ScTableConfig extends obj {
 }
 
 export interface ScTable extends Table {
+  /** 选中表格数据 */
+  selectTableData: obj[];
   /** 设置表格数据 */
   setDataTable(option?: object): void;
 }
