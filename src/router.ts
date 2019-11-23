@@ -102,6 +102,12 @@ const router = new Router({
           component: () => import('./pages/product/list.vue'),
           meta: { breadcrumb: [{ title: '商品管理' }, { title: '全部商品' }] },
         },
+        {
+          path: 'demo',
+          name: ' 测试',
+          component: () => import('./pages/product/demo.vue'),
+          meta: { breadcrumb: [{ title: '商品管理' }, { title: '测试' }] },
+        },
       ],
     },
     {
