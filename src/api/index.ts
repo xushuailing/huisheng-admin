@@ -36,4 +36,21 @@ export default {
     index: `${url}/admin/getUserRoleList`,
     create: `${url}/admin/setUserRole`,
   },
+
+  /** 活动管理 */
+  activity: {
+    index: {
+      index: `${url}/admin/shopJoinActivityList`,
+    },
+    adsSorts: {
+      index: `${url}/admin/getBanner`,
+      create: `${url}/admin/doaAddBanner`,
+      show: `${url}`,
+    },
+    coupon: {
+      index: `${url}/admin/getCouponList`,
+      create: `${url}/admin/doAddCoupon`,
+      delete: `${url}/admin/delCoupon`,
+    },
+  },
 };

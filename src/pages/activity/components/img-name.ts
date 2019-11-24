@@ -5,18 +5,10 @@ export default Vue.extend({
   render(h) {
     if (!this.url) return h('span', {}, this.text);
     const imgAttr = {
-      width: 25,
-      height: 25,
-      class: 'mr-10',
-      style: { cursor: 'pointer', 'object-fit': 'cover' },
-      src: this.url,
-      alt: this.text,
-      on: {
-        click: () => {
-          this.$vm.onImgClick(this.url);
-        },
-      },
+      attrs: { width: 40, height: 40, src: this.url, alt: this.text },
+      class: 'mr-10 border-radius-100',
+      style: { 'object-fit': 'cover' },
     };
-    return h('div', {}, [h('img', imgAttr), h('span', {}, this.text)]);
+    return h('div', { class: 'flex-jc-ac' }, [h('img', imgAttr, ''), h('span', {}, this.text)]);
   },
 });

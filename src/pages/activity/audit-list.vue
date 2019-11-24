@@ -9,6 +9,7 @@
                 :search-config="searchConfig"
                 @table-emitTableHandlerClick="onTableHandlerClick">
   </sc-min-table>
+  <!-- TODO: 全选通过 -->
 </template>
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
@@ -16,25 +17,34 @@ import { ScTable } from '../../lib/@types/sc-table.d';
 import { ScForm } from '../../lib/@types/sc-form.d';
 import { obj } from '@/lib/@types/sc-param.d';
 
+const STATUS: obj<string> = {
+  1: '审核中',
+  2: '审核通过',
+  3: '审核不通过',
+};
+
 @Component
 export default class ActvAdsList extends Vue {
+  $refs!: {
+    table: any;
+  };
+
   columns: ScTable.Columns = [
-    { label: '店铺信息', prop: 'none1' },
+    { label: '店铺信息', prop: 'company' },
     { label: '推广类型', prop: 'none2' },
     { label: '价格', prop: 'none' },
     { label: '有效期', prop: 'none3' },
     {
       label: '申请时间',
-      prop: 'none4',
-      formater: (row, col) => this.$utils._FormatDate(row[col.prop]),
+      prop: 'createtime',
     },
     {
       label: '状态',
-      prop: 'none5',
+      prop: 'status',
       formater: (row, col) => {
         const value = row[col.prop];
-        const style = value === '待审核' ? 'sc-font-danger' : 'sc-font-primary';
-        return [{ class: style }, value];
+        const style = value === '1' ? 'font-danger' : 'font-primary';
+        return [{ class: style }, STATUS[value]];
       },
     },
   ];
@@ -46,7 +56,6 @@ export default class ActvAdsList extends Vue {
 
   tableConfig: ScTable.TableConfig = {
     api: this.$api.merchant.inject,
-    breadcrumbButtons: [],
   };
 
   searchConfig: ScTable.Search = {
@@ -54,7 +63,7 @@ export default class ActvAdsList extends Vue {
     data: [
       {
         label: '商家店铺名称：',
-        prop: 'none1',
+        prop: 'company',
         tag: {
           attr: { placeholder: '请输入商家店铺名称' },
         },
@@ -70,7 +79,7 @@ export default class ActvAdsList extends Vue {
       },
       {
         label: '申请时间：',
-        prop: 'none4',
+        prop: 'createtime',
         tag: {
           tagType: 'date-picker',
           attr: {
@@ -84,10 +93,30 @@ export default class ActvAdsList extends Vue {
 
   onTableHandlerClick({ row, type }: { row: obj; type: string }) {
     if (type === 'pass') {
-      console.log('%c通过', 'color:#40b883;font-weight:bold');
+      this.handlePass(row.id);
     } else {
-      console.log('%c驳回', 'color:#40b883;font-weight:bold');
+      this.handleReject(row.id);
     }
+  }
+
+  handlePass(id: string) {
+    this.$http.get('', { id }).then((res) => {
+      console.log('res: ', res);
+      if (res.status) {
+        this.$message.success('审核通过');
+        this.$refs.table.setDataTable({});
+      }
+    });
+  }
+
+  handleReject(id: string) {
+    this.$http.get('', { id }).then((res) => {
+      console.log('res: ', res);
+      if (res.status) {
+        this.$message.success('申请已驳回');
+        this.$refs.table.setDataTable({});
+      }
+    });
   }
 }
 </script>

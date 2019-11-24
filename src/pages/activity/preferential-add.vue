@@ -17,17 +17,18 @@ export default class ActvPreferentialAdd extends Vue {
 
   addConfig: ScForm.Add = {
     type: 'plain',
+    params: { shopid: 0, coupon_type: 0 },
     buttons: [{ mode: 'cancel', isHide: false, sort: 7 }, { mode: 'submit', text: '保存' }],
     data: [
       [
         {
           label: '优惠券名称：',
-          prop: 'none',
+          prop: 'title',
           tag: { attr: { placeholder: '请输入优惠券名称' } },
         },
         {
           label: '面额：',
-          prop: 'none1',
+          prop: 'c_price',
           tag: {
             attr: {
               type: 'number',
@@ -45,12 +46,13 @@ export default class ActvPreferentialAdd extends Vue {
         },
         {
           label: '使用条件：',
-          prop: 'none2',
-          tag: { tagType: 'checkbox', options: [{ label: '无条件使用', value: 1 }] },
+          prop: 'condition',
+          handle: (data) => (data === '0' ? data : '1'),
+          tag: { tagType: 'checkbox', options: [{ label: '无条件使用', value: '0' }] },
         },
         {
           label: '发放日期：',
-          prop: 'none3',
+          prop: 'strtime',
           tag: {
             tagType: 'date-picker',
             attr: { type: 'date', placeholder: '请选择发放日期' },
@@ -58,7 +60,7 @@ export default class ActvPreferentialAdd extends Vue {
         },
         {
           label: '有效日期：',
-          prop: 'none4',
+          prop: 'endtime',
           tag: {
             tagType: 'component',
             components: EffectDate,

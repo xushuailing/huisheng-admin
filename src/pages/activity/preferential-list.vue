@@ -2,7 +2,7 @@
   <div class="preferential">
     <div v-for="item in list"
          :key="item.id"
-         class="flex-column bg-white mr-30 p-25 border-radius-4">
+         class="flex-column bg-white mb-30 mr-30 p-25 border-radius-4">
       <h2 class="m-0">{{item.title}}</h2>
       <div class="pt-15 pb-15 flex-1 font-text-secondary">{{item.desc}}</div>
       <div>
@@ -26,16 +26,26 @@ interface CouponsItem {
 
 @Component
 export default class ActvPreferential extends Vue {
-  list: CouponsItem[] = [
-    {
-      id: '1',
-      title: '新人红包',
-      desc: '规则规则规则规则规则规则规则规则规则规则规则规则规则规则规则规则规则规',
-    },
-  ];
+  list: CouponsItem[] = [];
 
   onOpen(id: string) {
     this.$router.push({ name: '新增优惠券', query: { id } });
+  }
+
+  getList() {
+    this.$http
+      .get(this.$api.activity.coupon.index)
+      .then((res) => {
+        // TODO: 没返回规则字段
+        this.list = res.data || [];
+      })
+      .catch((err) => {
+        this.$utils._ResponseError(err);
+      });
+  }
+
+  mounted() {
+    this.getList();
   }
 }
 </script>
@@ -43,7 +53,7 @@ export default class ActvPreferential extends Vue {
 <style lang="scss" scoped>
   .preferential {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 350px));
-    grid-template-rows: repeat(auto-fit, 300px);
+    grid-template-columns: repeat(auto-fit, 25%);
+    grid-template-rows: 300px;
   }
 </style>

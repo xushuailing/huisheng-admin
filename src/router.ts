@@ -201,7 +201,7 @@ const router = new Router({
           path: 'preferential',
           name: '优惠活动',
           component: () => import('./pages/activity/preferential-list.vue'),
-          meta: { breadcrumb: [{ title: '活动管理' }, { title: '优惠活动' }] },
+          meta: { breadcrumb: [{ title: '自营产品管理' }, { title: '优惠活动' }] },
         },
         {
           path: 'preferential-add',
