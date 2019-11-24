@@ -26,7 +26,8 @@ import Upload from './components/Upload';
 import Editor from './components/Editor';
 // import Filter from './components/Filter';
 import Breadcrumb from './components/Breadcrumb';
-
+import Sku from './components/SKU';
+import { OTable, OTableRow } from './components/OrderTable';
 // import directives from './directive';
 // import utils from './utils';
 // import axios from './axios';
@@ -60,6 +61,9 @@ const components = [
   // { com: Video, name: 'ScVideo' },
   // { com: Qrcode, name: 'ScQrcode' },
   { com: Editor, name: 'ScEditor' },
+  { com: Sku, name: 'ScSku' },
+  { com: OTable, name: 'OTable' },
+  { com: OTableRow, name: 'OTableRow' },
   // { com: Filter, name: 'ScFilter' },
 ];
 
@@ -101,5 +105,8 @@ export default {
   //   Video,
   //   Qrcode,
   Editor,
+  Sku,
+  OTable,
+  OTableRow,
   //   Filter,
 };

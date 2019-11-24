@@ -36,7 +36,8 @@ export default class App extends Vue {
 </script>
 <style lang="scss">
 .el-container {
-  // height: 100%;
+  height: 100%;
+  overflow: auto;
 }
 .el-header,
 .el-aside {
