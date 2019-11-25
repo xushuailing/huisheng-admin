@@ -244,6 +244,8 @@ export interface ScTable extends Table {
   selectTableData: obj[];
   /** 设置表格数据 */
   setDataTable(option?: object): void;
+  /** 刷新列表 */
+  emitRefresh(): void;
 }
 
 export namespace ScTable {
