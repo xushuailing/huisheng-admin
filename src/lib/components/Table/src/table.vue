@@ -276,7 +276,6 @@ export default {
           });
         });
       }
-      console.log('tableList', tableList);
       this.tableList = tableList;
     },
 

@@ -61,13 +61,14 @@ const router = new Router({
     },
     {
       path: '/merchant',
-      name: '首页',
+      name: '商家管理',
       redirect: '/merchant/inject',
       component: layoutView,
       children: [
         {
           path: 'inject',
           name: '商家入驻审核列表页',
+          meta: { breadcrumb: [{ title: '商家管理' }, { title: '商家入驻审核列表' }] },
           component: () => import('./pages/admin/merchant/inject-list.vue'),
         },
         {
@@ -94,6 +95,20 @@ const router = new Router({
           name: '审核列表',
           meta: { breadcrumb: [{ title: '会员管理' }, { title: '审核列表' }] },
           component: () => import('./pages/vip-manage/check-list.vue'),
+        },
+      ],
+    },
+    {
+      path: '/complaints',
+      name: '投诉管理',
+      component: layoutView,
+      redirect: '/complaints/list',
+      children: [
+        {
+          path: 'list',
+          name: '投诉列表',
+          meta: { breadcrumb: [{ title: '投诉管理' }, { title: '投诉列表' }] },
+          component: () => import('./pages/admin/complaints/list.vue'),
         },
       ],
     },

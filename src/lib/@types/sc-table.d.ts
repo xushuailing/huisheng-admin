@@ -190,7 +190,7 @@ interface ScTableConfigHeader {
 interface ScTableConfig extends obj {
   table?: {
     /** 表格自定义存储排版字段 */
-    storageKey: string;
+    storageKey?: string;
 
     /** 表格权限 */
     limit?: {

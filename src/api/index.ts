@@ -44,21 +44,27 @@ export default {
         update: `${url}/admin/getAdminDetail`,
       },
     },
-  },
 
-  /** 商家管理 */
-  merchant: {
-    /** 商家店铺管理 */
-    shop: {
-      index: `${url}/admin/getUserShopList`,
+    /** 商家管理 */
+    merchant: {
+      /** 商家店铺管理 */
+      shop: {
+        index: `${url}/admin/getUserShopList`,
+      },
+      /** 商家入驻审核列表 */
+      inject: {
+        index: `${url}/admin/getUserShopList`,
+        create: `${url}/admin/getUserShopList`,
+        update: `${url}/admin/getUserShopList`,
+        delete: `${url}/admin/getUserShopList`,
+        show: `${url}/admin/getUserShopList`,
+        check: `${url}/admin/checkUserShop`,
+      },
     },
-    inject: {
-      index: `${url}/service-uaa/sys/user/index`,
-      create: `${url}/service-uaa/sys/user/create`,
-      update: `${url}/service-uaa/sys/user/update`,
-      delete: `${url}/service-uaa/sys/user/delete`,
-      export: `${url}/service-uaa/sys/user/export`,
-      show: `${url}/service-uaa/sys/user/show`,
+
+    /** 投诉管理 */
+    complaints: {
+      index: `${url}/admin/getComplaintList`,
     },
   },
 };
