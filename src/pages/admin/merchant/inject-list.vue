@@ -7,16 +7,24 @@
                   :columns="columns"
                   :columns-schema="columnsSchema"
                   :table-config="tableConfig"
+                  :search-config="searchConfig"
                   @table-emitTableHandlerClick="onTableHandlerClick">
     </sc-min-table>
+
+    <dialog-textarea title="请输入驳回理由"
+                     placeholder="请输入驳回理由~"
+                     api='123'
+                     prop="reject"
+                     :id="rejectForm.id"
+                     :visible.sync="rejectForm.visible" />
   </div>
 </template>
 <script lang='ts'>
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { ScForm } from '../../../lib/@types/sc-form.d';
+import dialogTextarea from '@/components/dialogTextarea.vue';
 
-// const status =
 enum status {
   '审核中' = 1,
   '审核通过',
@@ -34,13 +42,17 @@ const columns: ScTable.SetColumns = [
   ['状态', 'status', 80],
 ];
 
-@Component
+@Component({ components: { dialogTextarea } })
 export default class SettingUsernameList extends Vue {
+  $refs!: {
+    table: ScTable;
+  };
+
   columns = this.$utils._SetTableColumns(columns);
 
   columnsHandler = [
     { name: 'pass', title: '通过' },
-    { name: 'del', title: '驳回', type: 'danger' },
+    { name: 'reject', title: '驳回', type: 'danger' },
   ];
 
   columnsSchema: ScTable.ColumnsSchema = {
@@ -126,13 +138,34 @@ export default class SettingUsernameList extends Vue {
     ],
   };
 
-  onTableHandlerClick({ row, index, type }: ScTable.Event.TableHandlerClick) {
-    console.log('row :', row);
-    console.log('index :', index);
-    console.log('type :', type);
-    // if (type === 'pass') {
+  rejectForm = {
+    visible: false,
+    id: null,
+  };
 
-    // }
+  onTableHandlerClick({ row, index, type }: ScTable.Event.TableHandlerClick) {
+    console.log('row :', { ...row });
+    if (type === 'reject') {
+      this.rejectForm.id = row.id;
+      this.rejectForm.visible = true;
+    } else if (type === 'pass') {
+      this.$utils._MessageConfirm('确认通过？', '提示').then((flag: boolean) => {
+        if (!flag) return;
+
+        // TODO: 未完成通过
+        const api = this.$api.admin.merchant.inject.check;
+        this.$http
+          .get(api, { shopid: row.id, uid: row.uid, status: 2 })
+          .then((res) => {
+            console.log('res :', res);
+          })
+          .catch((err) => {
+            console.log('err :', err);
+          });
+        // this.$message.success('通过成功');
+        // this.$refs.table.emitRefresh();
+      });
+    }
   }
 }
 </script>
