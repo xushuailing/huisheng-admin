@@ -68,6 +68,37 @@ export default {
     },
   },
 
+  /** 商家管理 */
+  merchant: {
+    /** 商家店铺管理 */
+    shop: {
+      index: `${url}/admin/getUserShopList`,
+      show: `${url}/admin/getUserShop`,
+      update: `${url}/admin/userJoinShop`,
+    },
+    product: {
+      index: `${url}/admin/getGoodsList`,
+      show: `${url}/admin/getGoodsdetail`,
+      create: `${url}/admin/doAddGoods`,
+      update: `${url}/admin/doAddGoods`,
+      delete: `${url}/admin/delGoods`,
+    },
+    market: {
+      index: `${url}/admin/getCouponList`,
+      show: `${url}/admin/getGoodsdetail`,
+      update: `${url}/admin/doAddCoupon`,
+      delete: `${url}/admin/delCoupon`,
+    },
+    inject: {
+      index: `${url}/service-uaa/sys/user/index`,
+      create: `${url}/service-uaa/sys/user/create`,
+      update: `${url}/service-uaa/sys/user/update`,
+      delete: `${url}/service-uaa/sys/user/delete`,
+      export: `${url}/service-uaa/sys/user/export`,
+      show: `${url}/service-uaa/sys/user/show`,
+    },
+  },
+
   /** 活动管理 */
   activity: {
     index: {
