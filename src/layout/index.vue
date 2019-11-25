@@ -1,5 +1,5 @@
 <template>
-  <el-container>
+  <el-container class="h100">
     <el-header>
       <Header></Header>
     </el-header>
@@ -8,7 +8,7 @@
       <!-- <el-aside width="200px">
         <Aside></Aside>
       </el-aside> -->
-      <el-main :class="{
+      <el-main class="flex-column" :class="{
           'el-main-p': breadcrumb,
         }">
         <template v-if="breadcrumb">

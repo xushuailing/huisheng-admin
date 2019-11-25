@@ -20,34 +20,24 @@ const router = new Router({
       ],
     },
     {
-      path: '/merchant',
-      name: '首页',
-      redirect: '/merchant/inject',
-      component: layoutView,
-      children: [
-        {
-          path: 'inject',
-          name: '商家入驻审核列表页',
-          component: () => import('./pages/admin/merchant/inject-list.vue'),
-        },
-        {
-          path: 'shop',
-          name: '商家店铺管理',
-          component: () => import('./pages/admin/merchant/shop-list.vue'),
-        },
-      ],
-    },
-    {
-      path: '/admin',
+      path: '/setting',
       name: '系统管理',
       component: layoutView,
-      redirect: '/admin/setting',
+      redirect: '/setting/index',
       children: [
         {
-          path: 'setting',
+          path: 'index',
           name: '平台管理',
           meta: { breadcrumb: [{ title: '系统管理' }, { title: '平台管理' }] },
           component: () => import('./pages/admin/setting/index.vue'),
+        },
+        {
+          path: 'root-name',
+          name: '平台管理员账号',
+          meta: {
+            breadcrumb: [{ title: '系统管理' }, { title: '总账号管理' }],
+          },
+          component: () => import('./pages/admin/setting/root-name.vue'),
         },
         {
           path: 'username-list',
@@ -56,8 +46,7 @@ const router = new Router({
             breadcrumbHide: true,
             breadcrumb: [{ title: '系统管理' }, { title: '平台管理员账号' }],
           },
-          component: () => import('./pages/admin/setting/root-name.vue'),
-          // component: () => import('./pages/admin/setting/platform-username-list.vue'),
+          component: () => import('./pages/admin/setting/platform-username-list.vue'),
         },
         {
           path: 'role-list',
@@ -67,6 +56,25 @@ const router = new Router({
             breadcrumbHide: true,
             breadcrumb: [{ title: '系统管理' }, { title: '角色管理' }],
           },
+        },
+      ],
+    },
+    {
+      path: '/merchant',
+      name: '商家管理',
+      redirect: '/merchant/inject',
+      component: layoutView,
+      children: [
+        {
+          path: 'inject',
+          name: '商家入驻审核列表页',
+          meta: { breadcrumb: [{ title: '商家管理' }, { title: '商家入驻审核列表' }] },
+          component: () => import('./pages/admin/merchant/inject-list.vue'),
+        },
+        {
+          path: 'shop',
+          name: '商家店铺管理',
+          component: () => import('./pages/admin/merchant/shop-list.vue'),
         },
       ],
     },
@@ -87,6 +95,20 @@ const router = new Router({
           name: '审核列表',
           meta: { breadcrumb: [{ title: '会员管理' }, { title: '审核列表' }] },
           component: () => import('./pages/vip-manage/check-list.vue'),
+        },
+      ],
+    },
+    {
+      path: '/complaints',
+      name: '投诉管理',
+      component: layoutView,
+      redirect: '/complaints/list',
+      children: [
+        {
+          path: 'list',
+          name: '投诉列表',
+          meta: { breadcrumb: [{ title: '投诉管理' }, { title: '投诉列表' }] },
+          component: () => import('./pages/admin/complaints/list.vue'),
         },
       ],
     },

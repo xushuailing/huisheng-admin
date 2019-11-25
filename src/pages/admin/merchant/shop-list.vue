@@ -19,13 +19,13 @@ import { ScTable } from '@/lib/@types/sc-table.d';
 
 const columns: ScTable.SetColumns = [
   ['门店名称', 'company'],
-  ['公司名称', 'none2'],
+  ['公司名称', 'company'],
   ['门店分类', 'keyword'],
   ['联系人', 'username', 100],
   ['公司电话', 'com_phone', 100],
   ['门店地址', 'address', 220],
   ['申请时间', 'createtime', 220],
-  ['状态', 'none8', 80],
+  ['状态', 'status', 80],
 ];
 
 @Component

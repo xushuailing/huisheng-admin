@@ -32,6 +32,14 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { ElUploadInternalRawFile, ElUpload } from 'element-ui/types/upload';
 
+export interface IUploadObject {
+  hasSuccess: boolean;
+  uid: number;
+  url: string;
+  width: number;
+  height: number;
+}
+
 @Component({
   name: 'EditorImageUpload',
 })

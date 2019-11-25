@@ -1,71 +1,106 @@
 <template>
   <div class="admin-rootName bg-white p-15">
     <div class="p-20">
-      <sc-add-form mode="page" api="http://baidu.com" :config="config9"> </sc-add-form>
+      <sc-add-form mode="page"
+                   :api="addApi"
+                   :config="getConfig"
+                   @emitAddComplete="onAddComplete"> </sc-add-form>
+
     </div>
-    <!-- <el-button @click="dialogShow=true">显示</el-button> -->
-    <!-- <div class="p-20">
-      <sc-add-form api="http://baidu.com"
-                   :visible.sync="dialogShow"
-                   :config="config5">
-      </sc-add-form>
-    </div> -->
   </div>
 </template>
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
+import { ScForm } from '../../../lib/@types/sc-form';
 @Component
 export default class AdminRootName extends Vue {
-  dialogShow = false;
+  isValidation = true;
+
+  get getConfig() {
+    return this.isValidation ? this.config1 : this.config2;
+  }
 
   /** 系统管理 >总账号管理 */
-  config1 = {
+  config1: ScForm.Config = {
+    handleSubmit: () => false,
     buttons: [
       {
         mode: 'submit',
         text: '更换密码',
       },
     ],
+    // rules: [
+    //   {
+    //     nickname: {
+    //       value: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+    //     },
+    //     phone: {
+    //       value: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
+    //     },
+    //   },
+    // ],
     data: [
       [
         {
           label: '用户名',
-          prop: 'none1',
+          prop: 'nickname',
+          default: '',
           tag: {
-            attr: { placeholder: '请输入用户名' },
+            attr: { disabled: true, placeholder: '请输入用户名' },
           },
         },
         {
           label: '手机号',
-          prop: 'none2',
+          prop: 'phone',
+          default: '',
           tag: {
-            attr: { placeholder: '请输入手机号', type: 'number' },
+            attr: { disabled: true, placeholder: '请输入手机号', maxlength: 13 },
           },
         },
       ],
     ],
   };
 
-  /** 系统管理 >总账号管理 > 更换密码 */
-  config2 = {
+  // TODO: 请求方式 为GET
+  config2: ScForm.Config = {
     buttons: [
       {
         mode: 'submit',
-        text: '确定更换',
+        text: '确认更改',
+        sort: 1,
+      },
+      {
+        mode: 'cancel',
+        sort: 2,
+        listeners: {
+          click: () => {
+            this.switchConfig();
+          },
+        },
+      },
+    ],
+    rules: [
+      {
+        oldPsw: {
+          value: [{ required: true, message: '请输入原密码', trigger: 'blur' }],
+        },
+        newPsw: {
+          value: [{ required: true, message: '请输入新密码', trigger: 'blur' }],
+        },
       },
     ],
     data: [
       [
         {
-          label: '原始密码',
-          prop: 'none1',
+          label: '原密码',
+          prop: 'old_login_pass',
           tag: {
-            attr: { placeholder: '请输入原始密码' },
+            attr: { placeholder: '请输入原密码' },
           },
         },
         {
           label: '新密码',
-          prop: 'none2',
+          prop: 'login_pass',
           tag: {
             attr: { placeholder: '请输入新密码' },
           },
@@ -74,273 +109,30 @@ export default class AdminRootName extends Vue {
     ],
   };
 
-  /** 会员管理 > 代理会员列表 > 修改 */
-  config5 = {
-    type: 'senior',
-    header: {
-      title: '新增数据',
-      desc: '文字文字',
-    },
-    buttons: [
-      {
-        mode: 'submit',
-        text: '确认添加',
-      },
-    ],
-    data: [
-      [
-        {
-          label: '代理等级：',
-          prop: 'none1',
-          tag: {
-            attr: { placeholder: '请输入代理等级' },
-          },
-        },
-        {
-          label: '费用：',
-          prop: 'none2',
-          tag: {
-            attr: { placeholder: '请输入费用' },
-          },
-        },
-        {
-          label: '黄金会员名额：',
-          prop: 'none3',
-          tag: {
-            tagType: 'input-number',
-            attr: { placeholder: '请输入黄金会员名额' },
-          },
-        },
-        {
-          label: '铂金会员名额：',
-          prop: 'none4',
-          tag: {
-            tagType: 'input-number',
-            attr: { placeholder: '请输入铂金会员名额' },
-          },
-        },
-        {
-          label: '钻石会员名额：',
-          prop: 'none5',
-          tag: {
-            tagType: 'input-number',
-            attr: { placeholder: '请输入钻石会员名额' },
-          },
-        },
-        {
-          label: '返点比例：',
-          prop: 'none6',
-          tag: {
-            attr: { placeholder: '请输入返点比例' },
-          },
-        },
-      ],
-    ],
-  };
+  get addApi() {
+    return this.$api.admin.setting.rootName.update;
+  }
 
-  /** 会员管理 > 添加代理 */
-  config6 = {
-    buttons: [
-      {
-        mode: 'submit',
-        text: '添加',
-      },
-    ],
-    data: [
-      [
-        {
-          label: '代理姓名：',
-          prop: 'none1',
-          tag: {
-            attr: { placeholder: '请输入代理姓名' },
-          },
-        },
-        {
-          label: '电话：',
-          prop: 'none2',
-          tag: {
-            attr: { placeholder: '请输入电话' },
-          },
-        },
-        {
-          label: '代理级别：',
-          prop: 'none3',
-          tag: {
-            tagType: 'select',
-            options: [
-              {
-                value: 1,
-                label: '启用',
-              },
-              {
-                value: 0,
-                label: '不启用',
-              },
-              {
-                value: 2,
-                label: '不启用1',
-              },
-            ],
-            attr: { placeholder: '请输入代理级别' },
-          },
-        },
-      ],
-    ],
-  };
+  mounted() {
+    this.getRootName();
+  }
 
-  /** 活动管理 > 广告管理 > 添加 */
-  config7 = {
-    buttons: [
-      {
-        mode: 'submit',
-        text: '确认添加',
-      },
-    ],
-    data: [
-      [
-        {
-          label: '添加图片：',
-          prop: 'none1',
-          tag: {
-            tagType: 'upload-img',
-            attr: {
-              limit: 1,
-            },
-          },
-        },
-        {
-          label: '跳转地址：',
-          prop: 'none2',
-          tag: {
-            attr: { placeholder: '请输入跳转地址' },
-          },
-        },
-        {
-          label: '跳转类型：',
-          prop: 'none3',
-          tag: {
-            attr: { placeholder: '请输入跳转类型' },
-          },
-        },
-      ],
-    ],
-  };
+  async getRootName() {
+    const api = this.$api.admin.setting.rootName.show;
+    const { data } = await this.$http.get(api);
+    const nickname = this.$utils._GetConfigItemData(this.config1.data, 'nickname');
+    const phone = this.$utils._GetConfigItemData(this.config1.data, 'phone');
 
-  /** 活动管理 > 今日上新 > 添加 */
-  config8 = {
-    buttons: [
-      {
-        mode: 'submit',
-        text: '确认添加',
-      },
-    ],
-    data: [
-      [
-        {
-          label: '店铺名称：',
-          prop: 'none1',
-          tag: {
-            attr: { placeholder: '请输入店铺名称' },
-          },
-        },
-        {
-          label: '添加产品：',
-          prop: 'none2',
-          tag: {
-            attr: { placeholder: '请输入商品ID' },
-          },
-        },
-        {
-          label: '有效期：',
-          prop: 'none3',
-          tag: {
-            tagType: 'date-picker',
-            attr: {
-              placeholder: '请选择有效期',
-              type: 'date',
-            },
-          },
-        },
-      ],
-    ],
-  };
+    if (nickname) nickname.default = data.nickname;
+    if (phone) phone.default = data.phone;
+  }
 
-  /** 自营产品管理 > 优惠活动 > 新增优惠券 */
-  config9 = {
-    buttons: [
-      {
-        mode: 'submit',
-        text: '保存',
-        sort: 1,
-      },
-      {
-        mode: 'cancel',
-        text: '取消',
-        sort: 2,
-      },
-    ],
-    data: [
-      [
-        {
-          label: '优惠券名称：',
-          prop: 'none0',
-          tag: {
-            tagType: 'editor',
-            attr: {},
-          },
-        },
-        {
-          label: '优惠券名称：',
-          prop: 'none1',
-          tag: {
-            attr: { placeholder: '请输入优惠券名称' },
-          },
-        },
-        {
-          label: '面额：',
-          prop: 'none2',
-          tag: {
-            tagType: 'date-picker',
-            attr: {
-              placeholder: '请选择面额',
-              type: 'date',
-            },
-          },
-        },
-        {
-          label: '使用条件：',
-          prop: 'none3',
-          tag: {
-            tagType: 'switch',
-            attr: {
-              'active-text': '无条件使用',
-            },
-          },
-        },
-        {
-          label: '发放日期：',
-          prop: 'none4',
-          tag: {
-            tagType: 'date-picker',
-            attr: {
-              placeholder: '请选择发放日期',
-              type: 'date',
-            },
-          },
-        },
-        {
-          label: '有效时间：',
-          prop: 'none5',
-          tag: {
-            tagType: 'date-picker',
-            attr: {
-              placeholder: '请选择有效时间',
-              type: 'date',
-            },
-          },
-        },
-      ],
-    ],
-  };
+  switchConfig() {
+    this.isValidation = !this.isValidation;
+  }
+
+  onAddComplete() {
+    this.switchConfig();
+  }
 }
 </script>

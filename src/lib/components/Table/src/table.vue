@@ -276,7 +276,6 @@ export default {
           });
         });
       }
-      console.log('tableList', tableList);
       this.tableList = tableList;
     },
 
@@ -467,9 +466,9 @@ export default {
       const { id } = scope.row;
       const api = this.api.show;
       this.$http
-        .post(api, { id })
+        .get(api, { id })
         .then((res) => {
-          const { data } = res.data;
+          const { data } = res;
           // 抛出修改数据
           this.$emit('emitGetEditData', data);
           this.$emit('emitTableHandlerClick', {

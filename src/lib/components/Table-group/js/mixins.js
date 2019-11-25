@@ -465,8 +465,15 @@ export default {
       const { title, message, option } = deleteMessage;
       const flag = await this.$utils._MessageConfirm(message, title, option);
       if (!flag) return;
+      const param = {};
+      if (ids.length === 1) {
+        param.id = ids[0];
+      } else {
+        param.ids = ids;
+      }
+
       this.$http
-        .post(api, { ...this.tableConfig.deleteParams, ids })
+        .post(api, { ...this.tableConfig.deleteParams, ...param })
         .then((res) => {
           this.$message({
             message: (res.data && res.data.errmsg) || '删除成功',
