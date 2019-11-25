@@ -23,9 +23,11 @@ import Upload from './components/Upload';
 // import Audio from './components/Audio';
 // import Video from './components/Video';
 // import Qrcode from './components/Qrcode';
-// import Editor from './components/Editor';
+import Editor from './components/Editor';
 // import Filter from './components/Filter';
-
+import Breadcrumb from './components/Breadcrumb';
+import Sku from './components/SKU';
+import { OTable, OTableRow } from './components/OrderTable';
 // import directives from './directive';
 // import utils from './utils';
 // import axios from './axios';
@@ -52,12 +54,16 @@ const components = [
   { com: Search, name: Search.name },
   { com: Edit, name: Edit.name },
   { com: Upload, name: Upload.name },
+  { com: Breadcrumb, name: 'ScBreadcrumb' },
   // { com: Tag, name: 'ScTag' },
   // { com: SettingTable, name: SettingTable.name },
   // { com: Audio, name: 'ScAudio' },
   // { com: Video, name: 'ScVideo' },
   // { com: Qrcode, name: 'ScQrcode' },
-  // { com: Editor, name: 'ScEditor' },
+  { com: Editor, name: 'ScEditor' },
+  { com: Sku, name: 'ScSku' },
+  { com: OTable, name: 'OTable' },
+  { com: OTableRow, name: 'OTableRow' },
   // { com: Filter, name: 'ScFilter' },
 ];
 
@@ -92,11 +98,15 @@ export default {
   Search,
   Edit,
   Upload,
+  Breadcrumb,
   //   Tag,
   //   SettingTable,
   //   Audio,
   //   Video,
   //   Qrcode,
-  //   Editor,
+  Editor,
+  Sku,
+  OTable,
+  OTableRow,
   //   Filter,
 };

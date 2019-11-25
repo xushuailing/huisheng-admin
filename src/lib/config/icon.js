@@ -18,6 +18,10 @@ export default [
     title: '详情',
   },
   {
+    name: 'look',
+    title: '查看',
+  },
+  {
     name: 'download',
     title: '下载',
   },

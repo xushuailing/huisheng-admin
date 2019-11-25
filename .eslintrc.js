@@ -30,11 +30,19 @@ module.exports = {
     camelcase: 'off',
     'class-methods-use-this': 'off',
     'prefer-destructuring': 'off',
+    'eqeqeq':'off'
   },
   globals: {
     vue: true,
     $: true,
     AMap: true,
     require: true,
+  },
+  settings: {
+    'import/resolver': {
+      node: {
+        extensions: ['.ts', '.tsx', '.js', '.jsx', '.d.ts'],
+      },
+    },
   },
 };

@@ -136,13 +136,13 @@
                     v-on="listeners"
                     v-model="formData.value"
                     ref="scTreeSelect">
-    </sc-tree-select>
+    </sc-tree-select> -->
     <sc-editor v-else-if="tagType==='editor'"
                v-bind="tagBind"
                v-on="listeners"
                v-model="formData.value"
                ref="scEditor">
-    </sc-editor> -->
+    </sc-editor>
     <component v-else-if="tagType==='component'"
                v-bind="tagBind"
                v-on="listeners"
@@ -163,8 +163,8 @@
               clearable>
       <template v-if="tagBind.slot">
         <component :is="tagBind.slot.component"
-                     v-on="tagBind.slot.listeners"
-                     v-bind="tagBind.slot.attr" />
+                   v-on="tagBind.slot.listeners"
+                   v-bind="tagBind.slot.attr" />
       </template>
     </el-input>
   </div>

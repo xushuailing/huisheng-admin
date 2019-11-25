@@ -15,6 +15,9 @@ interface Handler {
   /** 按钮提示 */
   title?: string;
 
+  /** 颜色 */
+  type?: 'primary' | 'success' | 'warning' | 'danger' | 'info';
+
   /** 按钮权限配置 */
   limit?: string | string[] | ScLimit;
 }
@@ -80,10 +83,10 @@ export type ScTableSetColumn = [
 ];
 
 export interface ScTableColumn {
-  /** 显示的标题 (必填) */
+  /** 对应列内容的字段名 (必填) */
   prop: string;
 
-  /** 对应列内容的字段名 (必填) */
+  /** 显示的标题 (必填) */
   label: string;
 
   /** 是否禁止修改宽度 默认值:false */
@@ -121,7 +124,7 @@ export interface ScTableColumn {
    *
    * 需要返回要显示数据
    */
-  formater?(row: obj, col: obj, that: Vue): any;
+  formater?(row: obj, col: ScTableColumn, that: Vue): any;
 
   /**
   处理特殊列表渲染方式和自定义函数渲染的属性
@@ -138,7 +141,7 @@ export interface ScTableColumn {
 
   需要返回处理后的数据
  */
-  propsHandler?(data: { row: obj; col: obj; column: obj }): { row: obj; col: obj; column: obj };
+  propsHandler?(data: { row: obj; col: obj; column: obj }): obj;
 
   /**
    * 当前列编辑表单配置项
@@ -187,7 +190,7 @@ interface ScTableConfigHeader {
 interface ScTableConfig extends obj {
   table?: {
     /** 表格自定义存储排版字段 */
-    storageKey: string;
+    storageKey?: string;
 
     /** 表格权限 */
     limit?: {
@@ -237,6 +240,8 @@ interface ScTableConfig extends obj {
 }
 
 export interface ScTable extends Table {
+  /** 选中表格数据 */
+  selectTableData: obj[];
   /** 设置表格数据 */
   setDataTable(option?: object): void;
 }
@@ -286,7 +291,7 @@ export namespace ScTable {
     /** `columns` 对应的 `label` */
     [x: string]: Partial<ScTableColumn> & {
       /** 自定义组件 */
-      component: VueConstructor;
+      component?: VueConstructor;
       /** 用于监听 `component` 配置的自定义渲染组件内部 `$emit` 出的事件 */
       listeners?: { [x: string]: Function };
     };

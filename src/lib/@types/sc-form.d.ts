@@ -171,6 +171,9 @@ export interface ScFormData {
   /** 是否占一整行(默认值: `false`) */
   isFull?: boolean;
 
+  /** `label-position` 不为 `top` 时，是否行内显示(默认值: `true`) */
+  inline?: boolean;
+
   /** 默认值 */
   default?: any;
 
@@ -213,6 +216,9 @@ declare class FormConfig {
 
   /** 表单属性 `form-attributes` */
   public formAttr?: obj;
+
+  /** 表单域标签的的宽度 */
+  public 'label-width'?: string;
 
   /** 表单事件 `form-events` */
   public formListeners?: obj;
