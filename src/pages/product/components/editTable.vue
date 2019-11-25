@@ -399,14 +399,13 @@ export default class EditTable extends Vue {
    */
   getColBind(col: obj) {
     const bind = Object.assign({ align: 'center' }, col);
-
-    if (this.tableBind.showRequired) {
+    if (this.tableConfig.showRequired) {
       // 设置表头必填符号
       const rulesObj = this.rules[col.prop];
       const rules = (rulesObj && rulesObj.value) || [];
       if (rules.some((e: obj) => e && e.required)) {
         bind['render-header'] = (h: any) => [
-          h('span', { class: 'sc-font-danger font-16', style: { verticalAlign: 'middle' } }, '* '),
+          h('span', { class: 'font-danger font-16', style: { verticalAlign: 'middle' } }, '* '),
           h('span', {}, bind.label),
         ];
       }

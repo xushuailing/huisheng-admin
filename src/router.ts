@@ -103,10 +103,16 @@ const router = new Router({
           meta: { breadcrumb: [{ title: '商品管理' }, { title: '全部商品' }] },
         },
         {
-          path: 'demo',
-          name: ' 测试',
-          component: () => import('./pages/product/demo.vue'),
-          meta: { breadcrumb: [{ title: '商品管理' }, { title: '测试' }] },
+          path: 'shelves',
+          name: '已下架',
+          component: () => import('./pages/product/shelves.vue'),
+          meta: { breadcrumb: [{ title: '商品管理' }, { title: '已下架' }] },
+        },
+        {
+          path: 'add',
+          name: '发布宝贝',
+          component: () => import('./pages/product/add.vue'),
+          meta: { breadcrumb: [{ title: '商品管理' }, { title: '发布宝贝' }] },
         },
       ],
     },
@@ -212,7 +218,7 @@ const router = new Router({
           component: () => import('./pages/shop/auth.vue'),
           meta: {
             breadcrumbHide: true,
-            breadcrumb: [{ title: '店铺管理' }, { title: '店铺认证' }],
+            breadcrumb: [{ title: '店铺管理' }, { title: '店铺基本设置' }],
           },
         },
         {
@@ -391,6 +397,34 @@ const router = new Router({
           meta: {
             breadcrumb: [{ title: '客服管理' }, { title: '运营客服列表' }, { title: '查看' }],
           },
+        },
+      ],
+    },
+    {
+      path: '/market',
+      name: '营销管理',
+      redirect: '/market/index',
+      component: layoutView,
+      children: [
+        {
+          path: 'index',
+          name: '优惠活动',
+          component: () => import('./pages/market/index.vue'),
+          meta: { breadcrumb: [{ title: '新增优惠券' }] },
+        },
+        {
+          path: 'add',
+          name: '新增优惠券',
+          // component: () => import('./pages/market/preferential-add.vue'),
+          meta: {
+            breadcrumb: [{ title: '活动管理' }, { title: '优惠活动' }, { title: '新增优惠券' }],
+          },
+        },
+        {
+          path: 'analysis',
+          name: '优惠活动',
+          component: () => import('./pages/market/analysis.vue'),
+          meta: { breadcrumb: [{ title: '营销管理' }, { title: '分析概况' }] },
         },
       ],
     },

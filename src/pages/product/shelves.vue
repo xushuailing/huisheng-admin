@@ -1,9 +1,5 @@
 <template>
   <div class='test-min'>
-    <sc-breadcrumb class="w100 flex-je pr-30 mb-10">
-      <el-button type="primary"
-                 @click="handleAdd">发布宝贝</el-button>
-    </sc-breadcrumb>
     <sc-min-table stripe
                   ref="table"
                   :columns-type="['selection']"
@@ -24,47 +20,38 @@ import { obj } from '@/lib/@types/sc-param.d';
 const columns: ScTable.SetColumns = [
   ['产品图片', 'image', 100, null, 'img'],
   ['产品规格', 'nickname'],
-  ['产品分类', 'name'],
   ['价格', 'price'],
+  ['产品分类', 'name'],
   ['商品类型', 'idCard'],
-  ['销量', 'pnum'],
 ];
 
 @Component
-export default class MerchantInject extends Vue {
+export default class ProductShelves extends Vue {
   columns = this.$utils._SetTableColumns(columns);
 
   columnsHandler: ScTable.ColumnsHandler = [
     'detail',
-    { name: 'shelves', title: '下架', type: 'danger' },
+    { name: 'shelves', title: '上架', type: 'danger' },
   ];
 
   paginationConfig = {
     slotAttr: {
       isCheckbox: true,
-      text: '全部下架',
+      text: '全部上架',
     },
   };
 
   tableConfig: ScTable.TableConfig = {
     api: this.$api.merchant.product,
-    index: { shopid: '' },
+    index: { shopid: '', status: 0 },
   };
 
   onTableHandlerClick({ row, type }: { row: obj; type: string }) {
     if (type === 'detail') {
-      this.$router.push({
-        path: 'add',
-        params: { detail: 'true', id: row.id },
-        query: { detail: 'true', id: row.id },
-      });
+      console.log('查看: ');
     } else {
-      console.log('下架: ');
+      console.log('上架: ');
     }
-  }
-
-  handleAdd() {
-    this.$router.push('add');
   }
 
   onSlotClick() {
