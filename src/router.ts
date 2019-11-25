@@ -20,6 +20,46 @@ const router = new Router({
       ],
     },
     {
+      path: '/setting',
+      name: '系统管理',
+      component: layoutView,
+      redirect: '/setting/index',
+      children: [
+        {
+          path: 'index',
+          name: '平台管理',
+          meta: { breadcrumb: [{ title: '系统管理' }, { title: '平台管理' }] },
+          component: () => import('./pages/admin/setting/index.vue'),
+        },
+        {
+          path: 'root-name',
+          name: '平台管理员账号',
+          meta: {
+            breadcrumb: [{ title: '系统管理' }, { title: '总账号管理' }],
+          },
+          component: () => import('./pages/admin/setting/root-name.vue'),
+        },
+        {
+          path: 'username-list',
+          name: '平台管理员账号',
+          meta: {
+            breadcrumbHide: true,
+            breadcrumb: [{ title: '系统管理' }, { title: '平台管理员账号' }],
+          },
+          component: () => import('./pages/admin/setting/platform-username-list.vue'),
+        },
+        {
+          path: 'role-list',
+          name: '角色管理',
+          component: () => import('./pages/admin/setting/platform-role-list.vue'),
+          meta: {
+            breadcrumbHide: true,
+            breadcrumb: [{ title: '系统管理' }, { title: '角色管理' }],
+          },
+        },
+      ],
+    },
+    {
       path: '/merchant',
       name: '首页',
       redirect: '/merchant/inject',
@@ -34,39 +74,6 @@ const router = new Router({
           path: 'shop',
           name: '商家店铺管理',
           component: () => import('./pages/admin/merchant/shop-list.vue'),
-        },
-      ],
-    },
-    {
-      path: '/admin',
-      name: '系统管理',
-      component: layoutView,
-      redirect: '/admin/setting',
-      children: [
-        {
-          path: 'setting',
-          name: '平台管理',
-          meta: { breadcrumb: [{ title: '系统管理' }, { title: '平台管理' }] },
-          component: () => import('./pages/admin/setting/index.vue'),
-        },
-        {
-          path: 'username-list',
-          name: '平台管理员账号',
-          meta: {
-            breadcrumbHide: true,
-            breadcrumb: [{ title: '系统管理' }, { title: '平台管理员账号' }],
-          },
-          component: () => import('./pages/admin/setting/root-name.vue'),
-          // component: () => import('./pages/admin/setting/platform-username-list.vue'),
-        },
-        {
-          path: 'role-list',
-          name: '角色管理',
-          component: () => import('./pages/admin/setting/platform-role-list.vue'),
-          meta: {
-            breadcrumbHide: true,
-            breadcrumb: [{ title: '系统管理' }, { title: '角色管理' }],
-          },
         },
       ],
     },

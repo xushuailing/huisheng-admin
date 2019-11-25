@@ -30,6 +30,7 @@ module.exports = {
     camelcase: 'off',
     'class-methods-use-this': 'off',
     'prefer-destructuring': 'off',
+    'eqeqeq':'off'
   },
   globals: {
     vue: true,

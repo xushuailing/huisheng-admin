@@ -83,10 +83,10 @@ export type ScTableSetColumn = [
 ];
 
 export interface ScTableColumn {
-  /** 显示的标题 (必填) */
+  /** 对应列内容的字段名 (必填) */
   prop: string;
 
-  /** 对应列内容的字段名 (必填) */
+  /** 显示的标题 (必填) */
   label: string;
 
   /** 是否禁止修改宽度 默认值:false */
@@ -124,7 +124,7 @@ export interface ScTableColumn {
    *
    * 需要返回要显示数据
    */
-  formater?(row: obj, col: obj, that: Vue): any;
+  formater?(row: obj, col: ScTableColumn, that: Vue): any;
 
   /**
   处理特殊列表渲染方式和自定义函数渲染的属性
@@ -291,7 +291,7 @@ export namespace ScTable {
     /** `columns` 对应的 `label` */
     [x: string]: Partial<ScTableColumn> & {
       /** 自定义组件 */
-      component: VueConstructor;
+      component?: VueConstructor;
       /** 用于监听 `component` 配置的自定义渲染组件内部 `$emit` 出的事件 */
       listeners?: { [x: string]: Function };
     };

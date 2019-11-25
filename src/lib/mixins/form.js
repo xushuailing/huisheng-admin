@@ -143,15 +143,6 @@ export default {
      * 关闭当前路由
      */
     onCancelViews() {
-      const view = this.$route;
-      this.$store.dispatch('delVisitedViews', view).then((views) => {
-        const latestView = views.slice(-1)[0];
-        if (latestView) {
-          this.$router.push(latestView.fullPath);
-        } else {
-          this.$utils._GoHomeRouter(this.$router);
-        }
-      });
     },
   },
   watch: {
