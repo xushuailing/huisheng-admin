@@ -74,7 +74,28 @@ const router = new Router({
         {
           path: 'shop',
           name: '商家店铺管理',
+          meta: { breadcrumb: [{ title: '商家管理' }, { title: '商家店铺管理' }] },
           component: () => import('./pages/admin/merchant/shop-list.vue'),
+        },
+        {
+          path: 'shop-detail',
+          name: '店铺基本信息',
+          meta: {
+            breadcrumb: [
+              { title: '商家管理' },
+              { title: '商家店铺管理' },
+              { title: '店铺基本信息' },
+            ],
+          },
+          component: () => import('./pages/admin/merchant/shop-detail.vue'),
+        },
+        {
+          path: 'shop-join',
+          name: '商家入驻信息',
+          meta: {
+            breadcrumb: [{ title: '商家管理' }, { title: '商家入驻信息' }],
+          },
+          component: () => import('./pages/admin/merchant/shop-join.vue'),
         },
       ],
     },

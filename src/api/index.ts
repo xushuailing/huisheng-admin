@@ -50,6 +50,14 @@ export default {
       /** 商家店铺管理 */
       shop: {
         index: `${url}/admin/getUserShopList`,
+        /** 店铺的商品列表 */
+        goods: {
+          index: `${url}/admin/getUserGoodsList`,
+        },
+        /** 设置商家加入保证金参数信息 */
+        shopJoinShow: `${url}/admin/getShopjoin`,
+        /** 设置商家加入保证金参数信息 */
+        shopJoinUpdate: `${url}/admin/setShopjoin`,
       },
       /** 商家入驻审核列表 */
       inject: {
@@ -59,6 +67,8 @@ export default {
         delete: `${url}/admin/getUserShopList`,
         show: `${url}/admin/getUserShopList`,
         check: `${url}/admin/checkUserShop`,
+        /** 商家审核驳回 */
+        reject: `${url}/admin/setUserShopReject`,
       },
     },
 
