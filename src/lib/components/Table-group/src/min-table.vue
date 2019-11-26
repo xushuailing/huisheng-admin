@@ -38,6 +38,7 @@
               :columnsHandler="columnsHandler"
               :columnsType="columnsType"
               :api="api"
+              :handleWidth="tableConfig.handleWidth"
               :tableData="tableData"
               :slotAppend="slotAppend"
               @select-all="onSelectionChange"
