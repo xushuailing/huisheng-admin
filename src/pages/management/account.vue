@@ -26,72 +26,8 @@ export default class ManagementAccount extends Vue {
   columns = this.$utils._SetTableColumns(columns);
 
   tableConfig = {
-    api: this.$api.merchant.inject,
-    // isSearch: false,
-
-    // disabledRequest: true,
-    table: {
-      // storageKey: 'myTable',
-    },
-    isSetting: true,
-    isExports: true,
+    api: this.$api.merchant.market.index,
   };
-
-
-  searchConfig = {
-    num: 3,
-    param: {},
-    attr: { 'label-width': '120px' },
-    data: [
-      {
-        label: '日期',
-        prop: 'none2',
-        tag: {
-          tagType: 'date-picker',
-          attr: {
-            type: 'datetime',
-            placeholder: '开始时间',
-          },
-        },
-      },
-      {
-        label: '至',
-        prop: 'none2',
-        tag: {
-          tagType: 'date-picker',
-          attr: {
-            type: 'datetime',
-            placeholder: '结束时间',
-          },
-        },
-      },
-      {
-        label: '项目类别',
-        prop: 'none3',
-        tag: {
-          tagType: 'select',
-          options: [
-            {
-              value: 2,
-              label: '全部',
-            },
-            {
-              value: 1,
-              label: '启用',
-            },
-            {
-              value: 0,
-              label: '不启用',
-            },
-          ],
-          attr: {
-            placeholder: '项目类别',
-          },
-        },
-      },
-    ],
-  };
-
 
   onTableHandlerClick() {}
 

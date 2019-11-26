@@ -1,25 +1,45 @@
 <template>
-  <div class="flex">
-    <!-- 营销分析 -->
-    <div class="bg-white border-radius-8 h100 flex-1 flex-column">
-      <div class="pt-15 pb-15 pl-20 pr-20 font-20">营销分析</div>
-      <div v-for="(item,key) in analysis"
-           :key="key"
-           class="border-top flex p-20">
-        <span class="flex-1">{{item.label}}</span>
-        <span class="flex-1 font-primary">{{item.value}}</span>
-      </div>
-    </div>
+  <div class="pb-30">
+    <el-row :gutter="10">
+      <!-- 营销分析 -->
+      <el-col :span="8">
+        <div class="bg-white border-radius-8 flex-column">
+          <div class="pt-15 pb-15 pl-20 pr-20 font-20">营销分析</div>
+          <div v-for="(item,key) in analysis"
+               :key="key"
+               class="border-top flex p-20">
+            <span class="flex-1">{{item.label}}</span>
+            <span class="flex-1 font-primary">{{item.value}}</span>
+          </div>
+        </div>
+      </el-col>
 
-    <!-- 增长趋势 -->
-    <div class="ml-10 pb-10 bg-white border-radius-8 flex-2 flex-column">
-      <div class="p-15 mb-10 border-bottom font-16">营业额增长趋势</div>
-      <ve-line height="290px"
-               :legend-visible="false"
-               :data="growth.data"
-               :settings="growth.settings"
-               :extend="growth.extend"></ve-line>
-    </div>
+      <!-- 增长趋势 -->
+      <el-col :span="16">
+        <div class="pb-10 bg-white border-radius-8 flex-column">
+          <div class="p-15 mb-10 border-bottom font-16">营业额增长趋势</div>
+          <ve-line height="290px"
+                   :legend-visible="false"
+                   :data="growth.data"
+                   :settings="growth.settings"
+                   :extend="growth.extend"></ve-line>
+        </div>
+      </el-col>
+    </el-row>
+
+    <el-row :gutter="10"
+            class="mt-20">
+      <!-- 订购数量 -->
+      <el-col :span="8">
+        <div class="bg-white border-radius-8 h100 flex-4 flex-column">
+          <div class="pt-15 pb-15 pl-20 pr-20 font-20">订购数量</div>
+          <ve-histogram height="400px"
+                        :extend="order.extend"
+                        :legend-visible="false"
+                        :data="order.data"></ve-histogram>
+        </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 <script lang="ts">
@@ -65,9 +85,25 @@ export default class MarketAnalysis extends Vue {
       ],
     },
   };
+
+  order = {
+    extend: {
+      grid: {
+        left: '20',
+        right: '20',
+        top: '6%',
+        bottom: '10%',
+        containLabel: true,
+      },
+    },
+    data: {
+      columns: ['类别', '今日订购量'],
+      rows: [
+        { 类别: '待付款', 今日订购量: 55 },
+        { 类别: '已付款', 今日订购量: 100 },
+        { 类别: '已退货', 今日订购量: 100 },
+      ],
+    },
+  };
 }
 </script>
-<style lang='scss' scoped>
-  .MarketAnalysis {
-  }
-</style>

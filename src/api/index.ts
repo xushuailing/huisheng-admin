@@ -76,6 +76,8 @@ export default {
       show: `${url}/admin/getUserShop`,
       update: `${url}/admin/userJoinShop`,
     },
+
+    /** 产品管理 */
     product: {
       index: `${url}/admin/getGoodsList`,
       show: `${url}/admin/getGoodsdetail`,
@@ -83,6 +85,8 @@ export default {
       update: `${url}/admin/doAddGoods`,
       delete: `${url}/admin/delGoods`,
     },
+
+    /** 营销管理 */
     market: {
       index: `${url}/admin/getCouponList`,
       show: `${url}/admin/getGoodsdetail`,

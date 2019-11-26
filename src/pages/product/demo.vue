@@ -36,9 +36,9 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator';
-import EditTable from './components/editTable.vue';
-import { ScEditTable } from './@types/sc-edit-table.d';
-import { _GetTableSpan, _ObjectSpanMethod, TableColumns, MergeKey } from './utils';
+import EditTable from '@/components/editTable.vue';
+import { ScEditTable } from '@/components/@types/sc-edit-table.d';
+import { _GetTableSpan, _ObjectSpanMethod, TableColumns, MergeKey } from '@/utils/handleTableSpan';
 import { obj } from '@/lib/@types/sc-param.d';
 
 const _MergeKeys: MergeKey = {

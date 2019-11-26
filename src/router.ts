@@ -141,32 +141,20 @@ const router = new Router({
     {
       path: '/member',
       name: '会员管理',
-      redirect: '/member/member',
+      redirect: '/member/index',
       component: layoutView,
       children: [
         {
-          path: 'member',
-          name: '会员',
-          component: () => import('./pages/member/member.vue'),
-          meta: { breadcrumb: [{ title: '会员管理' }, { title: '会员' }] },
+          path: 'index',
+          name: '会员管理页',
+          meta: { breadcrumb: [{ title: '会员管理' }] },
+          component: () => import('./pages/member/index.vue'),
         },
         {
-          path: 'agent',
-          name: '代理',
-          component: () => import('./pages/member/agent.vue'),
-          meta: { breadcrumb: [{ title: '会员管理' }, { title: '代理' }] },
-        },
-        {
-          path: 'agent-detail',
-          name: '代理明细',
-          component: () => import('./pages/member/agent-detail.vue'),
-          meta: { breadcrumb: [{ title: '会员管理' }, { title: '代理明细' }] },
-        },
-        {
-          path: 'member-detail',
-          name: '会员明细',
-          component: () => import('./pages/member/member-detail.vue'),
-          meta: { breadcrumb: [{ title: '会员管理' }, { title: '会员明细' }] },
+          path: 'list',
+          name: '收益明细',
+          meta: { breadcrumb: [{ title: '会员管理' }, { title: '收益明细' }] },
+          component: () => import('./pages/member/list.vue'),
         },
       ],
     },
@@ -437,9 +425,9 @@ const router = new Router({
         {
           path: 'add',
           name: '新增优惠券',
-          // component: () => import('./pages/market/preferential-add.vue'),
+          component: () => import('./pages/market/add.vue'),
           meta: {
-            breadcrumb: [{ title: '活动管理' }, { title: '优惠活动' }, { title: '新增优惠券' }],
+            breadcrumb: [{ title: '营销管理' }, { title: '优惠券' }, { title: '新增优惠券' }],
           },
         },
         {

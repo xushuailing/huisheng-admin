@@ -4,9 +4,7 @@
                   ref="table"
                   :columns="columns"
                   :search-config="searchConfig"
-                  :table-config="tableConfig"
-                  @pagination-onSlotClick="onSlotClick"
-                  @emitTableHandlerClick="onTableHandlerClick">
+                  :table-config="tableConfig">
     </sc-min-table>
   </div>
 </template>
@@ -14,52 +12,40 @@
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import { ScTable } from '../../lib/@types/sc-table.d';
 
-const columns: ScTable.SetColumns = [
-  ['提现金额', 'nickname'],
-  ['创建时期', 'name'],
-];
-
 @Component
 export default class ManagementRecode extends Vue {
-  columns = this.$utils._SetTableColumns(columns);
+  columns: ScTable.Columns = [
+    {
+      label: '提现金额',
+      prop: 'price',
+      formater: (row, col) => {
+        const text = row[col.prop];
+        const style = Number(text) > 0 ? '' : 'font-danger';
+        return [{ class: style }, text];
+      },
+    },
+    { label: '创建时期', prop: 'createtime' },
+  ];
 
   tableConfig = {
-    api: this.$api.merchant.inject,
-    // isSearch: false,
-
-    // disabledRequest: true,
-    table: {
-      // storageKey: 'myTable',
-    },
-    isSetting: true,
-    isExports: true,
+    api: this.$api.merchant.product,
   };
 
-
   searchConfig = {
-    num: 1,
     param: {},
-    attr: { 'label-width': '120px' },
     data: [
       {
         label: '创建时间',
-        prop: 'none2',
+        prop: 'createtime',
         tag: {
           tagType: 'date-picker',
           attr: {
-            type: 'datetime',
-            placeholder: '时间',
+            type: 'date',
+            placeholder: '请选择时间',
           },
         },
       },
     ],
   };
-
-
-  onTableHandlerClick() {}
-
-  onSlotClick() {
-    console.log('1', 1);
-  }
 }
 </script>
