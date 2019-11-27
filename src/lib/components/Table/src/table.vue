@@ -69,8 +69,8 @@
         </template>
 
         <el-table-column v-if="columnsHandlerType"
-                         :width="columnsHandlerType.width"
                          label="操作"
+                         :width="handleWidth||columnsHandlerType.width"
                          header-align='center'
                          fixed="right">
           <template slot-scope="scope">
@@ -174,6 +174,10 @@ export default {
     api: {
       type: Object,
       default: () => ({}),
+    },
+
+    handleWidth: {
+      table: [Number, String],
     },
   },
   data() {

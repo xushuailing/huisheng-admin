@@ -13,10 +13,12 @@
 
     <dialog-textarea title="请输入驳回理由"
                      placeholder="请输入驳回理由~"
-                     api='123'
+                     msg="驳回"
+                     :api='rejectApi'
                      prop="reject"
                      :id="rejectForm.id"
-                     :visible.sync="rejectForm.visible" />
+                     :visible.sync="rejectForm.visible"
+                     @onConfirm="onRejectConfirm" />
   </div>
 </template>
 <script lang='ts'>
@@ -34,7 +36,7 @@ enum status {
 
 const columns: ScTable.SetColumns = [
   ['门店名称', 'shopname', 200],
-  ['公司名称', 'company', 120],
+  ['公司名称', 'company'],
   ['联系人', 'username', 100],
   ['公司电话', 'com_phone', 100],
   ['门店地址', 'address'],
@@ -66,17 +68,15 @@ export default class SettingUsernameList extends Vue {
     index: {
       status: '1',
     },
+    // handleWidth: '100',
   };
 
   searchConfig = {
-    num: 4,
-    param: {},
     attr: { 'label-width': '120px' },
     data: [
       {
         label: '商家店铺名称：',
-        prop: 'none1',
-        default: '',
+        prop: 'company',
         tag: {
           attr: {
             placeholder: '请输入商家店铺名称',
@@ -90,14 +90,14 @@ export default class SettingUsernameList extends Vue {
         tag: {
           tagType: 'select',
           options: [
-            {
-              value: 1,
-              label: '启用',
-            },
-            {
-              value: 0,
-              label: '不启用',
-            },
+            // {
+            //   value: 1,
+            //   label: '启用',
+            // },
+            // {
+            //   value: 0,
+            //   label: '不启用',
+            // },
           ],
           attr: {
             placeholder: '请选择店铺类型',
@@ -105,28 +105,8 @@ export default class SettingUsernameList extends Vue {
         },
       },
       {
-        label: '审核状态：',
-        prop: 'none4',
-        tag: {
-          tagType: 'select',
-          options: [
-            {
-              value: 1,
-              label: '启用',
-            },
-            {
-              value: 0,
-              label: '不启用',
-            },
-          ],
-          attr: {
-            placeholder: '请选择审核状态',
-          },
-        },
-      },
-      {
         label: '提交时间：',
-        prop: 'none2',
+        prop: 'strtime',
         tag: {
           tagType: 'date-picker',
           attr: {
@@ -142,6 +122,10 @@ export default class SettingUsernameList extends Vue {
     visible: false,
     id: null,
   };
+
+  get rejectApi() {
+    return this.$api.admin.merchant.inject.reject;
+  }
 
   onTableHandlerClick({ row, index, type }: ScTable.Event.TableHandlerClick) {
     console.log('row :', { ...row });
@@ -166,6 +150,10 @@ export default class SettingUsernameList extends Vue {
         // this.$refs.table.emitRefresh();
       });
     }
+  }
+
+  onRejectConfirm(flag: boolean) {
+    if (flag) this.$refs.table.emitRefresh();
   }
 }
 </script>

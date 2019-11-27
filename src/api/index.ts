@@ -50,6 +50,14 @@ export default {
       /** 商家店铺管理 */
       shop: {
         index: `${url}/admin/getUserShopList`,
+        /** 店铺的商品列表 */
+        goods: {
+          index: `${url}/admin/getUserGoodsList`,
+        },
+        /** 设置商家加入保证金参数信息 */
+        shopJoinShow: `${url}/admin/getShopjoin`,
+        /** 设置商家加入保证金参数信息 */
+        shopJoinUpdate: `${url}/admin/setShopjoin`,
       },
       /** 商家入驻审核列表 */
       inject: {
@@ -59,6 +67,8 @@ export default {
         delete: `${url}/admin/getUserShopList`,
         show: `${url}/admin/getUserShopList`,
         check: `${url}/admin/checkUserShop`,
+        /** 商家审核驳回 */
+        reject: `${url}/admin/setUserShopReject`,
       },
     },
 
@@ -66,36 +76,18 @@ export default {
     complaints: {
       index: `${url}/admin/getComplaintList`,
     },
-  },
-
-  /** 商家管理 */
-  merchant: {
-    /** 商家店铺管理 */
-    shop: {
-      index: `${url}/admin/getUserShopList`,
-      show: `${url}/admin/getUserShop`,
-      update: `${url}/admin/userJoinShop`,
-    },
-    product: {
-      index: `${url}/admin/getGoodsList`,
-      show: `${url}/admin/getGoodsdetail`,
-      create: `${url}/admin/doAddGoods`,
-      update: `${url}/admin/doAddGoods`,
-      delete: `${url}/admin/delGoods`,
-    },
-    market: {
-      index: `${url}/admin/getCouponList`,
-      show: `${url}/admin/getGoodsdetail`,
-      update: `${url}/admin/doAddCoupon`,
-      delete: `${url}/admin/delCoupon`,
-    },
-    inject: {
-      index: `${url}/service-uaa/sys/user/index`,
-      create: `${url}/service-uaa/sys/user/create`,
-      update: `${url}/service-uaa/sys/user/update`,
-      delete: `${url}/service-uaa/sys/user/delete`,
-      export: `${url}/service-uaa/sys/user/export`,
-      show: `${url}/service-uaa/sys/user/show`,
+    /** 会员管理 */
+    vip: {
+      /** 会员列表 */
+      level: {
+        index: `${url}/admin/levelList`,
+      },
+      /** 会员规则 */
+      rules: {
+        show: `${url}/admin/RuleText`,
+        update: `${url}/admin/RuleTextUpdate`,
+        index: `${url}/admin/SetUpList`,
+      },
     },
   },
 

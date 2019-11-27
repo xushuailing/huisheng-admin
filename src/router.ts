@@ -74,7 +74,28 @@ const router = new Router({
         {
           path: 'shop',
           name: '商家店铺管理',
+          meta: { breadcrumb: [{ title: '商家管理' }, { title: '商家店铺管理' }] },
           component: () => import('./pages/admin/merchant/shop-list.vue'),
+        },
+        {
+          path: 'shop-detail',
+          name: '店铺基本信息',
+          meta: {
+            breadcrumb: [
+              { title: '商家管理' },
+              { title: '商家店铺管理' },
+              { title: '店铺基本信息' },
+            ],
+          },
+          component: () => import('./pages/admin/merchant/shop-detail.vue'),
+        },
+        {
+          path: 'shop-join',
+          name: '商家入驻信息',
+          meta: {
+            breadcrumb: [{ title: '商家管理' }, { title: '商家入驻信息' }],
+          },
+          component: () => import('./pages/admin/merchant/shop-join.vue'),
         },
       ],
     },
@@ -88,13 +109,31 @@ const router = new Router({
           path: 'list',
           name: '列表',
           meta: { breadcrumb: [{ title: '会员管理' }, { title: '列表' }] },
-          component: () => import('./pages/vip-manage/list.vue'),
+          component: () => import('./pages/admin/vip/list.vue'),
         },
         {
           path: 'check-list',
           name: '审核列表',
           meta: { breadcrumb: [{ title: '会员管理' }, { title: '审核列表' }] },
-          component: () => import('./pages/vip-manage/check-list.vue'),
+          component: () => import('./pages/admin/vip/check-list.vue'),
+        },
+        {
+          path: 'rules-manage',
+          name: '规则管理',
+          meta: { breadcrumb: [{ title: '会员管理' }, { title: '规则管理' }] },
+          component: () => import('./pages/admin/vip/rules-manage.vue'),
+        },
+        {
+          path: 'rules-list',
+          name: '会员规则',
+          meta: { breadcrumb: [{ title: '会员管理' }, { title: '会员规则' }] },
+          component: () => import('./pages/admin/vip/rules-list.vue'),
+        },
+        {
+          path: 'agent',
+          name: '添加代理',
+          meta: { breadcrumb: [{ title: '会员管理' }, { title: '添加代理' }] },
+          component: () => import('./pages/admin/vip/add-agent.vue'),
         },
       ],
     },

@@ -41,12 +41,12 @@ export default class MerchantShop extends Vue {
   paginationConfig = {
     slotAttr: {
       isCheckbox: true,
-      text: '通过',
+      text: '下架',
     },
   };
 
   tableConfig = {
-    api: this.$api.merchant.shop,
+    api: this.$api.admin.merchant.shop,
   };
 
   searchConfig = {
@@ -119,6 +119,14 @@ export default class MerchantShop extends Vue {
       },
     ],
   };
+
+  async getTypeid() {
+    try {
+      // const { data } = await this.$http.get();
+    } catch (error) {
+      console.log('error', error);
+    }
+  }
 
   onTableHandlerClick() {}
 
