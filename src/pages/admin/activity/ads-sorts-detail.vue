@@ -1,14 +1,9 @@
 <template>
-  <div class='ads-sorts'>
-    <sc-min-table stripe
-                  ref="table"
-                  :columns-handler="columnsHandler"
-                  :columns="columns"
-                  :table-config="tableConfig"
-                  :search-config="searchConfig"
-                  :form-add-config="addConfig"
-                  @table-emitTableHandlerClick="onTableHandlerClick">
-    </sc-min-table>
+  <div class='ads-sorts-detail bg-white p-15 border-r'>
+    <sc-add-form mode="page"
+                 :api="api"
+                 :config="addConfig">
+    </sc-add-form>
   </div>
 </template>
 <script lang='ts'>
@@ -18,57 +13,11 @@ import { ScTable } from '@/lib/@types/sc-table.d';
 import { ScForm } from '@/lib/@types/sc-form.d';
 import { obj } from '@/lib/@types/sc-param.d';
 
-export const ADS_TYPE: obj = {
-  0: '广告',
-  1: '活动',
-};
-
 @Component
-export default class ActvAdsSorts extends Vue {
-  columns: ScTable.Columns = [
-    {
-      label: '广告类型',
-      prop: 'type',
-      formater: (row, col) => ADS_TYPE[row[col.prop]] || '',
-    },
-    { label: '名称', prop: 'title' },
-    {
-      label: '价位',
-      prop: 'price',
-      formater: (row, col) => (row[col.prop] ? `￥ ${row[col.prop]}` : ''),
-    },
-    { label: '有效期', prop: 'none2' },
-    { label: '创建时间', prop: 'createtime' },
-  ];
-
-  columnsHandler: ScTable.ColumnsHandler = ['look'];
-
-  tableConfig: ScTable.TableConfig = {
-    api: this.$api.admin.activity.adsSorts,
-    breadcrumbButtons: ['add'],
-  };
-
-  searchConfig: ScTable.Search = {
-    data: [
-      {
-        label: '广告类型：',
-        prop: 'type',
-        tag: {
-          tagType: 'select',
-          options: Object.keys(ADS_TYPE).map((k) => ({ label: ADS_TYPE[k], value: k })),
-          attr: { placeholder: '请选择广告类型' },
-        },
-      },
-      {
-        label: '创建时间：',
-        prop: 'createtime',
-        tag: {
-          tagType: 'date-picker',
-          attr: { type: 'datetime', placeholder: '请选择创建时间' },
-        },
-      },
-    ],
-  };
+export default class ActvAdsSortsDetail extends Vue {
+  get api() {
+    return this.$api.admin.activity.adsSorts.create;
+  }
 
   addConfig: ScForm.Add = {
     'label-width': '140px',
@@ -97,11 +46,10 @@ export default class ActvAdsSorts extends Vue {
     ],
   };
 
-  onTableHandlerClick({ row, type }: { row: obj; type: string }) {
-    if (type === 'detail') {
-      console.log('%c查看', 'color:#40b883;font-weight:bold');
-      this.getDetails(row.id);
-    }
+  mounted() {
+    const { id } = this.$route.query;
+
+    if (id) this.getDetails(id as string);
   }
 
   getDetails(id: string) {

@@ -351,10 +351,9 @@ const router = new Router({
         },
         {
           path: 'ads-sorts-detail',
-          name: '广告分类',
+          name: '详情',
           component: () => import('./pages/admin/activity/ads-sorts-detail.vue'),
           meta: {
-            breadcrumbHide: true,
             breadcrumb: [{ title: '活动管理' }, { title: '广告分类' }, { title: '详情' }],
           },
         },

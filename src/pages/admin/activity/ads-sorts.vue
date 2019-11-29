@@ -6,8 +6,10 @@
                   :columns="columns"
                   :table-config="tableConfig"
                   :search-config="searchConfig"
-                  :form-add-config="addConfig"
                   @table-emitTableHandlerClick="onTableHandlerClick">
+      <template slot="breadcrumb">
+        <el-button @click="onAdd">新增</el-button>
+      </template>
     </sc-min-table>
   </div>
 </template>
@@ -25,6 +27,7 @@ export const ADS_TYPE: obj = {
 
 @Component
 export default class ActvAdsSorts extends Vue {
+  // TODO: 缺少有效期
   columns: ScTable.Columns = [
     {
       label: '广告类型',
@@ -70,44 +73,16 @@ export default class ActvAdsSorts extends Vue {
     ],
   };
 
-  addConfig: ScForm.Add = {
-    'label-width': '140px',
-    header: { title: '新增分类' },
-    formAttr: { 'label-position': 'left' },
-    data: [
-      [
-        {
-          label: '请输入广告位名称：',
-          prop: 'title',
-          tag: { attr: { placeholder: '请输入广告位名称' } },
-        },
-        {
-          label: '介绍：',
-          prop: 'none3',
-          inline: false,
-          tag: { attr: { type: 'textarea', rows: 6, placeholder: '请输入介绍' } },
-        },
-        {
-          label: '',
-          prop: 'sort',
-          inline: false,
-          tag: { tagType: 'component', components: SortAdd },
-        },
-      ],
-    ],
-  };
-
   onTableHandlerClick({ row, type }: { row: obj; type: string }) {
     if (type === 'detail') {
       console.log('%c查看', 'color:#40b883;font-weight:bold');
-      this.getDetails(row.id);
+      // this.getDetails(row.id);
+      this.onAdd(row.id);
     }
   }
 
-  getDetails(id: string) {
-    this.$http.get(this.$api.admin.activity.adsSorts.show, { id }).then(({ data }: obj) => {
-      console.log('res: ', data);
-    });
+  onAdd(id?: string) {
+    this.$router.push('/activity/ads-sorts-detail');
   }
 }
 </script>

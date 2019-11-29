@@ -18,6 +18,7 @@ import { ScTable } from '@/lib/@types/sc-table.d';
 import { ScForm } from '@/lib/@types/sc-form.d';
 import { obj } from '@/lib/@types/sc-param.d';
 
+// TODO: 缺少店铺信息
 const columns: ScTable.SetColumns = [
   ['店铺信息', 'none1'],
   ['推广类型', 'title'],
@@ -25,7 +26,6 @@ const columns: ScTable.SetColumns = [
   ['有效期', 'endtime'],
   ['申请时间', 'createtime'],
 ];
-// TODO: 缺少店铺信息 跳转类型：
 
 @Component
 export default class ActvAdsList extends Vue {
@@ -44,6 +44,7 @@ export default class ActvAdsList extends Vue {
     breadcrumbButtons: ['add'],
   };
 
+  // TODO: 缺少推广类型
   searchConfig: ScTable.Search = {
     attr: { 'label-width': '110px' },
     data: [
@@ -77,6 +78,7 @@ export default class ActvAdsList extends Vue {
     ],
   };
 
+  // TODO: 跳转类型
   addConfig: ScForm.Add = {
     buttons: [
       {

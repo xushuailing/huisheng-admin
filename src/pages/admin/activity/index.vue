@@ -43,6 +43,7 @@ export default class ActvIndex extends Vue {
     },
   };
 
+  // TODO: 缺少上传图片
   onTableHandlerClick({ row, type }: { row: obj; type: string }) {
     if (type === 'change') {
       console.log('%c更改图片', 'color:#40b883;font-weight:bold');
