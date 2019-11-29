@@ -36,14 +36,14 @@
             <template slot-scope="scope">
               <div v-if="col.special === 'img'"
                    class="w100 flex-jc">
-                <img width="25"
-                     height="25"
+                <img v-if="scope.row[col.prop]"
                      style="object-fit: cover;"
                      v-bind="getCptBind(scope, col)"
                      @click="onImgClick(scope, col)"
                      v-on="col.listeners"
                      :src="scope.row[col.prop]"
                      alt />
+                <span v-else>无</span>
               </div>
               <el-switch v-else-if="col.special === 'switch'"
                          v-model="scope.row[col.prop]"
@@ -220,7 +220,7 @@ export default {
 
     columnsHandlerType() {
       const { columnsHandler: name } = this;
-      const WIDTH = 45; // 默认一个操作事件的宽
+      const WIDTH = 55; // 默认一个操作事件的宽
       let handler = { content: [], width: WIDTH }; // 初始化属性
 
       // 一个操作
@@ -246,7 +246,7 @@ export default {
         handler = null;
       }
       if (handler && handler.content.length) {
-        handler.width = handler.content.length * WIDTH + 25;
+        handler.width = handler.content.length * WIDTH + 40;
       } else {
         handler = null;
       }
@@ -452,6 +452,11 @@ export default {
         props.column.width = 70;
         props.col.width = 70;
       }
+      if (type === 'img') {
+        props.width = 25;
+        props.height = 25;
+      }
+
       return (handler && handler(props)) || props;
     },
 

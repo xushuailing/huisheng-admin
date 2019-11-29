@@ -208,6 +208,8 @@ interface ScTableConfig extends obj {
     };
   };
 
+  handleWidth?: number;
+
   /** `max-table`头部设置 */
   header?: ScTableConfigHeader;
 
