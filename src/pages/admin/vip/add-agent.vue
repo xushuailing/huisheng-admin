@@ -2,7 +2,7 @@
   <div class="admin-rootName bg-white p-15">
     <div class="p-20">
       <sc-add-form mode="page"
-                   api="http://baidu.com"
+                   :api="addApi"
                    :config="config"> </sc-add-form>
     </div>
 
@@ -63,8 +63,8 @@ export default class AdminRootName extends Vue {
     ],
   };
 
-  get addApi(){
-    
+  get addApi() {
+    return '';
   }
 }
 </script>

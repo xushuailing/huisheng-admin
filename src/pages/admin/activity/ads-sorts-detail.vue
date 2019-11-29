@@ -2,10 +2,8 @@
   <div class='ads-sorts'>
     <sc-min-table stripe
                   ref="table"
-                  :columns-type="['index']"
                   :columns-handler="columnsHandler"
                   :columns="columns"
-                  :columns-props="{align:'center'}"
                   :table-config="tableConfig"
                   :search-config="searchConfig"
                   :form-add-config="addConfig"
@@ -16,8 +14,8 @@
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
 import SortAdd from './components/ads-sorts-add.vue';
-import { ScTable } from '../../lib/@types/sc-table.d';
-import { ScForm } from '../../lib/@types/sc-form.d';
+import { ScTable } from '@/lib/@types/sc-table.d';
+import { ScForm } from '@/lib/@types/sc-form.d';
 import { obj } from '@/lib/@types/sc-param.d';
 
 export const ADS_TYPE: obj = {
@@ -43,10 +41,10 @@ export default class ActvAdsSorts extends Vue {
     { label: '创建时间', prop: 'createtime' },
   ];
 
-  columnsHandler: ScTable.ColumnsHandler = ['detail'];
+  columnsHandler: ScTable.ColumnsHandler = ['look'];
 
   tableConfig: ScTable.TableConfig = {
-    api: this.$api.activity.adsSorts,
+    api: this.$api.admin.activity.adsSorts,
     breadcrumbButtons: ['add'],
   };
 
@@ -73,8 +71,6 @@ export default class ActvAdsSorts extends Vue {
   };
 
   addConfig: ScForm.Add = {
-    type: 'plain',
-    width: '90%',
     'label-width': '140px',
     header: { title: '新增分类' },
     formAttr: { 'label-position': 'left' },
@@ -109,7 +105,7 @@ export default class ActvAdsSorts extends Vue {
   }
 
   getDetails(id: string) {
-    this.$http.get(this.$api.activity.adsSorts.show, { id }).then(({ data }: obj) => {
+    this.$http.get(this.$api.admin.activity.adsSorts.show, { id }).then(({ data }: obj) => {
       console.log('res: ', data);
     });
   }

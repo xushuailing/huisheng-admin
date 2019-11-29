@@ -22,7 +22,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import GoodsInfo from './components/img-name';
 import { ScTable, Scope } from '@/lib/@types/sc-table.d';
-import { ScForm } from '../../lib/@types/sc-form.d';
+import { ScForm } from '@/lib/@types/sc-form.d';
 import { obj } from '@/lib/@types/sc-param.d';
 
 @Component
@@ -47,7 +47,7 @@ export default class ActvNew extends Vue {
   columnsHandler: ScTable.ColumnsHandler = ['del'];
 
   tableConfig: ScTable.TableConfig = {
-    api: this.$api.merchant.inject,
+    // api: this.$api.merchant.inject,
     breadcrumbButtons: [],
   };
 

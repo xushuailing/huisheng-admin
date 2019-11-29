@@ -54,6 +54,7 @@ export default {
         goods: {
           index: `${url}/admin/getUserGoodsList`,
         },
+        show: `${url}/admin/getUserShop`,
         /** 设置商家加入保证金参数信息 */
         shopJoinShow: `${url}/admin/getShopjoin`,
         /** 设置商家加入保证金参数信息 */
@@ -89,22 +90,27 @@ export default {
         index: `${url}/admin/SetUpList`,
       },
     },
-  },
 
-  /** 活动管理 */
-  activity: {
-    index: {
-      index: `${url}/admin/shopJoinActivityList`,
-    },
-    adsSorts: {
-      index: `${url}/admin/getBanner`,
-      create: `${url}/admin/doaAddBanner`,
-      show: `${url}`,
-    },
-    coupon: {
-      index: `${url}/admin/getCouponList`,
-      create: `${url}/admin/doAddCoupon`,
-      delete: `${url}/admin/delCoupon`,
+    /** 活动管理 */
+    activity: {
+      index: {
+        index: `${url}/admin/shopJoinActivityList`,
+      },
+      ads: {
+        index: `${url}/admin/getBannerList`,
+        create: `${url}/admin/setBanner`,
+      },
+
+      adsSorts: {
+        index: `${url}/admin/getBanner`,
+        create: `${url}/admin/doaAddBanner`,
+        show: `${url}`,
+      },
+      // coupon: {
+      //   index: `${url}/admin/getCouponList`,
+      //   create: `${url}/admin/doAddCoupon`,
+      //   delete: `${url}/admin/delCoupon`,
+      // },
     },
   },
 };

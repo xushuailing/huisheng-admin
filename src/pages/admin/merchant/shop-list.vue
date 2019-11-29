@@ -18,7 +18,7 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
 
 const columns: ScTable.SetColumns = [
-  ['门店名称', 'company'],
+  ['门店名称', 'shopname'],
   ['公司名称', 'company'],
   ['门店分类', 'keyword'],
   ['联系人', 'username', 100],
@@ -128,7 +128,13 @@ export default class MerchantShop extends Vue {
     }
   }
 
-  onTableHandlerClick() {}
+  onTableHandlerClick({ type, row }: ScTable.Event.TableHandlerClick) {
+    console.log('type', type);
+    console.log('row', row);
+    if (type === 'look') {
+      this.$router.push({ path: '/merchant/shop-detail', query: { uid: row.uid, id: row.id } });
+    }
+  }
 
   onSlotClick() {
     console.log('this.$refs.table', this.$refs.table.selectTableData);
