@@ -104,13 +104,14 @@ export default {
       adsSorts: {
         index: `${url}/admin/getBanner`,
         create: `${url}/admin/doaAddBanner`,
-        show: `${url}`,
+        show: `${url}/admin/lookBanner`,
       },
-      // coupon: {
-      //   index: `${url}/admin/getCouponList`,
-      //   create: `${url}/admin/doAddCoupon`,
-      //   delete: `${url}/admin/delCoupon`,
-      // },
+      /** 自营产品管理 > 优惠活动 */
+      coupon: {
+        index: `${url}/admin/getCouponList`,
+        create: `${url}/admin/doAddCoupon`,
+        delete: `${url}/admin/delCoupon`,
+      },
     },
   },
 };
