@@ -18,7 +18,7 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
 
 const columns: ScTable.SetColumns = [
-  ['门店名称', 'company'],
+  ['门店名称', 'shopname'],
   ['公司名称', 'company'],
   ['门店分类', 'keyword'],
   ['联系人', 'username', 100],
@@ -41,12 +41,12 @@ export default class MerchantShop extends Vue {
   paginationConfig = {
     slotAttr: {
       isCheckbox: true,
-      text: '通过',
+      text: '下架',
     },
   };
 
   tableConfig = {
-    api: this.$api.merchant.shop,
+    api: this.$api.admin.merchant.shop,
   };
 
   searchConfig = {
@@ -120,7 +120,21 @@ export default class MerchantShop extends Vue {
     ],
   };
 
-  onTableHandlerClick() {}
+  async getTypeid() {
+    try {
+      // const { data } = await this.$http.get();
+    } catch (error) {
+      console.log('error', error);
+    }
+  }
+
+  onTableHandlerClick({ type, row }: ScTable.Event.TableHandlerClick) {
+    console.log('type', type);
+    console.log('row', row);
+    if (type === 'look') {
+      this.$router.push({ path: '/merchant/shop-detail', query: { uid: row.uid, id: row.id } });
+    }
+  }
 
   onSlotClick() {
     console.log('this.$refs.table', this.$refs.table.selectTableData);
