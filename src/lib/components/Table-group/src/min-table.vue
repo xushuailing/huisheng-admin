@@ -10,6 +10,7 @@
                    v-if="addFormApi&&breadcrumbButtons.includes('add')">新增</el-button>
         <el-button @click="onHeaderHandle('del')"
                    v-if="isDelete&&breadcrumbButtons.includes('del')">删除</el-button>
+        <slot name="breadcrumb"></slot>
       </sc-breadcrumb>
     </div>
     <div class="pb-10"
@@ -38,6 +39,7 @@
               :columnsHandler="columnsHandler"
               :columnsType="columnsType"
               :api="api"
+              :handleWidth="tableConfig.handleWidth"
               :tableData="tableData"
               :slotAppend="slotAppend"
               @select-all="onSelectionChange"

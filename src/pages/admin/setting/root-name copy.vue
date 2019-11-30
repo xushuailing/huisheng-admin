@@ -1,7 +1,9 @@
 <template>
   <div class="admin-rootName bg-white p-15">
     <div class="p-20">
-      <sc-add-form mode="page" api="http://baidu.com" :config="config9"> </sc-add-form>
+      <sc-add-form mode="page"
+                   api="http://baidu.com"
+                   :config="config9"> </sc-add-form>
     </div>
     <!-- <el-button @click="dialogShow=true">显示</el-button> -->
     <!-- <div class="p-20">
@@ -132,94 +134,6 @@ export default class AdminRootName extends Vue {
           prop: 'none6',
           tag: {
             attr: { placeholder: '请输入返点比例' },
-          },
-        },
-      ],
-    ],
-  };
-
-  /** 会员管理 > 添加代理 */
-  config6 = {
-    buttons: [
-      {
-        mode: 'submit',
-        text: '添加',
-      },
-    ],
-    data: [
-      [
-        {
-          label: '代理姓名：',
-          prop: 'none1',
-          tag: {
-            attr: { placeholder: '请输入代理姓名' },
-          },
-        },
-        {
-          label: '电话：',
-          prop: 'none2',
-          tag: {
-            attr: { placeholder: '请输入电话' },
-          },
-        },
-        {
-          label: '代理级别：',
-          prop: 'none3',
-          tag: {
-            tagType: 'select',
-            options: [
-              {
-                value: 1,
-                label: '启用',
-              },
-              {
-                value: 0,
-                label: '不启用',
-              },
-              {
-                value: 2,
-                label: '不启用1',
-              },
-            ],
-            attr: { placeholder: '请输入代理级别' },
-          },
-        },
-      ],
-    ],
-  };
-
-  /** 活动管理 > 广告管理 > 添加 */
-  config7 = {
-    buttons: [
-      {
-        mode: 'submit',
-        text: '确认添加',
-      },
-    ],
-    data: [
-      [
-        {
-          label: '添加图片：',
-          prop: 'none1',
-          tag: {
-            tagType: 'upload-img',
-            attr: {
-              limit: 1,
-            },
-          },
-        },
-        {
-          label: '跳转地址：',
-          prop: 'none2',
-          tag: {
-            attr: { placeholder: '请输入跳转地址' },
-          },
-        },
-        {
-          label: '跳转类型：',
-          prop: 'none3',
-          tag: {
-            attr: { placeholder: '请输入跳转类型' },
           },
         },
       ],

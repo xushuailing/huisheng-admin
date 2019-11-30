@@ -37,6 +37,8 @@ export default class DialogTextarea extends Vue {
 
   @Prop({ type: String, default: '' }) placeholder!: string;
 
+  @Prop({ type: String, default: '' }) msg!: string;
+
   value = '';
 
   dialogVisible = this.visible;
@@ -59,10 +61,12 @@ export default class DialogTextarea extends Vue {
   async onConfirm() {
     try {
       console.log('this.id :', this.id);
-      await this.$http.post(this.api, { [this.prop]: this.value, id: this.id });
+      await this.$http.get(this.api, { [this.prop]: this.value, shopid: this.id });
       this.$emit('onConfirm', true);
+      this.$message.success(`${this.msg}成功`);
     } catch (error) {
       this.$emit('onConfirm', false);
+      this.$message.error(`${this.msg}失败`);
       console.log('error :', error);
     }
     this.dialogVisible = false;

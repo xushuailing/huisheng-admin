@@ -1,12 +1,13 @@
 <template>
-  <div class="tablecolumn">
-    <div class="tablecolumn-header">
+  <div class="tablecolumn bg-white border-radius-8">
+    <div class="tablecolumn-header bg-info-lighter border-bottom">
       <slot name="top_th"></slot>
     </div>
     <div class="tablecolumn-body">
       <slot></slot>
     </div>
-    <div class="tablecolumn-footer">
+    <div v-if="$slots.footer_th"
+         class="tablecolumn-footer p-15">
       <slot name="footer_th"></slot>
     </div>
   </div>
@@ -17,22 +18,25 @@ export default {};
 </script>
 
 <style lang="scss" scoped>
-.tablecolumn {
-  border-radius: 8px;
-  overflow: hidden;
-  &-header {
-    padding: 0 20px;
-    line-height: 40px;
-    background: #f7f7f7;
-    border-bottom: 1px solid #ebebeb;
+  .tablecolumn {
+    border-radius: 20px;
+    overflow: hidden;
+    &-header {
+      padding: 0 20px;
+      line-height: 40px;
+    }
+    &-body {
+      & > * > * {
+        flex: 1;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        padding-left: 15px;
+        padding-right: 15px;
+      }
+    }
+    &-footer {
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+    }
   }
-  &-body {
-    padding: 0 20px;
-  }
-  &-footer{
-    height: 30px;
-    line-height: 30px;
-    padding-left: 20px;
-  }
-}
 </style>
