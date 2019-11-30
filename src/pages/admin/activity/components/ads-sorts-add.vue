@@ -1,23 +1,27 @@
 <template>
-  <div class="sort-add bg-border-color-extra-light p-10 border-radius-4">
+  <div class="sort-add bg-border-color-extra-light p-15 border-radius-8">
     <el-form v-for="(item,i) in form"
              :key="i"
              label-position="left"
              class="mb-30">
       <div>分类{{i+1}}</div>
-      <el-form-item label="请输入广告位分类：">
-        <el-input v-model="form[i].title"></el-input>
+      <el-form-item label="广告位分类：">
+        <el-input placeholder="请输入广告位分类"
+                  v-model="form[i].title"></el-input>
       </el-form-item>
-      <el-form-item label="请输入广告位价位：">
-        <el-input v-model="form[i].price">
+      <el-form-item label="广告位价位：">
+        <el-input placeholder="请输入广告位价位"
+                  v-model="form[i].price">
           <span slot="prefix">￥</span>
         </el-input>
       </el-form-item>
       <el-form-item label="有效期：">
-        <el-input v-model="form[i].validity"></el-input>
+        <el-input placeholder="请输入有效期"
+                  v-model="form[i].validity"></el-input>
       </el-form-item>
       <el-form-item label="介绍：">
-        <el-input v-model="form[i].desc"
+        <el-input placeholder="请输入介绍"
+                  v-model="form[i].desc"
                   type="textarea"
                   rows="4"></el-input>
       </el-form-item>
@@ -72,7 +76,7 @@ export default class ActvSortsAdd extends Vue {
 </script>
 
 <style lang="scss">
-  .sc-add-form .el-form-item.vertical .sort-add .el-form-item__content {
-    margin-left: 140px !important;
-  }
+.sc-add-form .el-form-item.vertical .sort-add .el-form-item__content {
+  margin-left: 140px !important;
+}
 </style>

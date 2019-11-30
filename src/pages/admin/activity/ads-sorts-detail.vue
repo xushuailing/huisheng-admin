@@ -1,5 +1,5 @@
 <template>
-  <div class='ads-sorts-detail bg-white p-15 border-r'>
+  <div class='ads-sorts-detail bg-white p-15 border-radius-8'>
     <sc-add-form mode="page"
                  :api="api"
                  :config="addConfig">
@@ -15,10 +15,13 @@ import { obj } from '@/lib/@types/sc-param.d';
 
 @Component
 export default class ActvAdsSortsDetail extends Vue {
+  id: string = '';
+
   get api() {
     return this.$api.admin.activity.adsSorts.create;
   }
 
+  // TODO: 缺少广告位名称、广告位介绍字段，一个广告位应对应多组分类
   addConfig: ScForm.Add = {
     'label-width': '140px',
     header: { title: '新增分类' },
@@ -26,7 +29,7 @@ export default class ActvAdsSortsDetail extends Vue {
     data: [
       [
         {
-          label: '请输入广告位名称：',
+          label: '广告位名称：',
           prop: 'title',
           tag: { attr: { placeholder: '请输入广告位名称' } },
         },
@@ -44,14 +47,19 @@ export default class ActvAdsSortsDetail extends Vue {
         },
       ],
     ],
+    handleSubmit: (data) => {
+      if (this.id) return { ...data, id: this.id };
+      return data;
+    },
   };
 
-  mounted() {
-    const { id } = this.$route.query;
-
-    if (id) this.getDetails(id as string);
+  created() {
+    const id = this.$route.query.id as string;
+    this.id = id;
+    if (id) this.getDetails(id);
   }
 
+  // TODO: 缺少详情接口
   getDetails(id: string) {
     this.$http.get(this.$api.admin.activity.adsSorts.show, { id }).then(({ data }: obj) => {
       console.log('res: ', data);

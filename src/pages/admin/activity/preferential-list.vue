@@ -2,9 +2,10 @@
   <div class="preferential">
     <div v-for="item in list"
          :key="item.id"
-         class="flex-column bg-white mb-30 mr-30 p-25 border-radius-4">
-      <h2 class="m-0">{{item.title}}</h2>
-      <div class="pt-15 pb-15 flex-1 font-text-secondary">{{item.desc}}</div>
+         class="flex-column bg-white p-25 border-radius-4">
+      <div class="font-20 font-bold">{{item.title}}</div>
+      <div style="height:200px"
+           class="pt-15 pb-15  font-text-secondary">{{item.desc}}</div>
       <div>
         <el-button type="primary"
                    size="small"
@@ -29,12 +30,12 @@ export default class ActvPreferential extends Vue {
   list: CouponsItem[] = [];
 
   onOpen(id: string) {
-    this.$router.push({ name: '新增优惠券', query: { id } });
+    this.$router.push({ path: '/activity/preferential-add', query: { id } });
   }
 
   getList() {
     this.$http
-      .get(this.$api.activity.coupon.index)
+      .get(this.$api.admin.activity.coupon.index, { limit: 1e6 })
       .then((res) => {
         // TODO: 没返回规则字段
         this.list = res.data || [];
@@ -51,9 +52,9 @@ export default class ActvPreferential extends Vue {
 </script>
 
 <style lang="scss" scoped>
-  .preferential {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, 25%);
-    grid-template-rows: 300px;
-  }
+.preferential {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 20px;
+}
 </style>

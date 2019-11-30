@@ -51,6 +51,7 @@ export default class ActvAdsSorts extends Vue {
     breadcrumbButtons: ['add'],
   };
 
+  // TODO: 查询需加字段：广告类型、创建时间
   searchConfig: ScTable.Search = {
     data: [
       {
@@ -73,16 +74,14 @@ export default class ActvAdsSorts extends Vue {
     ],
   };
 
-  onTableHandlerClick({ row, type }: { row: obj; type: string }) {
-    if (type === 'detail') {
-      console.log('%c查看', 'color:#40b883;font-weight:bold');
-      // this.getDetails(row.id);
+  onTableHandlerClick({ row, type }: ScTable.Event.TableHandlerClick) {
+    if (type === 'look') {
       this.onAdd(row.id);
     }
   }
 
   onAdd(id?: string) {
-    this.$router.push('/activity/ads-sorts-detail');
+    this.$router.push(`/activity/ads-sorts-detail?id=${id}`);
   }
 }
 </script>

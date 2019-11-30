@@ -6,6 +6,7 @@
                   :columns="columns"
                   :columns-props="{align:'center'}"
                   :table-config="tableConfig"
+                  :formAddConfig="addConfig"
                   :search-config="searchConfig">
     </sc-min-table>
   </div>
@@ -13,8 +14,8 @@
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
 import GoodsInfo from './components/img-name';
-import { ScTable } from '../../lib/@types/sc-table.d';
-import { ScForm } from '../../lib/@types/sc-form.d';
+import { ScTable } from '@/lib/@types/sc-table.d';
+import { ScForm } from '@/lib/@types/sc-form.d';
 import { obj } from '@/lib/@types/sc-param.d';
 
 @Component
@@ -28,33 +29,30 @@ export default class ActvFamous extends Vue {
     },
     { label: '推广类型', prop: 'none2' },
     { label: '有效期', prop: 'none3' },
-    {
-      label: '申请时间',
-      prop: 'none4',
-      formater: (row, col) => this.$utils._FormatDate(row[col.prop]),
-    },
+    { label: '申请时间', prop: 'createtime' },
   ];
 
   columnsHandler: ScTable.ColumnsHandler = ['del'];
 
+  // TODO: 缺少所有接口
   tableConfig: ScTable.TableConfig = {
-    api: this.$api.merchant.inject,
-    breadcrumbButtons: [],
+    api: this.$api.admin.activity.ads,
+    breadcrumbButtons: ['add'],
   };
 
   searchConfig: ScTable.Search = {
-    attr: { 'label-width': '110px' },
+    attr: { 'label-width': '140px' },
     data: [
       {
         label: '商家店铺名称：',
-        prop: 'none',
+        prop: 'none1',
         tag: {
           attr: { placeholder: '请输入商家店铺名称' },
         },
       },
       {
         label: '申请时间：',
-        prop: 'none4',
+        prop: 'createtime',
         tag: {
           tagType: 'date-picker',
           attr: {
@@ -67,7 +65,24 @@ export default class ActvFamous extends Vue {
   };
 
   addConfig: ScForm.Add = {
-    type: 'plain',
+    header: { title: '添加' },
+
+    buttons: [
+      {
+        mode: 'submit',
+        text: '确认添加',
+      },
+    ],
+    rules: [
+      {
+        none1: {
+          value: [{ required: true, trigger: 'blur', message: '请输入店铺名称' }],
+        },
+        none3: {
+          value: [{ required: true, trigger: 'change', message: '请选择有效期' }],
+        },
+      },
+    ],
     data: [
       [
         {

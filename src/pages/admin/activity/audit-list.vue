@@ -5,6 +5,7 @@
                 :columns-handler="columnsHandler"
                 :columns="columns"
                 :columns-props="{align:'center'}"
+                :columns-schema="columnsSchema"
                 :table-config="tableConfig"
                 :search-config="searchConfig"
                 @table-emitTableHandlerClick="onTableHandlerClick">
@@ -13,8 +14,8 @@
 </template>
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
-import { ScTable } from '../../lib/@types/sc-table.d';
-import { ScForm } from '../../lib/@types/sc-form.d';
+import { ScTable } from '@/lib/@types/sc-table.d';
+import { ScForm } from '@/lib/@types/sc-form.d';
 import { obj } from '@/lib/@types/sc-param.d';
 
 const STATUS: obj<string> = {
@@ -22,55 +23,56 @@ const STATUS: obj<string> = {
   2: '审核通过',
   3: '审核不通过',
 };
+const columns: ScTable.SetColumns = [
+  ['店铺信息', 'none1'],
+  ['推广类型', 'title'],
+  ['价格', 'none2'],
+  ['有效期', 'endtime'],
+  ['申请时间', 'createtime'],
+  ['状态', 'status'],
+];
 
 @Component
 export default class ActvAdsList extends Vue {
   $refs!: {
-    table: any;
+    table: ScTable;
   };
 
-  columns: ScTable.Columns = [
-    { label: '店铺信息', prop: 'company' },
-    { label: '推广类型', prop: 'none2' },
-    { label: '价格', prop: 'none' },
-    { label: '有效期', prop: 'none3' },
-    {
-      label: '申请时间',
-      prop: 'createtime',
-    },
-    {
-      label: '状态',
-      prop: 'status',
+  columns = this.$utils._SetTableColumns(columns);
+
+  columnsSchema: ScTable.ColumnsSchema = {
+    状态: {
       formater: (row, col) => {
         const value = row[col.prop];
         const style = value === '1' ? 'font-danger' : 'font-primary';
         return [{ class: style }, STATUS[value]];
       },
     },
-  ];
+  };
 
   columnsHandler: ScTable.ColumnsHandler = [
     { name: 'pass', title: '通过' },
     { name: 'reject', title: '驳回', type: 'danger' },
   ];
 
+  // TODO: 缺少所有接口
   tableConfig: ScTable.TableConfig = {
-    api: this.$api.merchant.inject,
+    api: this.$api.admin.activity.ads,
   };
 
   searchConfig: ScTable.Search = {
-    attr: { 'label-width': '110px' },
+    attr: { 'label-width': '130px' },
     data: [
       {
         label: '商家店铺名称：',
-        prop: 'company',
+        prop: 'none1',
         tag: {
           attr: { placeholder: '请输入商家店铺名称' },
         },
       },
       {
         label: '推广类型：',
-        prop: 'none2',
+        prop: 'title',
         tag: {
           tagType: 'select',
           options: [],
