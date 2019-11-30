@@ -1,5 +1,6 @@
 <template>
   <div class='test-min'>
+    <!-- TODO: 没切图 -->
     <sc-min-table stripe
                   ref="table"
                   :columns="columns"

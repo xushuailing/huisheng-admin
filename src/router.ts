@@ -432,9 +432,51 @@ const router = new Router({
         },
         {
           path: 'analysis',
-          name: '优惠活动',
+          name: '分析概况',
           component: () => import('./pages/market/analysis.vue'),
           meta: { breadcrumb: [{ title: '营销管理' }, { title: '分析概况' }] },
+        },
+      ],
+    },
+    {
+      path: '/order',
+      name: '订单管理',
+      redirect: '/order/index',
+      component: layoutView,
+      children: [
+        {
+          path: 'index',
+          name: '全部订单',
+          component: () => import('./pages/order/index.vue'),
+          meta: { breadcrumb: [{ title: '订单管理' }, { title: '全部订单' }] },
+        },
+        {
+          path: 'return',
+          name: '退货管理',
+          component: () => import('./pages/order/return.vue'),
+          meta: { breadcrumb: [{ title: '订单管理' }, { title: '退货管理' }] },
+        },
+        {
+          path: 'evaluate',
+          name: '评价管理',
+          component: () => import('./pages/order/evaluate.vue'),
+          meta: { breadcrumb: [{ title: '订单管理' }, { title: '评价管理' }] },
+        },
+        {
+          path: 'delivery',
+          name: '待发货订单',
+          component: () => import('./pages/order/delivery.vue'),
+          meta: {
+            breadcrumb: [{ title: '订单管理' }, { title: '待发货订单' }, { title: '发货' }],
+          },
+        },
+        {
+          path: 'detail',
+          name: '详情',
+          component: () => import('./pages/order/detail.vue'),
+          meta: {
+            breadcrumb: [{ title: '订单管理' }, { title: '订单列表' }, { title: '详情' }],
+          },
         },
       ],
     },

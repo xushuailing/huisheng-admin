@@ -1,5 +1,5 @@
 <template>
-  <div class='test-min'>
+  <div class='recode'>
     <sc-min-table stripe
                   ref="table"
                   :columns="columns"
