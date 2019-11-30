@@ -70,11 +70,11 @@ export default class MerchantShopDetail extends Vue {
     handleWidth: 100,
   };
 
-  activeName = '2';
+  activeName = '1';
 
   detail = [
-    { label: '店铺名称：', value: '哎呦喂', prop: 'none1' },
-    { label: '店铺状态：', value: '正常', prop: 'none2' },
+    { label: '店铺名称：', value: '', prop: 'shopname' },
+    { label: '店铺状态：', value: '', prop: 'status' },
     {
       label: '店铺标志：',
       value: ['http://placehold.it/200x200'],
@@ -84,7 +84,7 @@ export default class MerchantShopDetail extends Vue {
       height: '120px',
     },
     { label: '掌柜名称：', value: '', prop: 'none4' },
-    { label: '服务电话：', value: '', prop: 'none5' },
+    { label: '服务电话：', value: '', prop: 'com_phone' },
     { label: '开店时间：', value: '', prop: 'none6' },
     { label: '营业时间：', value: '', prop: 'none7' },
     { label: '经营品类：', value: '', prop: 'none8' },
@@ -106,5 +106,21 @@ export default class MerchantShopDetail extends Vue {
       height: '150px',
     },
   ];
+
+  mounted() {
+    const { id, uid } = this.$route.query;
+    this.getDetaill(id, uid);
+  }
+
+  async getDetaill(shopid: any, uid: any) {
+    const api = this.$api.admin.merchant.shop.show;
+    const { data } = await this.$http.get(api, { uid, shopid });
+
+    this.detail.forEach((v) => {
+      v.value = data[v.prop];
+    });
+
+    console.log('this.detail', this.detail);
+  }
 }
 </script>
