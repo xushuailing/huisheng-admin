@@ -13,7 +13,7 @@
 </template>
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
-import GoodsInfo from './components/img-name';
+import GoodsInfo from '@/components/img-name';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { ScForm } from '@/lib/@types/sc-form.d';
 import { obj } from '@/lib/@types/sc-param.d';

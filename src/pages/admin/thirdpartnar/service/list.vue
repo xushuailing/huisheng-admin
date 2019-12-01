@@ -43,7 +43,7 @@
 </template>
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
-import Info from '../../admin/activity/components/img-name';
+import Info from '@/components/img-name';
 import { ScTable } from '../../../lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
 

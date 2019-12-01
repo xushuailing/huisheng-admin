@@ -21,7 +21,7 @@
 <script lang='ts'>
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
-import { ScForm } from '../../../lib/@types/sc-form.d';
+import { ScForm } from '@/lib/@types/sc-form.d';
 import dialogTextarea from '@/components/dialogTextarea.vue';
 
 const columns: ScTable.SetColumns = [

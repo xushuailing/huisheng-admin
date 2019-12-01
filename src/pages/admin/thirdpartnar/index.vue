@@ -11,8 +11,8 @@
 </template>
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
-import Info from '../activity/components/img-name';
-import { ScTable } from '../../lib/@types/sc-table.d';
+import Info from '@/components/img-name';
+import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
 
 @Component
@@ -22,43 +22,30 @@ export default class TpIndex extends Vue {
     { label: '店铺名称', prop: 'none2' },
     { label: '平台选择', prop: 'none3' },
     { label: '有效期', prop: 'none4' },
-    {
-      label: '入驻时间',
-      prop: 'none5',
-      formater: (row, col) => this.$utils._FormatDate(row[col.prop]),
-    },
+    { label: '入驻时间', prop: 'none5' },
     {
       label: '状态',
       prop: 'none6',
       formater: (row, col) => {
         const value = row[col.prop];
-        return [{ class: value === '代运营' ? 'sc-font-danger' : 'sc-font-primary' }, value];
+        return [{ class: value === '正在运营' ? 'sc-font-danger' : 'sc-font-primary' }, value];
       },
     },
   ];
 
   columnsHandler: ScTable.ColumnsHandler = [
-    {
-      name: 'detail',
-      title: '详情',
-    },
-    {
-      name: 'operate',
-      title: '运营',
-    },
-    {
-      name: 'upload',
-      title: '上传',
-    },
+    'look',
+    { name: 'operate', title: '运营' },
+    { name: 'upload', title: '上传' },
   ];
 
+  // TODO: 缺少接口
   tableConfig: ScTable.TableConfig = {
-    api: this.$api.merchant.inject,
-    breadcrumbButtons: [],
+    api: this.$api.admin.activity.ads,
   };
 
   searchConfig: ScTable.Search = {
-    attr: { 'label-width': '130px' },
+    attr: { 'label-width': '150px' },
     data: [
       {
         label: '代运营套餐类型：',
@@ -100,7 +87,7 @@ export default class TpIndex extends Vue {
   };
 
   onTableHandlerClick({ row, type }: { row: obj; type: string }) {
-    if (type === 'detail') {
+    if (type === 'look') {
       this.$router.push({ name: '奶爸代运营详情', query: { id: row.id } });
     } else if (type === 'operate') {
       console.log('%c运营', 'color:#fff;background:#40b883;border-radius:5px;padding:2px 5px;');
