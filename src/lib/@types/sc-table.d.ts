@@ -210,6 +210,8 @@ interface ScTableConfig extends obj {
 
   handleWidth?: number;
 
+  breadcrumbButtons?: string[];
+
   /** `max-table`头部设置 */
   header?: ScTableConfigHeader;
 

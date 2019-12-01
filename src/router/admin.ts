@@ -202,13 +202,13 @@ export default [
       {
         path: 'index',
         name: '奶爸代运营列表',
-        component: () => import('../pages/thirdpartnar/index.vue'),
+        component: () => import('../pages/admin/thirdpartnar/index.vue'),
         meta: { breadcrumb: [{ title: '代运营管理' }, { title: '奶爸代运营列表' }] },
       },
       {
         path: 'detail',
         name: '奶爸代运营详情',
-        component: () => import('../pages/thirdpartnar/details/index.vue'),
+        component: () => import('../pages/admin/thirdpartnar/details/index.vue'),
         meta: {
           breadcrumb: [{ title: '代运营管理' }, { title: '奶爸代运营列表' }, { title: '详情' }],
         },
@@ -216,7 +216,7 @@ export default [
       {
         path: 'shops',
         name: '店铺诊断',
-        component: () => import('../pages/thirdpartnar/details/data/shop/index.vue'),
+        component: () => import('../pages/admin/thirdpartnar/details/data/shop/index.vue'),
         meta: {
           breadcrumb: [{ title: '代运营管理' }, { title: '奶爸代运营列表' }, { title: '店铺诊断' }],
         },
@@ -224,7 +224,7 @@ export default [
       {
         path: 'market',
         name: '营销策划',
-        component: () => import('../pages/thirdpartnar/details/data/market/index.vue'),
+        component: () => import('../pages/admin/thirdpartnar/details/data/market/index.vue'),
         meta: {
           breadcrumb: [{ title: '代运营管理' }, { title: '奶爸代运营列表' }, { title: '营销策划' }],
         },
@@ -232,7 +232,7 @@ export default [
       {
         path: 'promotion',
         name: '推广计划表',
-        component: () => import('../pages/thirdpartnar/details/data/promotion/index.vue'),
+        component: () => import('../pages/admin/thirdpartnar/details/data/promotion/index.vue'),
         meta: {
           breadcrumb: [
             { title: '代运营管理' },
@@ -244,21 +244,65 @@ export default [
       {
         path: 'setting',
         name: '代运营设置',
-        component: () => import('../pages/thirdpartnar/setting/index.vue'),
+        component: () => import('../pages/admin/thirdpartnar/setting/index.vue'),
         meta: { breadcrumb: [{ title: '代运营管理' }, { title: '代运营设置' }] },
       },
       {
         path: 'service',
         name: '运营客服列表',
-        component: () => import('../pages/thirdpartnar/service/list.vue'),
+        component: () => import('../pages/admin/thirdpartnar/service/list.vue'),
         meta: { breadcrumb: [{ title: '客服管理' }, { title: '运营客服列表' }] },
       },
       {
         path: 'service-detail',
         name: '运营客服详情',
-        component: () => import('../pages/thirdpartnar/service/detail.vue'),
+        component: () => import('../pages/admin/thirdpartnar/service/detail.vue'),
         meta: {
           breadcrumb: [{ title: '客服管理' }, { title: '运营客服列表' }, { title: '查看' }],
+        },
+      },
+    ],
+  },
+  {
+    path: '/operate',
+    name: '运营小知识',
+    redirect: '/operate/evaluate-list',
+    component: layoutView,
+    children: [
+      {
+        path: 'evaluate-list',
+        name: '评价模板',
+        component: () => import('../pages/admin/operate/evaluate-list.vue'),
+        meta: {
+          breadcrumbHide: true,
+          breadcrumb: [{ title: '运营小知识' }, { title: '评价模板' }],
+        },
+      },
+      {
+        path: 'poster-list',
+        name: '海报专场',
+        component: () => import('../pages/admin/operate/poster-list.vue'),
+        meta: {
+          breadcrumbHide: true,
+          breadcrumb: [{ title: '运营管理' }, { title: '运营小知识' }, { title: '海报专场' }],
+        },
+      },
+      {
+        path: 'images-list',
+        name: '图片精选',
+        component: () => import('../pages/admin/operate/images-list.vue'),
+        meta: {
+          breadcrumbHide: true,
+          breadcrumb: [{ title: '运营管理' }, { title: '运营小知识' }, { title: '图片精选' }],
+        },
+      },
+      {
+        path: 'take-out',
+        name: '图片精选',
+        component: () => import('../pages/admin/operate/take-out/index.vue'),
+        meta: {
+          breadcrumbHide: true,
+          breadcrumb: [{ title: '运营小知识' }, { title: '外卖学院' }],
         },
       },
     ],
