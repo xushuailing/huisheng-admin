@@ -76,9 +76,9 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator';
-import EditTable from './components/editTable.vue';
-import { ScEditTable } from './@types/sc-edit-table.d';
-import { _GetTableSpan, _ObjectSpanMethod, TableColumns, MergeKey } from './utils';
+import EditTable from '@/components/editTable.vue';
+import { ScEditTable } from '@/components/@types/sc-edit-table.d';
+import { _GetTableSpan, _ObjectSpanMethod, TableColumns, MergeKey } from '@/utils/handleTableSpan';
 import { obj } from '@/lib/@types/sc-param.d';
 
 interface Form {
@@ -86,7 +86,7 @@ interface Form {
   name: string[];
   size: string[];
   detail: string;
-  deliveryTime: number;
+  deliveryTime: boolean;
 }
 
 interface Option {
@@ -121,7 +121,7 @@ export default class ProductAdd extends Vue {
     name: [''],
     size: [],
     detail: '',
-    deliveryTime: 0,
+    deliveryTime: true,
   };
 
   rules = {
@@ -205,8 +205,8 @@ export default class ProductAdd extends Vue {
       label: '图片',
       prop: 'image',
       tag: {
-        tagType: 'upload-file',
-        attr: { limit: 100, fileSize: 10000, custom: { timeout: 2000000 } },
+        tagType: 'upload-img',
+        attr: { limit: 1, fileSize: 10000, custom: { timeout: 2000000 } },
       },
     },
     {
@@ -236,11 +236,36 @@ export default class ProductAdd extends Vue {
   }
 
   handleSubmit() {
-    //
+    this.$refs.form.validate((valid: boolean) => {
+      if (valid) {
+        this.$refs.table.validate().then((res: boolean) => {
+          if (res) {
+            this.submit();
+          }
+        });
+      } else {
+        this.validateError();
+      }
+    });
+  }
+
+  validateError() {
+    this.$message.error('输入内容不符合要求，请修正后提交！');
+  }
+
+  submit() {
+    console.log('%c提交', 'color:#fff;background:#40b883;border-radius:5px;padding:2px 5px;');
+    const api = this.$api.merchant.product.update;
+    const param = { gid: this.id, shopid: '' };
+    // this.$http.post(api, param).then((res) => {
+    //   console.log('res: ', res);
+    // });
   }
 
   getDetail() {
-    this.$http.post(this.$api.merchant.product.show, { gid: this.id, shopid: '' }).then((res) => {
+    const api = this.$api.merchant.product.show;
+    const param = { gid: this.id, shopid: '' };
+    this.$http.post(api, param).then((res) => {
       console.log('res: ', res);
     });
   }

@@ -29,7 +29,7 @@ export default class Market extends Vue {
   list: CouponsItem[] = [];
 
   onOpen(id: string) {
-    this.$router.push({ name: '新增优惠券', query: { id } });
+    this.$router.push({ path: 'add', query: { id } });
   }
 
   getList() {
