@@ -4,6 +4,7 @@ import NProgress from 'nprogress';
 import 'normalize.css/normalize.css';
 import commonRouter from './common';
 import adminRouter from './admin';
+import merchantRouter from './merchant';
 
 Vue.use(Router);
 
@@ -26,6 +27,7 @@ const router = new Router({
     },
     ...commonRouter,
     ...adminRouter,
+    ...merchantRouter,
   ],
 });
 

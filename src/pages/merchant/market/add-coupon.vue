@@ -8,7 +8,7 @@
 </template>
 <script lang='ts'>
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import { ScForm } from '../../lib/@types/sc-form';
+import { ScForm } from '@/lib/@types/sc-form.d';
 import Condition, { SortItem } from './condition.vue';
 import Time from './time.vue';
 

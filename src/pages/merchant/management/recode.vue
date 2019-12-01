@@ -10,7 +10,7 @@
 </template>
 <script lang='ts'>
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import { ScTable } from '../../lib/@types/sc-table.d';
+import { ScTable } from '@/lib/@types/sc-table.d';
 
 @Component
 export default class ManagementRecode extends Vue {

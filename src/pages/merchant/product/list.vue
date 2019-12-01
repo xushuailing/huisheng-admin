@@ -18,7 +18,7 @@
 </template>
 <script lang='ts'>
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import { ScTable } from '../../lib/@types/sc-table.d';
+import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
 
 const columns: ScTable.SetColumns = [
