@@ -143,5 +143,28 @@ export default {
       update: `${url}/admin/doAddCoupon`,
       delete: `${url}/admin/delCoupon`,
     },
+
+    /** 订单管理 */
+    order: {
+      index: `${url}/admin/getOrderList`,
+      show: `${url}/admin/getOrderDetail`,
+      delivery: `${url}/admin/setDeliverGoods`,
+      return: {
+        index: `${url}/admin/refundOrderList`,
+        show: `${url}/admin/doAddKeyword`,
+      },
+      logistics: {
+        index: `${url}/admin/getLogistics`,
+      },
+      pay: `${url}/admin/setConfirmPayment`,
+      comment: {
+        // 评价列表
+        index: `${url}/admin/getCommenReply`,
+        // TODO: 待评价列表？是不是要合并到一个接口
+        // index: `${url}/admin/getCommentList`,
+        show: `${url}/admin/getCommenDatail`,
+        reply: `${url}admin/getDoCommenDatail`,
+      },
+    },
   },
 };
