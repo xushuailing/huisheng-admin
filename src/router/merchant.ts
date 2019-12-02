@@ -95,7 +95,7 @@ export default [
       {
         path: 'coupon',
         name: '优惠券',
-        component: () => import('../pages/merchant/market/condition.vue'),
+        component: () => import('../pages/merchant/market/coupon.vue'),
         meta: { breadcrumb: [{ title: '营销管理' }, { title: '优惠券' }] },
       },
     ],
@@ -165,10 +165,16 @@ export default [
         meta: { breadcrumb: [{ title: '订单管理' }, { title: '退货管理' }] },
       },
       {
-        path: 'evaluate',
+        path: 'comment',
         name: '评价管理',
-        component: () => import('../pages/merchant/order/evaluate.vue'),
+        component: () => import('../pages/merchant/order/comment.vue'),
         meta: { breadcrumb: [{ title: '订单管理' }, { title: '评价管理' }] },
+      },
+      {
+        path: 'reply',
+        name: '评价详情',
+        component: () => import('../pages/merchant/order/reply.vue'),
+        meta: { breadcrumb: [{ title: '订单管理' }, { title: '详情' }] },
       },
       {
         path: 'delivery',
@@ -179,11 +185,42 @@ export default [
         },
       },
       {
-        path: 'detail',
-        name: '详情',
-        component: () => import('../pages/merchant/order/detail.vue'),
+        path: 'pay-detail',
+        name: '待付款订单详情',
+        component: () => import('../pages/merchant/order/detail/pay.vue'),
         meta: {
-          breadcrumb: [{ title: '订单管理' }, { title: '订单列表' }, { title: '详情' }],
+          breadcrumb: [{ title: '订单管理' }, { title: '待付款订单' }, { title: '详情' }],
+        },
+      },
+      {
+        path: 'send-detail',
+        name: '待发货订单详情',
+        component: () => import('../pages/merchant/order/detail/send.vue'),
+        meta: { breadcrumb: [{ title: '订单管理' }, { title: '待发货订单' }, { title: '详情' }] },
+      },
+      {
+        path: 'receive-detail',
+        name: '收货与物流信息',
+        component: () => import('../pages/merchant/order/detail/receive.vue'),
+        meta: { breadcrumb: [{ title: '订单管理' }, { title: '收货与物流信息' }] },
+      },
+      {
+        path: 'return-detail',
+        name: '退货详情',
+        component: () => import('../pages/merchant/order/detail/return.vue'),
+        meta: { breadcrumb: [{ title: '退货管理' }, { title: '详情' }] },
+      },
+      {
+        path: 'address',
+        name: '修改地址',
+        component: () => import('../pages/merchant/order/address.vue'),
+        meta: {
+          breadcrumb: [
+            { title: '订单管理' },
+            { title: '待发货订单' },
+            { title: '发货' },
+            { title: '修改地址' },
+          ],
         },
       },
     ],

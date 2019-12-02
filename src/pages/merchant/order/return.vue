@@ -8,15 +8,15 @@
         <o-table-row>
           <div slot="top_th"
                class="flex-jsb">
-            <span>订单编号：{{row.id}}</span>
+            <span>订单编号：{{row.ordernumber}}</span>
             <span>创建时间：{{row.createtime}}</span>
-            <span>订单类型：{{row.parameter}}</span>
+            <span>订单类型：{{row.type}}</span>
           </div>
           <div v-for="item in 1"
                :key="item"
                class="flex-jc-ac text-c pt-10 pb-10">
             <div class="flex-ac"
-                 :style="{width:width[0]?width[0]+'px':'auto',flex:width[0]?'none':1}">
+                 :style="getWidth(width[0])">
               <img :width="80"
                    :height="80"
                    :src="row.image"
@@ -28,26 +28,28 @@
             <div>{{row.price}}</div>
             <div>{{row.num}}</div>
             <div>
-              <div>{{row.parameter}}</div>
-              <div>{{row.createtime}}</div>
+              <div>{{row.pay_type}}</div>
+              <div>{{row.phone}}</div>
             </div>
-            <div :class="currentTab==='pay'?'font-danger':'font-primary'">{{row.status}}</div>
-            <div>{{row.price}}</div>
+            <div :class="currentTab==='pay'?'font-danger':'font-primary'">
+              {{getStatus(row.status)}}
+            </div>
+            <div>{{row.pay_type}}</div>
             <div>{{row.createtime}}</div>
             <div class="flex-jc-ac">
               <el-button type="text"
                          class="font-black"
-                         @click="toDetail">详情</el-button>
+                         @click="toDetail(row.oid)">详情</el-button>
               <el-button type="text"
-                         @click="handleRefund">退款</el-button>
+                         @click="handleRefund(row.oid)">退款</el-button>
               <el-button type="text"
                          class="font-danger"
-                         @click="handleReject">驳回</el-button>
+                         @click="handleReject(row.oid)">驳回</el-button>
             </div>
           </div>
           <div slot="footer_th">
             <strong class="font-danger">申请退款理由：</strong>
-            <span class="ml-5">尺码错误</span>
+            <span class="ml-5">{{row.refund_reason}}</span>
           </div>
         </o-table-row>
       </template>
@@ -55,14 +57,15 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Mixins } from 'vue-property-decorator';
+import Mixin from './mixin';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
 
 const lodashArray = require('lodash/array');
 
 @Component
-export default class OrderReturn extends Vue {
+export default class OrderReturn extends Mixins(Mixin) {
   currentTab = 'all';
 
   thead = [
@@ -77,11 +80,22 @@ export default class OrderReturn extends Vue {
   ];
 
   tableConfig: ScTable.TableConfig = {
-    api: this.$api.merchant.product,
+    api: this.$api.merchant.order.return,
+    index: { uid: '123' },
   };
 
   searchConfig = {
-    param: {},
+    param: { uid: '' },
+    handleSubmit: (data: any) => {
+      if (data.createtime) {
+        const [start, end] = data.createtime.split(',');
+        data.strtime = start;
+        data.endtime = end;
+        delete data.createtime;
+      }
+      console.log('data: ', data);
+      return data;
+    },
     data: [
       {
         label: '订单编号：',
@@ -112,15 +126,15 @@ export default class OrderReturn extends Vue {
     ],
   };
 
-  toDetail() {
+  toDetail(id: string) {
+    this.$router.push({ path: 'detail', query: { id } });
+  }
+
+  handleRefund(id: string) {
     //
   }
 
-  handleRefund() {
-    //
-  }
-
-  handleReject() {
+  handleReject(id: string) {
     //
   }
 }

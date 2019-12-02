@@ -17,7 +17,7 @@
                :key="item"
                class="flex-jc-ac text-c pt-10 pb-10">
             <div class="flex-ac"
-                 :style="{width:width[0]?width[0]+'px':'auto',flex:width[0]?'none':1}">
+                 :style="getWidth(width[0])">
               <img :width="80"
                    :height="80"
                    :src="row.image"
@@ -26,28 +26,38 @@
                    class="mr-10">
               <strong class="ellipsis goods-name">{{row.title}}</strong>
             </div>
-            <div>{{row.num}}</div>
+            <div>{{row.star}}</div>
+            <div>{{row.content}}</div>
             <div>{{row.createtime}}</div>
             <div class="flex-jc-ac">
               <el-button type="text"
                          class="font-black"
-                         @click="toDetail">详情</el-button>
+                         @click="toDetail(row.id)">详情</el-button>
               <el-button type="text"
-                         @click="toDetail">回复</el-button>
+                         @click="handleReply(row.id)">回复</el-button>
             </div>
           </div>
         </o-table-row>
       </template>
     </o-table>
+
+    <dialog-textarea title="请输入回复内容"
+                     placeholder="请输入回复内容"
+                     prop="reply_content"
+                     :api='reply.api'
+                     :id="reply.id"
+                     :visible.sync="reply.visible" />
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Mixins } from 'vue-property-decorator';
+import dialogTextarea from '@/components/dialogTextarea.vue';
+import Mixin from './mixin';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
 
-@Component
-export default class OrderEvaluate extends Vue {
+@Component({ components: { dialogTextarea } })
+export default class OrderEvaluate extends Mixins(Mixin) {
   currentTab = 'all';
 
   thead = [
@@ -59,7 +69,8 @@ export default class OrderEvaluate extends Vue {
   ];
 
   tableConfig: ScTable.TableConfig = {
-    api: this.$api.merchant.product,
+    api: this.$api.merchant.order.comment,
+    index: { oid: '', gid: '', uid: '' },
   };
 
   searchConfig = {
@@ -71,7 +82,7 @@ export default class OrderEvaluate extends Vue {
         tag: { attr: { placeholder: '请输入订单号' } },
       },
       {
-        label: '下单时间',
+        label: '下单时间：',
         prop: 'createtime',
         tag: {
           tagType: 'date-picker',
@@ -94,12 +105,19 @@ export default class OrderEvaluate extends Vue {
     ],
   };
 
-  toDetail() {
-    //
+  toDetail(id: string) {
+    this.$router.push({ path: 'reply', query: { id } });
   }
 
-  toProgress() {
-    //
+  reply = {
+    api: this.$api.merchant.order.comment.reply,
+    id: '',
+    visible: false,
+  };
+
+  handleReply(id: string) {
+    this.reply.id = id;
+    this.reply.visible = true;
   }
 }
 </script>

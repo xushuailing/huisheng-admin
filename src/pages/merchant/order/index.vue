@@ -6,25 +6,30 @@
                        :key="i"
                        :label="item.value">{{item.label}}</el-radio-button>
     </el-radio-group>
-
     <o-table :thead="thead"
              :table-config="tableConfig"
              :search-config="searchConfig"
+             :paginationConfig="paginationConfig"
+             @pagination-onSlotClick="handleSendAll"
+             @select-all="onSelectAll"
+             @emitGetTableDataComplete="getTableData"
              class="mt-20">
-      <template slot-scope="{ row }">
+      <template slot-scope="{ row, width }">
         <o-table-row>
           <div slot="top_th">
-            <span>订单编号：{{row.id}}</span>
-            <span class="ml-30">订单类型：{{row.parameter}}</span>
-            <span class="ml-30">创建时间：{{row.createtime}}</span>
+            <span>订单编号：{{row.ordernumber}}</span>
+            <span class="ml-30">订单类型：{{row.ordertype}}</span>
+            <span class="ml-30">创建时间：{{row.ordertime}}</span>
           </div>
           <div v-for="item in 1"
                :key="item"
                class="flex-jc-ac text-c">
+            <el-checkbox-group v-show="currentTab==='send'"
+                               v-model="selection"
+                               :style="getWidth(width[0])">
+              <el-checkbox :label="row.id">{{''}}</el-checkbox>
+            </el-checkbox-group>
             <div class="flex-ac flex-1">
-              <el-checkbox v-show="currentTab==='send'"
-                           :true-label="row.id"
-                           @change="handleCheck"></el-checkbox>
               <img :width="40"
                    :height="40"
                    :src="row.image"
@@ -36,19 +41,30 @@
             <div>{{row.price}}</div>
             <div>{{row.num}}</div>
             <div>
-              <div>{{row.parameter}}</div>
-              <div>{{row.createtime}}</div>
+              <div>{{row.username}}</div>
+              <div>{{row.phone}}</div>
             </div>
-            <div class="font-danger"
-                 v-if="currentTab==='send'||currentTab==='receive'">&yen; {{row.price}}</div>
-            <div v-else
-                 :class="currentTab==='pay'?'font-danger':'font-primary'">{{row.status}}</div>
+            <div>
+              <span class="font-danger"
+                    v-if="currentTab==='send'||currentTab==='receive'">
+                &yen; {{row.shop_goods_pay_price}}
+              </span>
+              <span v-else
+                    :class="currentTab==='pay'?'font-danger':'font-primary'">
+                {{getStatus(row.status)}}
+              </span>
+            </div>
             <div class="flex-column flex-jc-ac">
               <el-button type="text"
-                         @click="toDetail">详情</el-button>
-              <el-button type="primary"
-                         size="small"
-                         @click="toProgress">查看进度</el-button>
+                         @click="toDetail(row.oid)">详情</el-button>
+              <el-button v-show="currentTab==='all'"
+                         type="primary"
+                         size="mini"
+                         @click="toProgress(row.oid)">查看进度</el-button>
+              <el-button v-show="currentTab==='send'"
+                         type="primary"
+                         size="mini"
+                         @click="handleDelivery(row.oid)">发货</el-button>
             </div>
           </div>
         </o-table-row>
@@ -57,14 +73,15 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Mixins } from 'vue-property-decorator';
+import Mixin from './mixin';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
 
 const lodashArray = require('lodash/array');
 
 @Component
-export default class Order extends Vue {
+export default class Order extends Mixins(Mixin) {
   tabs = [
     { label: '全部订单', value: 'all' },
     { label: '待付款', value: 'pay' },
@@ -76,7 +93,9 @@ export default class Order extends Vue {
 
   get thead() {
     const price = ['send', 'receive'];
+    const selectAll = this.currentTab === 'send' ? [{ label: '', type: 'checked', width: 10 }] : [];
     return [
+      ...selectAll,
       { label: '商品信息' },
       { label: '单价' },
       { label: '数量' },
@@ -86,16 +105,36 @@ export default class Order extends Vue {
     ];
   }
 
-  tableConfig: ScTable.TableConfig = {
-    api: this.$api.merchant.product,
-  };
+  get tableConfig(): ScTable.TableConfig {
+    const orderApi = this.$api.merchant.order;
+    const apis: obj = {
+      all: orderApi,
+      pay: orderApi.pay,
+      send: orderApi,
+      receive: orderApi,
+    };
+    return {
+      api: apis[this.currentTab],
+      index: { uid: '' },
+    };
+  }
 
-  searchConfig = {
-    param: {},
+  searchConfig: ScTable.Search = {
+    param: { uid: '' },
+    handleSubmit: (data: any) => {
+      if (data.createtime) {
+        const [start, end] = data.createtime.split(',');
+        data.strtime = start;
+        data.endtime = end;
+        delete data.createtime;
+      }
+      console.log('data: ', data);
+      return data;
+    },
     data: [
       {
         label: '订单编号：',
-        prop: 'id',
+        prop: 'ordernumber',
         tag: { attr: { placeholder: '请输入订单号' } },
       },
       {
@@ -110,7 +149,7 @@ export default class Order extends Vue {
       },
       {
         label: '商品名称：',
-        prop: 'name',
+        prop: 'title',
         tag: { attr: { placeholder: '请输入商品名称' } },
       },
       {
@@ -137,23 +176,50 @@ export default class Order extends Vue {
     ],
   };
 
-  selections: any[] = [];
+  get paginationConfig() {
+    const send = {
+      slotAttr: { isCheckbox: true, text: ' 批量发货' },
+    };
+    return this.currentTab === 'send' ? send : {};
+  }
 
-  handleCheck(value: string | boolean) {
-    if (typeof value !== 'boolean') {
-      this.selections.push(value);
-    } else {
-      lodashArray.pull(this.selections, value);
+  handleSendAll() {
+    console.log('this.selection: ', this.selection);
+  }
+
+  selection: any[] = [];
+
+  onSelectAll(status: string) {
+    if (status) {
+      this.selection = this.tableData.map((t) => t.id);
     }
-    console.log('value: ', value, this.selections);
   }
 
-  toDetail() {
-    //
+  tableData: obj[] = [];
+
+  getTableData({ response }: obj) {
+    this.tableData = response.data;
   }
 
-  toProgress() {
-    //
+  toDetail(id: string) {
+    this.$router.push({ path: 'detail', query: { id } });
+  }
+
+  toProgress(id: string) {
+    this.$router.push({ path: 'detail', query: { id } });
+  }
+
+  handleDelivery(id: string | string[]) {
+    const api = this.$api.merchant.order.delivery;
+    const param = { oid: id, name: '', number: '', text: '' };
+    this.$http
+      .get(api, param)
+      .then((res) => {
+        console.log('res: ', res);
+      })
+      .catch((err) => {
+        this.$utils._ResponseError(err);
+      });
   }
 }
 </script>
