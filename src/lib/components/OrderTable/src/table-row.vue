@@ -3,7 +3,7 @@
     <div class="tablecolumn-header bg-info-lighter border-bottom">
       <slot name="top_th"></slot>
     </div>
-    <div class="tablecolumn-body">
+    <div class="tablecolumn-body pt-10 pb-10">
       <slot></slot>
     </div>
     <div v-if="$slots.footer_th"

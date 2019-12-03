@@ -29,7 +29,7 @@ export default class SettingRoleList extends Vue {
     data: [
       [
         {
-          label: '上传banner:',
+          label: '上传banner：',
           prop: 'none1',
           tag: {
             tagType: 'upload-img',
@@ -37,7 +37,7 @@ export default class SettingRoleList extends Vue {
           },
         },
         {
-          label: '跳转链接：:',
+          label: '跳转链接：',
           prop: 'none2',
           tag: { attr: { type: 'url', placeholder: '请输入跳转链接' } },
         },

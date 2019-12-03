@@ -64,7 +64,7 @@ export default class MerchantInject extends Vue {
   }
 
   handleAdd() {
-    this.$router.push('add');
+    this.$router.push('add-physical');
   }
 
   onSlotClick() {

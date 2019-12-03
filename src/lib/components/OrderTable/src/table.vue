@@ -13,23 +13,31 @@
       <div :class="['p-15 font-bold text-c font-16',!item.width&&'flex-1']"
            v-for="(item,index) in thead"
            :key="index"
-           :style="{width:item.width?item.width+'px':'auto'}">{{item.label}}</div>
+           :style="{width:item.width?item.width+'px':'auto'}">
+        <el-checkbox v-if="item.type==='checked'"
+                     @change="handleSelectAll"></el-checkbox>
+        <span v-else>{{item.label}}</span>
+      </div>
     </div>
     <div class="tbody">
-      <div class="tbody-item"
-           v-for="(item, index) in tableData"
-           :key="index">
-        <slot :row="item"
-              :width="widths"
-              :index="index"></slot>
-      </div>
+      <template v-if="tableData.length">
+        <div class="tbody-item"
+             v-for="(item, index) in tableData"
+             :key="index">
+          <slot :row="item"
+                :width="widths"
+                :index="index"></slot>
+        </div>
+      </template>
+      <div v-else class="p-30 text-c font-16 font-info">暂无数据</div>
     </div>
     <div class="tfoot">
       <sc-pagination ref="scPagination"
                      v-if="tableConfig.isPagination!==false"
                      v-bind="paginationConfig"
                      @size-change="handleSizeChange"
-                     @current-change="handleCurrentChange">
+                     @current-change="handleCurrentChange"
+                     v-on="listeners.pagination">
       </sc-pagination>
     </div>
   </div>
@@ -80,6 +88,31 @@ export default {
     },
     widths() {
       return this.thead.map((t) => t.width);
+    },
+    listeners() {
+      const { $listeners: Ev } = this;
+      const events = {
+        table: {},
+        pagination: {},
+        tree: {},
+        add: {},
+        edit: {},
+        search: {},
+        exports: {},
+        settingTable: {},
+      };
+
+      const replaceString = (srt, re) => srt.replace(`${re}-`, '');
+
+      Object.keys(events).forEach((key) => {
+        Object.keys(Ev).forEach((event) => {
+          const re = new RegExp(`^${key}`, 'gm');
+          if (re.test(event)) {
+            events[key][replaceString(event, key)] = Ev[event];
+          }
+        });
+      });
+      return events;
     },
   },
   methods: {
@@ -190,6 +223,10 @@ export default {
       this.paginationConfig.currentPage = val;
       this.getDataTable();
       this.$emit('emitPaginationCurrentChange', val);
+    },
+
+    handleSelectAll(value) {
+      this.$emit('select-all', value);
     },
 
     emitGetTableDataComplete(info, status, response) {

@@ -7,34 +7,8 @@
       <span>订单类型：{{data.parameter}}</span>
     </div>
 
-    <div class="mt-30 border-horizontal border-vertical border-radius-8 text-c">
-      <div class="table-header bg-info-lighter border-bottom">
-        <div v-for="(item,key) in header"
-             :key="key"
-             class="p-20">{{item}}</div>
-      </div>
-      <div v-for="(row,i) in list"
-           :key="i"
-           class="table-row">
-        <template v-for="(col,k) in row">
-          <div v-if="columns.includes(k)"
-               :key="k"
-               class="p-20">
-            <div v-if="k === 'info'"
-                 class="flex-ac">
-              <img :width="80"
-                   :height="80"
-                   :src="row.image"
-                   :alt="col"
-                   style="object-fit: cover"
-                   class="mr-10">
-              <span>{{col}}</span>
-            </div>
-            <div v-else>{{col}}</div>
-          </div>
-        </template>
-      </div>
-    </div>
+        <goods-table :header="header"
+                     :list="list"></goods-table>
 
     <el-form ref="form"
              :model="form"
@@ -73,9 +47,10 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
+import GoodsTable from './goods-table.vue';
 import { obj } from '@/lib/@types/sc-param.d';
 
-@Component
+@Component({ components: { GoodsTable } })
 export default class OrderDelivery extends Vue {
   data = {
     id: '12345678910',
@@ -89,10 +64,6 @@ export default class OrderDelivery extends Vue {
     num: '数量',
     amount: '商品总价',
   };
-
-  get columns() {
-    return Object.keys(this.header);
-  }
 
   list: obj[] = [
     {
