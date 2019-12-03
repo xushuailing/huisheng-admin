@@ -35,10 +35,10 @@
                       @emitDeleteComplete="handleMinus"></edit-table>
         </div>
       </el-form-item>
-      <el-form-item label="发货时间："
+      <el-form-item label="发放日期："
                     prop="deliveryTime">
-        <el-checkbox v-model="form.deliveryTime"
-                     :disabled="isDetail">三天内发货</el-checkbox>
+        <el-date-picker v-model="form.deliveryTime"
+                        placeholder="请选择发放日期"></el-date-picker>
       </el-form-item>
       <el-form-item label="有效时间："
                     prop="effectTime">
@@ -104,7 +104,7 @@ export default class MarketAdd extends Vue {
     id: '',
     size: [],
     detail: '',
-    deliveryTime: 0,
+    deliveryTime: '',
     effectTime: null,
   };
 

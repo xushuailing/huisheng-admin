@@ -54,6 +54,12 @@ export default [
         component: () => import('../pages/merchant/product/add.vue'),
         meta: { breadcrumb: [{ title: '商品管理' }, { title: '发布宝贝' }] },
       },
+      {
+        path: 'add-physical',
+        name: '发布宝贝',
+        component: () => import('../pages/merchant/product/add-physical.vue'),
+        meta: { breadcrumb: [{ title: '商品管理' }, { title: '发布宝贝-实体' }] },
+      },
     ],
   },
   {
@@ -63,14 +69,20 @@ export default [
     component: layoutView,
     children: [
       {
+        path: 'mine',
+        name: '我的优惠券',
+        component: () => import('../pages/merchant/market/mine.vue'),
+        meta: { breadcrumb: [{ title: '营销管理' }, { title: '优惠券' }] },
+      },
+      {
         path: 'index',
-        name: '优惠活动',
+        name: '新增优惠券',
         component: () => import('../pages/merchant/market/index.vue'),
-        meta: { breadcrumb: [{ title: '新增优惠券' }] },
+        meta: { breadcrumb: [{ title: '营销管理' }, { title: '新增优惠券' }] },
       },
       {
         path: 'analysis',
-        name: '优惠活动',
+        name: '分析概况',
         component: () => import('../pages/merchant/market/analysis.vue'),
         meta: { breadcrumb: [{ title: '营销管理' }, { title: '分析概况' }] },
       },
@@ -250,9 +262,9 @@ export default [
         meta: { breadcrumb: [{ title: '广告管理' }, { title: '活动banner' }] },
       },
       {
-        path: 'banner-detail1',
+        path: 'banner-detail',
         name: 'banner介绍',
-        component: () => import('../pages/merchant/advertisement/banner-detail1.vue'),
+        component: () => import('../pages/merchant/advertisement/banner-detail.vue'),
         meta: { breadcrumb: [{ title: '广告管理' }, { title: 'banner介绍' }] },
       },
       {
@@ -260,6 +272,12 @@ export default [
         name: '广告推广',
         component: () => import('../pages/merchant/advertisement/upload.vue'),
         meta: { breadcrumb: [{ title: '广告管理' }, { title: '广告推广' }, { title: '购买' }] },
+      },
+      {
+        path: 'add-goods',
+        name: '广告推广',
+        component: () => import('../pages/merchant/advertisement/add-goods.vue'),
+        meta: { breadcrumb: [{ title: '广告管理' }, { title: '广告推广' }, { title: '详情' }] },
       },
       {
         path: 'today-detail',

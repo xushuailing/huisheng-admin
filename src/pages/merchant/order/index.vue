@@ -45,10 +45,10 @@
               <div>{{row.phone}}</div>
             </div>
             <div>
-              <span class="font-danger"
-                    v-if="currentTab==='send'||currentTab==='receive'">
-                &yen; {{row.shop_goods_pay_price}}
-              </span>
+              <div v-if="currentTab==='send'||currentTab==='receive'">
+                <div class="font-danger">&yen; {{row.shop_goods_pay_price}}</div>
+                <div class="font-info">含运费：{{12.00}}</div>
+              </div>
               <span v-else
                     :class="currentTab==='pay'?'font-danger':'font-primary'">
                 {{getStatus(row.status)}}
