@@ -69,7 +69,7 @@ export default class ComplaintsList extends Vue {
     this.$refs.table.emitRefresh();
   }
 
-  // TODO: 回复接口接口报错
+  // TODO: 接口报错
   onTableHandlerClick({ row, index, type }: ScTable.Event.TableHandlerClick) {
     console.log('row :', row);
     console.log('index :', index);
