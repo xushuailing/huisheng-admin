@@ -17,6 +17,10 @@ $types: top, bottom, left, right;
       }
     }
 
+    &-solid {
+      border: 1px solid $--border-color-base;
+    }
+
     &-horizontal {
       border-left: 1px solid $--border-color-base;
       border-right: 1px solid $--border-color-base;

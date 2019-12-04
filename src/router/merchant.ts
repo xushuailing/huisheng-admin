@@ -43,6 +43,12 @@ export default [
         meta: { breadcrumb: [{ title: '商品管理' }, { title: '全部商品' }] },
       },
       {
+        path: 'list-physical',
+        name: '商品列表',
+        component: () => import('../pages/merchant/product/list-physical.vue'),
+        meta: { breadcrumb: [{ title: '商品管理' }, { title: '全部商品' }] },
+      },
+      {
         path: 'shelves',
         name: '已下架',
         component: () => import('../pages/merchant/product/shelves.vue'),
