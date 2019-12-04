@@ -54,11 +54,15 @@ export default {
         goods: {
           index: `${url}/admin/getUserGoodsList`,
         },
+        /** 店铺类型 */
+        types: `${url}/admin/getType`,
         show: `${url}/admin/getUserShop`,
         /** 设置商家加入保证金参数信息 */
         shopJoinShow: `${url}/admin/getShopjoin`,
         /** 设置商家加入保证金参数信息 */
         shopJoinUpdate: `${url}/admin/setShopjoin`,
+        /** 下架 */
+        prohibit: `${url}/admin/setUserShopProhibit`,
       },
       /** 商家入驻审核列表 */
       inject: {
@@ -76,6 +80,7 @@ export default {
     /** 投诉管理 */
     complaints: {
       index: `${url}/admin/getComplaintList`,
+      reply: `${url}/admin/complaint_reply`,
     },
 
     /** 会员管理 */
