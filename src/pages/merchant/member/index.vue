@@ -58,10 +58,12 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import { ScTable } from '../../lib/@types/sc-table.d';
+import { ScTable } from '@/lib/@types/sc-table.d';
 
 @Component
 export default class Vip extends Vue {
+  userInfo = this.$utils._Storage.get('user_info');
+
   isAgent = true;
 
   info = {
@@ -106,24 +108,27 @@ export default class Vip extends Vue {
   trendType = '0';
 
   get columns(): ScTable.Columns {
-    const none = this.isAgent ? [{ label: '佣金比例', prop: 'none4' }] : [];
-
     return [
-      { label: '会员头像', prop: 'image', width: 100, special: 'img' },
-      { label: '名称', prop: 'name' },
-      { label: '会员类型', prop: 'type' },
+      { label: '会员头像', prop: 'avatarurl', width: 100, special: 'img' },
+      { label: '名称', prop: 'nickname' },
+      { label: '会员类型', prop: 'member_name' },
       {
         label: '会员金额',
-        prop: 'none3',
-        formater: (row, col) => (row[col.prop] ? `￥ ${row[col.prop]}` : ''),
+        prop: 'money',
+        formater: (row, col) => (row[col.prop] ? `￥${row[col.prop]}` : ''),
       },
-      ...none,
+      {
+        label: '佣金比例',
+        prop: 'divide_comparisons',
+        formater: (row, col) => `${row[col.prop]}%`,
+      },
       { label: '创建时间', prop: 'createtime' },
     ];
   }
 
   tableConfig: ScTable.TableConfig = {
-    api: this.$api.merchant.product,
+    api: this.$api.merchant.member,
+    index: { uid: this.userInfo.id },
   };
 
   showDetail() {
