@@ -126,9 +126,9 @@ export default class SettingRoleList extends Vue {
           remark: {
             value: [{ required: true, message: '请输入权限', trigger: 'blur' }],
           },
-          open_status: {
-            value: [{ required: true, message: '请输入状态', trigger: 'blur' }],
-          },
+          // open_status: {
+          //   value: [{ required: true, message: '请输入状态', trigger: 'blur' }],
+          // },
         },
       ],
 
@@ -148,13 +148,13 @@ export default class SettingRoleList extends Vue {
               attr: { placeholder: '请输入权限' },
             },
           },
-          {
-            label: '状态',
-            prop: 'open_status',
-            tag: {
-              attr: { placeholder: '请输入状态' },
-            },
-          },
+          // {
+          //   label: '状态',
+          //   prop: 'open_status',
+          //   tag: {
+          //     attr: { placeholder: '请输入状态' },
+          //   },
+          // },
         ],
       ],
     };
