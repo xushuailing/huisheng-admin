@@ -25,7 +25,8 @@
               <div>{{item.value}}</div>
             </div>
           </div>
-          <el-button type="primary"
+          <el-button @click="onProhibit"
+                     type="primary"
                      class="mt-20">
             下架
           </el-button>
@@ -45,7 +46,7 @@
   </div>
 </template>
 <script lang='ts'>
-import { Component, Vue, Prop } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
 
 const columns: ScTable.SetColumns = [
@@ -107,14 +108,40 @@ export default class MerchantShopDetail extends Vue {
     },
   ];
 
-  mounted() {
-    const { id, uid } = this.$route.query;
-    this.getDetaill(id, uid);
+  get allId(): { uid: string; shopid: string } {
+    const { uid, id } = this.$route.query as any;
+    return {
+      uid,
+      shopid: id,
+    };
   }
 
-  async getDetaill(shopid: any, uid: any) {
+  mounted() {
+    this.getDetail(this.allId);
+
+    console.log('this', this);
+  }
+
+  async onProhibit() {
+    try {
+      const flag = await this.$utils._MessageConfirm('是否下架该店铺', '下架');
+
+      if (flag) {
+        const api = this.$api.admin.merchant.shop.prohibit;
+        await this.$http.get(api, {
+          shopid: this.allId.shopid,
+        });
+
+        this.getDetail(this.allId);
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+  }
+
+  async getDetail(id: any) {
     const api = this.$api.admin.merchant.shop.show;
-    const { data } = await this.$http.get(api, { uid, shopid });
+    const { data } = await this.$http.get(api, id);
 
     this.detail.forEach((v) => {
       v.value = data[v.prop];

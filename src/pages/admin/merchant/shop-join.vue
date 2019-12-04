@@ -115,6 +115,7 @@ export default class AdminSetting extends Vue {
     this.value = this.formData[prop];
   }
 
+  // TODO: 接口报错
   onSubmit() {
     const api = this.$api.admin.merchant.shop.shopJoinUpdate;
     this.$http
