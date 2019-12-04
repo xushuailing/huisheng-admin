@@ -10,7 +10,7 @@
 
     <sc-min-table stripe
                   ref="table"
-                  class="mt-30"
+                  class="mt-20"
                   :columns="columns"
                   :search-config="searchConfig"
                   :table-config="tableConfig"
@@ -20,7 +20,7 @@
   </div>
 </template>
 <script lang='ts'>
-import { Component, Vue, Prop } from 'vue-property-decorator';
+import { Component, Vue, Prop, Ref } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
 
@@ -33,18 +33,21 @@ const columns: ScTable.SetColumns = [
 
 @Component
 export default class ManagementAccount extends Vue {
+  @Ref('table') $table!:ScTable;
+
   userInfo = this.$utils._Storage.get('user_info');
 
   tabs = [
-    { label: '账户日汇总', value: 'date' },
-    { label: '账户月汇总', value: 'month' },
-    { label: '账户年汇总', value: 'year' },
+    { label: '账户日汇总', value: 1 },
+    { label: '账户月汇总', value: 2 },
+    { label: '账户年汇总', value: 3 },
   ];
 
   currentTab = this.tabs[0].value;
 
-  onTabChange(tab: string) {
-    console.log('tab: ', tab);
+  onTabChange(tab: number) {
+    this.tableConfig.index.typetime = tab;
+    this.$table.setDataTable({});
   }
 
   columns: ScTable.Columns = [

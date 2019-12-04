@@ -19,14 +19,16 @@ export default class ManagementRecode extends Vue {
   columns: ScTable.Columns = [
     {
       label: '提现金额',
-      prop: 'price',
+      prop: 'money',
       formater: (row, col) => {
-        const text = row[col.prop];
-        const style = Number(text) > 0 ? '' : 'font-danger';
-        return [{ class: style }, text];
+        const isNegative = row[col.prop].includes('-');
+        const style = isNegative ? 'font-danger' : 'font-primary';
+        const value = row[col.prop].replace('-', '');
+        const operate = isNegative ? '-' : '+';
+        return [{ class: style }, `${operate}￥${value}`];
       },
     },
-    { label: '创建时期', prop: 'createtime' },
+    { label: '创建时期', prop: 'time' },
   ];
 
   tableConfig = {
@@ -35,15 +37,14 @@ export default class ManagementRecode extends Vue {
   };
 
   searchConfig: ScTable.Search = {
-    param: {},
     data: [
       {
         label: '创建时间',
-        prop: 'createtime',
+        prop: 'time',
         tag: {
           tagType: 'date-picker',
           attr: {
-            type: 'datetime',
+            type: 'date',
             placeholder: '请选择时间',
           },
         },
