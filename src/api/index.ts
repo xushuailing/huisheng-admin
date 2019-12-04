@@ -130,6 +130,31 @@ export default {
       index: `${url}/admin/getUserShopList`,
       show: `${url}/admin/getUserShop`,
       update: `${url}/admin/userJoinShop`,
+      /** 客服 */
+      service: {
+        index: `${url}/admin/CustomerServiceList`,
+        delete: `${url}/admin/deleteCustomerService`,
+      },
+    },
+
+    /** 会员管理 */
+    member: {
+      index: `${url}/admin/OfflineMember`,
+      list: {
+        index: `${url}/admin/AccountingOfficeShow`,
+      },
+    },
+
+    /**  经营管理 */
+    manage: {
+      index: `${url}/admin/DiscountRecord`,
+      account: {
+        index: `${url}/admin/DiscountRecord`,
+        // export: `${url}/admin/DiscountRecord`,
+      },
+      record: {
+        index: `${url}/admin/DiscountRecord`,
+      },
     },
 
     /** 产品管理 */

@@ -14,19 +14,22 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
 
 const columns: ScTable.SetColumns = [
-  ['头像', 'avatar', 100, null, 'img'],
-  ['昵称', 'nickname'],
+  ['头像', 'default_img', 100, null, 'img'],
+  ['昵称', 'name'],
   ['电话', 'phone'],
-  ['工作时间', 'idCard'],
-  ['创建时间', 'pnum'],
+  ['工作时间', 'work_time'],
+  ['创建时间', 'createtime'],
 ];
 
 @Component
 export default class ShopService extends Vue {
+  userInfo = this.$utils._Storage.get('user_info');
+
   columns = this.$utils._SetTableColumns(columns);
 
   tableConfig = {
-    api: this.$api.merchant.product,
+    api: this.$api.merchant.shop.service,
+    index: { shopid: this.userInfo.shopid },
     breadcrumbButtons: ['add'],
   };
 }

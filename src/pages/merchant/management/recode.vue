@@ -14,6 +14,8 @@ import { ScTable } from '@/lib/@types/sc-table.d';
 
 @Component
 export default class ManagementRecode extends Vue {
+  userInfo = this.$utils._Storage.get('user_info');
+
   columns: ScTable.Columns = [
     {
       label: '提现金额',
@@ -28,10 +30,11 @@ export default class ManagementRecode extends Vue {
   ];
 
   tableConfig = {
-    api: this.$api.merchant.product,
+    api: this.$api.merchant.manage.record,
+    index: { shopid: this.userInfo.shopid },
   };
 
-  searchConfig = {
+  searchConfig: ScTable.Search = {
     param: {},
     data: [
       {
@@ -40,7 +43,7 @@ export default class ManagementRecode extends Vue {
         tag: {
           tagType: 'date-picker',
           attr: {
-            type: 'date',
+            type: 'datetime',
             placeholder: '请选择时间',
           },
         },

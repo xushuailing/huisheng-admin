@@ -61,6 +61,7 @@ export default class Login extends Vue {
       })
       .then((res) => {
         this.$utils._Storage.set('user_token', res.data.access_token);
+        this.$utils._Storage.set('user_info', res.data);
         this.$router.push('/');
         if (this.form.memory) {
           this.$utils._Storage.set('user_login_form', this.form);
