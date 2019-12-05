@@ -152,7 +152,7 @@ export default {
       },
     },
 
-    /** 产品管理 */
+    /** 商品管理 */
     product: {
       index: `${url}/admin/getGoodsList`,
       show: `${url}/admin/getGoodsdetail`,
