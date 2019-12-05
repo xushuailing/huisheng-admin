@@ -20,6 +20,16 @@ interface Handler {
 
   /** 按钮权限配置 */
   limit?: string | string[] | ScLimit;
+
+  /**
+   * 按钮有统一配置的权限时，增加按钮权限限制
+   * 返回真值或 undefined 时不加限制，否则根据 limit 中的 mode 限制访问，默认为禁用
+   *
+   * `row` 行数据
+   * `$index` 行号
+   * `column` 单元格配置
+   */
+  handler?({ row, $index, column }: Scope): any;
 }
 
 type Sortable = true | false | 'custom';
