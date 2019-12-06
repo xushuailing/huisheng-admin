@@ -76,8 +76,8 @@
           <template slot-scope="scope">
             <div style="display: flex;justify-content: space-around;">
               <template v-for="(item, index) in columnsHandlerType.content">
-
-                <el-link @click="onHandlerClick(scope, item.name)"
+                <el-link v-show="showHandlerType(item, scope)"
+                         @click="onHandlerClick(scope, item.name)"
                          :key="index"
                          :underline="false"
                          :type="item.type||'primary'">
@@ -467,6 +467,14 @@ export default {
 
     indexMethod(index) {
       return this.page * this.size + index + 1;
+    },
+
+    showHandlerType(item, scope) {
+      let isShow = true;
+      if (item.handler) {
+        isShow = !!item.handler(scope);
+      }
+      return isShow;
     },
 
     // 获取修改数据

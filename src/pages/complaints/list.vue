@@ -2,7 +2,6 @@
   <div class='complaints-list'>
     <sc-min-table stripe
                   ref="table"
-                  :columns-type="['selection']"
                   :columns-handler="columnsHandler"
                   :columns="columns"
                   :columns-schema="columnsSchema"
@@ -11,10 +10,11 @@
     </sc-min-table>
     <dialog-textarea title="请输入回复内容"
                      placeholder="请输入回复内容~"
-                     api='123'
-                     prop="reject"
-                     :id="replyForm.id"
-                     :visible.sync="replyForm.visible" />
+                     :api='replyApi'
+                     prop="reply_text"
+                     :id="{id:replyForm.id}"
+                     :visible.sync="replyForm.visible"
+                     @onConfirm="onConfirm" />
 
   </div>
 </template>
@@ -31,20 +31,29 @@ const columns: ScTable.SetColumns = [
   ['状态', 'status', 100],
 ];
 
+const status = ['', '未处理', '已处理'];
+
 @Component({ components: { dialogTextarea } })
 export default class ComplaintsList extends Vue {
+  $refs!: {
+    table: ScTable;
+  };
+
   columns = this.$utils._SetTableColumns(columns);
 
   columnsHandler = [{ name: 'reply', title: '回复' }];
 
   columnsSchema: ScTable.ColumnsSchema = {
-    // 状态: {
-    //   // formater: (row, col) => [{ class: 'font-primary' }, status[row[col.prop]]],
-    // },
+    状态: {
+      formater: (row, col) => [
+        { class: row[col.prop] == '1' ? 'font-primary' : 'font-success' },
+        status[row[col.prop]],
+      ],
+    },
   };
 
   tableConfig: ScTable.TableConfig = {
-    api: this.$api.admin.complaints,
+    api: this.$api.common.complaints,
   };
 
   replyForm = {
@@ -52,12 +61,15 @@ export default class ComplaintsList extends Vue {
     visible: false,
   };
 
-  // TODO: 缺少投诉回复接口
+  get replyApi() {
+    return this.$api.common.complaints.reply;
+  }
+
+  onConfirm() {
+    this.$refs.table.emitRefresh();
+  }
 
   onTableHandlerClick({ row, index, type }: ScTable.Event.TableHandlerClick) {
-    console.log('row :', row);
-    console.log('index :', index);
-    console.log('type :', type);
     if (type === 'reply') {
       this.replyForm.visible = true;
       this.replyForm.id = row.id;

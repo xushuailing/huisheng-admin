@@ -29,7 +29,7 @@ export default class DialogTextarea extends Vue {
 
   @Prop({ type: String, required: true }) prop!: string;
 
-  @Prop({ type: [String, Number] }) id!: string | Number;
+  @Prop({ type: Object, default: () => ({}) }) id!: { [x: string]: number | string };
 
   @Prop({ type: String, required: true }) api!: string;
 
@@ -61,11 +61,11 @@ export default class DialogTextarea extends Vue {
   async onConfirm() {
     try {
       console.log('this.id :', this.id);
-      await this.$http.get(this.api, { [this.prop]: this.value, shopid: this.id });
+      await this.$http.get(this.api, { [this.prop]: this.value, ...this.id });
       this.$emit('onConfirm', true);
       this.$message.success(`${this.msg}成功`);
     } catch (error) {
-      this.$emit('onConfirm', false);
+      this.$emit('onError', false);
       this.$message.error(`${this.msg}失败`);
       console.log('error :', error);
     }

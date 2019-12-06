@@ -233,8 +233,8 @@ export default class ScFormTag extends Vue {
     return listeners;
   }
 
-  created() {
-    const { tagType = 'input' } = this.data.tag || {};
+  async created() {
+    const { tagType = 'input', options } = this.data.tag || {};
     const { value } = this.formData;
 
     if (tagType === 'input-number' && !value) {
@@ -251,6 +251,9 @@ export default class ScFormTag extends Vue {
     }
     if (tagType === 'select' && this.tagBind.multiple) {
       this.formData.value = this.$utils._DataTypeChange(value);
+    }
+    if (options && typeof options === 'function') {
+      this.data.tag!.options = ((await options) as any)();
     }
   }
 }

@@ -11,7 +11,7 @@
       <div class="mt-15 font-text-regular"
            style="white-space:pre-wrap">
         <span>&yen;</span>
-        <span v-text="formData.bond_price||'暂无'"></span>
+        <span v-text="formData.bond_price"></span>
       </div>
 
     </div>
@@ -24,7 +24,7 @@
       </div>
       <div class="mt-15 font-text-regular"
            style="white-space:pre-wrap">
-        <span v-text="formData.bond_tel||'暂无'"></span>
+        <span v-text="formData.bond_tel"></span>
       </div>
     </div>
     <div class=" p-15 bg-white mt-20 border-radius-4">
@@ -35,7 +35,7 @@
                    plain>修改</el-button>
       </div>
       <div class="mt-15 font-text-regular">
-        <span v-text="formData.bond_questions||'暂无'"></span>
+        <span v-text="formData.bond_questions"></span>
       </div>
     </div>
 
@@ -118,7 +118,7 @@ export default class AdminSetting extends Vue {
   onSubmit() {
     const api = this.$api.admin.merchant.shop.shopJoinUpdate;
     this.$http
-      .post(api, {
+      .get(api, {
         ...this.formData,
         [this.key]: this.value,
       })

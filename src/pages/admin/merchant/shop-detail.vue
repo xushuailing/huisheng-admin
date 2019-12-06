@@ -25,7 +25,8 @@
               <div>{{item.value}}</div>
             </div>
           </div>
-          <el-button type="primary"
+          <el-button @click="onProhibit"
+                     type="primary"
                      class="mt-20">
             下架
           </el-button>
@@ -38,15 +39,33 @@
                       ref="table"
                       :columns-handler="columnsHandler"
                       :columns="columns"
-                      :table-config="tableConfig">
+                      :table-config="tableConfig"
+                      @table-emitTableHandlerClick="onTableHandlerClick">
         </sc-min-table>
       </el-tab-pane>
     </el-tabs>
+
+    <el-dialog title="修改销量"
+               :visible.sync="form.dialogVisible"
+               width="30%">
+      <div>
+        <span>销量：</span>
+        <el-input v-model.number="form.input"
+                  type="number"
+                  placeholder="请输入销量"></el-input>
+      </div>
+      <span slot="footer"
+            class="dialog-footer">
+        <el-button type="primary"
+                   @click="onSubmit">确定修改</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script lang='ts'>
-import { Component, Vue, Prop } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
+import { obj } from '../../../lib/@types/sc-param';
 
 const columns: ScTable.SetColumns = [
   ['商品信息', 'title'],
@@ -72,26 +91,32 @@ export default class MerchantShopDetail extends Vue {
 
   activeName = '1';
 
-  detail = [
+  form = {
+    dialogVisible: false,
+    input: '',
+    id: 0,
+  };
+
+  detail: obj = [
     { label: '店铺名称：', value: '', prop: 'shopname' },
-    { label: '店铺状态：', value: '', prop: 'status' },
+    { label: '店铺状态：', value: '', prop: 'company_state' },
     {
       label: '店铺标志：',
-      value: ['http://placehold.it/200x200'],
+      value: [],
       prop: 'none3',
       type: 'img',
       width: '120px',
       height: '120px',
     },
-    { label: '掌柜名称：', value: '', prop: 'none4' },
+    { label: '掌柜名称：', value: '', prop: 'username' },
     { label: '服务电话：', value: '', prop: 'com_phone' },
     { label: '开店时间：', value: '', prop: 'none6' },
     { label: '营业时间：', value: '', prop: 'none7' },
-    { label: '经营品类：', value: '', prop: 'none8' },
+    { label: '经营品类：', value: '', prop: 'typetitle' },
     { label: '配送方式：', value: '', prop: 'none9' },
     {
       label: '营业执照：',
-      value: ['http://placehold.it/200x201', 'http://placehold.it/200x202'],
+      value: [],
       prop: 'none10',
       type: 'img',
       width: '260px',
@@ -99,7 +124,7 @@ export default class MerchantShopDetail extends Vue {
     },
     {
       label: '身份证：',
-      value: ['http://placehold.it/200x203', 'http://placehold.it/200x204'],
+      value: [],
       prop: 'none11',
       type: 'img',
       width: '260px',
@@ -107,20 +132,66 @@ export default class MerchantShopDetail extends Vue {
     },
   ];
 
-  mounted() {
-    const { id, uid } = this.$route.query;
-    this.getDetaill(id, uid);
+  get allId(): { uid: string; shopid: string } {
+    const { uid, id } = this.$route.query as any;
+    return {
+      uid,
+      shopid: id,
+    };
   }
 
-  async getDetaill(shopid: any, uid: any) {
+  mounted() {
+    this.getDetail(this.allId);
+  }
+
+  onSubmit() {
+    const { input, id } = this.form;
+
+    if (!input && input != '0') {
+      this.$message.warning('请输入销量');
+      return;
+    }
+    const api = this.$api.admin.merchant.shop.shopNum;
+    this.$http.post(api, { shopid: this.allId.shopid, gid: id, xnum: input }).then((res) => {
+      this.$message.success('修改成功');
+    });
+
+    this.form.dialogVisible = false;
+  }
+
+  async onProhibit() {
+    try {
+      const flag = await this.$utils._MessageConfirm('是否下架该店铺', '下架');
+
+      if (flag) {
+        const api = this.$api.admin.merchant.shop.prohibit;
+        await this.$http.get(api, {
+          shopid: this.allId.shopid,
+        });
+
+        this.getDetail(this.allId);
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+  }
+
+  async getDetail(id: any) {
     const api = this.$api.admin.merchant.shop.show;
-    const { data } = await this.$http.get(api, { uid, shopid });
+    const { data } = await this.$http.get(api, id);
 
     this.detail.forEach((v) => {
       v.value = data[v.prop];
     });
 
     console.log('this.detail', this.detail);
+  }
+
+  onTableHandlerClick({ row, index, type }: ScTable.Event.TableHandlerClick) {
+    if (type === 'editsales') {
+      this.form.dialogVisible = true;
+      this.form.id = row.id;
+    }
   }
 }
 </script>

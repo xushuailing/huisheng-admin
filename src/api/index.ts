@@ -54,28 +54,26 @@ export default {
         goods: {
           index: `${url}/admin/getUserGoodsList`,
         },
+        /** 店铺类型 */
+        types: `${url}/admin/getType`,
         show: `${url}/admin/getUserShop`,
         /** 设置商家加入保证金参数信息 */
         shopJoinShow: `${url}/admin/getShopjoin`,
         /** 设置商家加入保证金参数信息 */
         shopJoinUpdate: `${url}/admin/setShopjoin`,
+        /** 下架 */
+        prohibit: `${url}/admin/setUserShopProhibit`,
+
+        /** 修改销量 */
+        shopNum: `${url}/admin/setUserShopXnum`,
       },
       /** 商家入驻审核列表 */
       inject: {
-        index: `${url}/admin/getUserShopList`,
-        create: `${url}/admin/getUserShopList`,
-        update: `${url}/admin/getUserShopList`,
-        delete: `${url}/admin/getUserShopList`,
-        show: `${url}/admin/getUserShopList`,
+        index: `${url}/admin/getShopToexamineList`,
         check: `${url}/admin/checkUserShop`,
         /** 商家审核驳回 */
         reject: `${url}/admin/setUserShopReject`,
       },
-    },
-
-    /** 投诉管理 */
-    complaints: {
-      index: `${url}/admin/getComplaintList`,
     },
 
     /** 会员管理 */
@@ -116,9 +114,7 @@ export default {
     },
   },
 
-  // 商家端接口
-
-  /** 商家管理 */
+  /** 商家的接口 */
   merchant: {
     /** 商家店铺管理 */
     shop: {
@@ -190,6 +186,14 @@ export default {
         show: `${url}/admin/getCommenDatail`,
         reply: `${url}admin/getDoCommenDatail`,
       },
+    },
+  },
+
+  common: {
+    /** 投诉管理 */
+    complaints: {
+      index: `${url}/admin/getComplaintList`,
+      reply: `${url}/admin/complaint_reply`,
     },
   },
 };

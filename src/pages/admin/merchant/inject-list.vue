@@ -16,16 +16,18 @@
                      msg="驳回"
                      :api='rejectApi'
                      prop="reject"
-                     :id="rejectForm.id"
+                     :id="{shopid:rejectForm.id}"
                      :visible.sync="rejectForm.visible"
                      @onConfirm="onRejectConfirm" />
   </div>
 </template>
 <script lang='ts'>
-import { Component, Vue, Prop } from 'vue-property-decorator';
+import { Component, Vue, Prop, Ref } from 'vue-property-decorator';
+import { namespace } from 'vuex-class';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { ScForm } from '../../../lib/@types/sc-form.d';
 import dialogTextarea from '@/components/dialogTextarea.vue';
+import { State } from '../../../store/common';
 
 enum status {
   '审核中' = 1,
@@ -35,20 +37,21 @@ enum status {
 }
 
 const columns: ScTable.SetColumns = [
-  ['门店名称', 'shopname', 200],
+  ['门店名称', 'shopname'],
   ['公司名称', 'company'],
-  ['联系人', 'username', 100],
-  ['公司电话', 'com_phone', 100],
+  ['门店分类', 'typeid'],
+  ['联系人', 'username'],
+  ['联系电话', 'com_phone'],
   ['门店地址', 'address'],
-  ['申请时间', 'createtime', 150],
+  ['申请时间', 'createtime'],
   ['状态', 'status', 80],
 ];
 
 @Component({ components: { dialogTextarea } })
 export default class SettingUsernameList extends Vue {
-  $refs!: {
-    table: ScTable;
-  };
+  @(namespace('common').Action) getShopTypes!: () => Promise<State['shopTypes']>;
+
+  @Ref('table') $table!: ScTable;
 
   columns = this.$utils._SetTableColumns(columns);
 
@@ -60,6 +63,14 @@ export default class SettingUsernameList extends Vue {
   columnsSchema: ScTable.ColumnsSchema = {
     状态: {
       formater: (row, col) => [{ class: 'font-primary' }, status[row[col.prop]]],
+    },
+    门店分类: {
+      formater: (row, col) => {
+        const types = this.getTypeIds();
+
+        const type = (types && types.find((v) => v.value == row[col.prop])) || {};
+        return type.label;
+      },
     },
   };
 
@@ -75,30 +86,21 @@ export default class SettingUsernameList extends Vue {
     attr: { 'label-width': '120px' },
     data: [
       {
-        label: '商家店铺名称：',
-        prop: 'company',
+        label: '门店名称：',
+        prop: 'shopname',
         tag: {
           attr: {
-            placeholder: '请输入商家店铺名称',
+            placeholder: '请输入门店名称',
           },
         },
       },
 
       {
         label: '店铺类型：',
-        prop: 'none3',
+        prop: 'typeid',
         tag: {
           tagType: 'select',
-          options: [
-            // {
-            //   value: 1,
-            //   label: '启用',
-            // },
-            // {
-            //   value: 0,
-            //   label: '不启用',
-            // },
-          ],
+          options: [],
           attr: {
             placeholder: '请选择店铺类型',
           },
@@ -123,8 +125,30 @@ export default class SettingUsernameList extends Vue {
     id: null,
   };
 
+  typeIds: any[] | null = null;
+
   get rejectApi() {
     return this.$api.admin.merchant.inject.reject;
+  }
+
+  created() {
+    this.getTypeid();
+  }
+
+  getTypeIds() {
+    return this.typeIds;
+  }
+
+  async getTypeid() {
+    try {
+      const api = this.$api.admin.merchant.shop.types;
+      const data = await this.getShopTypes();
+      this.typeIds = data;
+
+      this.$set(this.searchConfig.data[1].tag, 'options', data);
+    } catch (error) {
+      console.log('error', error);
+    }
   }
 
   onTableHandlerClick({ row, index, type }: ScTable.Event.TableHandlerClick) {
@@ -153,7 +177,7 @@ export default class SettingUsernameList extends Vue {
   }
 
   onRejectConfirm(flag: boolean) {
-    if (flag) this.$refs.table.emitRefresh();
+    if (flag) this.$table.emitRefresh();
   }
 }
 </script>
