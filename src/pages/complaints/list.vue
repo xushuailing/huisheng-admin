@@ -53,7 +53,7 @@ export default class ComplaintsList extends Vue {
   };
 
   tableConfig: ScTable.TableConfig = {
-    api: this.$api.admin.complaints,
+    api: this.$api.common.complaints,
   };
 
   replyForm = {
@@ -62,18 +62,14 @@ export default class ComplaintsList extends Vue {
   };
 
   get replyApi() {
-    return this.$api.admin.complaints.reply;
+    return this.$api.common.complaints.reply;
   }
 
   onConfirm() {
     this.$refs.table.emitRefresh();
   }
 
-  // TODO: 接口报错
   onTableHandlerClick({ row, index, type }: ScTable.Event.TableHandlerClick) {
-    console.log('row :', row);
-    console.log('index :', index);
-    console.log('type :', type);
     if (type === 'reply') {
       this.replyForm.visible = true;
       this.replyForm.id = row.id;

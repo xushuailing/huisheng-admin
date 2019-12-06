@@ -69,11 +69,7 @@ export default {
       },
       /** 商家入驻审核列表 */
       inject: {
-        index: `${url}/admin/getUserShopList`,
-        create: `${url}/admin/getUserShopList`,
-        update: `${url}/admin/getUserShopList`,
-        delete: `${url}/admin/getUserShopList`,
-        show: `${url}/admin/getUserShopList`,
+        index: `${url}/admin/getShopToexamineList`,
         check: `${url}/admin/checkUserShop`,
         /** 商家审核驳回 */
         reject: `${url}/admin/setUserShopReject`,

@@ -31,7 +31,6 @@ export default class SettingRoleList extends Vue {
     breadcrumbButtons: ['add'],
   };
 
-  // TODO: 角色添加报错
   formAddConfig = this.formConfig();
 
   editConfig = this.formConfig(false);

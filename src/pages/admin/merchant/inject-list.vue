@@ -27,7 +27,7 @@ import { namespace } from 'vuex-class';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { ScForm } from '../../../lib/@types/sc-form.d';
 import dialogTextarea from '@/components/dialogTextarea.vue';
-import { State } from '../../../store/admin';
+import { State } from '../../../store/common';
 
 enum status {
   '审核中' = 1,
@@ -49,7 +49,7 @@ const columns: ScTable.SetColumns = [
 
 @Component({ components: { dialogTextarea } })
 export default class SettingUsernameList extends Vue {
-  @(namespace('admin').Action) getShopTypes!: () => Promise<State['shopTypes']>;
+  @(namespace('common').Action) getShopTypes!: () => Promise<State['shopTypes']>;
 
   @Ref('table') $table!: ScTable;
 

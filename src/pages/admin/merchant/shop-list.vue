@@ -18,7 +18,8 @@
 import { Component, Vue, Prop, Ref } from 'vue-property-decorator';
 import { Action, namespace } from 'vuex-class';
 import { ScTable } from '@/lib/@types/sc-table.d';
-import { State } from '@/store/admin';
+import { State } from '@/store/common';
+import { _MerchantState } from '../data';
 
 const columns: ScTable.SetColumns = [
   ['门店名称', 'shopname'],
@@ -28,12 +29,12 @@ const columns: ScTable.SetColumns = [
   ['公司电话', 'com_phone', 100],
   ['门店地址', 'address', 220],
   ['申请时间', 'createtime', 220],
-  ['状态', 'status', 80],
+  ['状态', 'company_state', 80],
 ];
 
 @Component
 export default class MerchantShop extends Vue {
-  @(namespace('admin').Action) getShopTypes!: () => Promise<State['shopTypes']>;
+  @(namespace('common').Action) getShopTypes!: () => Promise<State['shopTypes']>;
 
   @Ref('table') $table!: ScTable;
 
@@ -41,10 +42,12 @@ export default class MerchantShop extends Vue {
 
   columnsHandler = ['look', { name: 'prohibit', title: '下架', type: 'danger' }];
 
-  // TODO: 缺少状态
   columnsSchema: ScTable.ColumnsSchema = {
     状态: {
-      formater: (row, col) => row[col.prop],
+      formater: (row, col) => {
+        const data = _MerchantState(row[col.prop]);
+        return data && [{ class: data.color }, data.label];
+      },
     },
     门店分类: {
       formater: (row, col) => {
@@ -93,11 +96,10 @@ export default class MerchantShop extends Vue {
       },
       {
         label: '店铺状态：',
-        prop: 'status',
+        prop: 'company_state',
         tag: {
           tagType: 'select',
-          options: [],
-          // options: status.filter((v) => v).map((v, i) => ({ value: i + 1, label: v })),
+          options: _MerchantState,
           attr: {
             placeholder: '请选择店铺类型',
           },
@@ -120,6 +122,7 @@ export default class MerchantShop extends Vue {
   };
 
   typeIds: any[] | null = null;
+
 
   created() {
     this.getTypeid();
@@ -145,11 +148,10 @@ export default class MerchantShop extends Vue {
     if (type === 'look') {
       this.$router.push({ path: '/merchant/shop-detail', query: { uid: row.uid, id: row.id } });
     } else if (type === 'prohibit') {
-      this.onProhibit(row.id);
+      this.onProhibit([row.id]);
     }
   }
 
-  // TODO: 下架接口不能批量
   async onProhibit(ids: any[]) {
     try {
       const flag = await this.$utils._MessageConfirm('是否下架该店铺', '下架');
@@ -157,10 +159,12 @@ export default class MerchantShop extends Vue {
       if (flag) {
         const api = this.$api.admin.merchant.shop.prohibit;
         const res = await this.$http.get(api, {
-          shopid: ids,
+          shopids: ids,
         });
 
         this.$table.emitRefresh();
+
+        this.$message.success('成功下架');
       }
     } catch (error) {
       console.log('error', error);
