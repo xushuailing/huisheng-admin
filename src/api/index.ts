@@ -63,6 +63,9 @@ export default {
         shopJoinUpdate: `${url}/admin/setShopjoin`,
         /** 下架 */
         prohibit: `${url}/admin/setUserShopProhibit`,
+
+        /** 修改销量 */
+        shopNum: `${url}/admin/setUserShopXnum`,
       },
       /** 商家入驻审核列表 */
       inject: {
@@ -75,12 +78,6 @@ export default {
         /** 商家审核驳回 */
         reject: `${url}/admin/setUserShopReject`,
       },
-    },
-
-    /** 投诉管理 */
-    complaints: {
-      index: `${url}/admin/getComplaintList`,
-      reply: `${url}/admin/complaint_reply`,
     },
 
     /** 会员管理 */
@@ -121,9 +118,7 @@ export default {
     },
   },
 
-  // 商家端接口
-
-  /** 商家管理 */
+  /** 商家的接口 */
   merchant: {
     /** 商家店铺管理 */
     shop: {
@@ -195,6 +190,14 @@ export default {
         show: `${url}/admin/getCommenDatail`,
         reply: `${url}admin/getDoCommenDatail`,
       },
+    },
+  },
+
+  common: {
+    /** 投诉管理 */
+    complaints: {
+      index: `${url}/admin/getComplaintList`,
+      reply: `${url}/admin/complaint_reply`,
     },
   },
 };

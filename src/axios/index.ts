@@ -28,9 +28,9 @@ const Token = (): object => {
 };
 
 const successResponse = (res: AxiosResponse) => {
-  const { code, msg } = res.data;
+  const { status, message } = res.data;
 
-  if (Number(code) !== 0 && msg) errorMessage(msg);
+  if (!status) errorMessage(message);
 
   return res;
 };
