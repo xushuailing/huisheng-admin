@@ -274,6 +274,9 @@ declare class FormConfig {
   /** 是否再失败提交数据后关闭(弹框/页面) (默认值 `false`) */
   public isFailClose?: boolean;
 
+  /** 请求体类型 (默认值: `json`) */
+  public bodyType?: 'json' | 'formData';
+
   /**
    * 上一步之前的钩子
    *

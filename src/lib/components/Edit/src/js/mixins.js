@@ -168,7 +168,11 @@ export default {
       });
 
       const allData = { ...data, ...params };
-      const submitData = handleSubmit ? await handleSubmit(allData, this) : allData;
+      let submitData = handleSubmit ? await handleSubmit(allData, this) : allData;
+
+      if (this.config.bodyType === 'formData' || !this.config.bodyType) {
+        submitData = this.jsonToFromData(submitData);
+      }
 
       if (!this.$utils._DataIsEmpty(submitData)) {
         this.emitEditCompleteFun(allData, false, 'prevent', null);
