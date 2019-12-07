@@ -81,11 +81,13 @@ export default {
       /** 会员列表 */
       level: {
         index: `${url}/admin/levelList`,
+        delete: `${url}/admin/delLevel`,
       },
       /** 会员规则 */
       rules: {
-        show: `${url}/admin/RuleText`,
-        update: `${url}/admin/RuleTextUpdate`,
+        textShow: `${url}/admin/RuleText`,
+        textUpdate: `${url}/admin/RuleTextUpdate`,
+        update: `${url}/admin/SetUpUpdate`,
         index: `${url}/admin/SetUpList`,
       },
     },

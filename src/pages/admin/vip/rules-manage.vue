@@ -88,7 +88,7 @@ export default class AdminVipRules extends Vue {
   }
 
   async getFormData() {
-    const api = this.$api.admin.vip.rules.show;
+    const api = this.$api.admin.vip.rules.textShow;
     const { data } = await this.$http.get(api);
     this.formData = data;
   }
@@ -101,7 +101,7 @@ export default class AdminVipRules extends Vue {
   }
 
   onSubmit() {
-    const api = this.$api.admin.vip.rules.update;
+    const api = this.$api.admin.vip.rules.textUpdate;
     this.$http
       .post(api, {
         ...this.formData,

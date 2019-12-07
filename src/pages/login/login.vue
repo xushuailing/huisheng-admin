@@ -6,12 +6,12 @@
         <div class="font-30 font-bold text-center mb-30 pt-20 pb-20">莱赶集管理后台</div>
         <el-form :model="form">
           <el-form-item prop="username">
-            <el-input v-model="form.username"
+            <el-input class="w100" v-model="form.username"
                       placeholder="请输入账号"
                       clearable></el-input>
           </el-form-item>
           <el-form-item prop="password">
-            <el-input show-password
+            <el-input class="w100" show-password
                       placeholder="请输入密码"
                       clearable
                       v-model="form.password"></el-input>

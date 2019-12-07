@@ -3,6 +3,7 @@
     <sc-min-table stripe
                   ref="table"
                   :columns-handler="columnsHandler"
+                  :columns-schema="columnsSchema"
                   :columns="columns"
                   :search-config="searchConfig"
                   :table-config="tableConfig">
@@ -20,7 +21,7 @@ const level_id = [
 ];
 
 const columns: ScTable.SetColumns = [
-  ['头像', 'avatarurl', null, null, 'img'],
+  ['头像', 'avatarurl', 100, null, 'img'],
   ['名称', 'nickname'],
   ['会员金额', 'money'],
   ['会员类型', 'member_name'],
@@ -34,6 +35,17 @@ export default class SettingRoleList extends Vue {
 
   columnsHandler = ['del'];
 
+
+  columnsSchema: ScTable.ColumnsSchema = {
+    // level_id: {
+    //   formater: (row, col) => {
+    //     const item = level_id.find((v) => row[col.prop] == v.value);
+    //     return item && item.label;
+    //   },
+    // },
+  };
+
+  // TODO: 缺少删除接口
   tableConfig = {
     api: this.$api.admin.vip.level,
     // breadcrumbButtons: ['add'],
