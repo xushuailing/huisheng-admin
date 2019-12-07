@@ -253,13 +253,13 @@ export default class ScFormTag extends Vue {
       this.formData.value = this.$utils._DataTypeChange(value);
     }
     if (options && typeof options === 'function') {
-      this.data.tag!.options = ((await options) as any)();
+      this.data.tag!.options = await (options as Function)();
     }
   }
 }
 </script>
 <style lang='scss'>
-.sc-form-tag {
-  height: 100%;
-}
+  .sc-form-tag {
+    height: 100%;
+  }
 </style>
