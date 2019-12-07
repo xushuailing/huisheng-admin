@@ -44,27 +44,10 @@
               <div>{{row.username}}</div>
               <div>{{row.phone}}</div>
             </div>
-            <div>
-              <div v-if="currentTab===2||currentTab===3">
-                <div class="font-danger">&yen; {{row.shop_goods_pay_price}}</div>
-                <div class="font-info">含运费：{{12.00}}</div>
-              </div>
-              <span v-else
-                    :class="currentTab===1?'font-danger':'font-primary'">
-                {{getStatus(row.status)}}
-              </span>
-            </div>
+            <div class="font-danger">{{getStatus(row.status)}}</div>
             <div class="flex-column flex-jc-ac">
               <el-button type="text"
                          @click="toDetail(row.oid)">详情</el-button>
-              <el-button v-show="currentTab===0"
-                         type="primary"
-                         size="mini"
-                         @click="toProgress(row.oid)">查看进度</el-button>
-              <el-button v-show="currentTab===2"
-                         type="primary"
-                         size="mini"
-                         @click="handleDelivery(row.oid)">发货</el-button>
             </div>
           </div>
         </o-table-row>
@@ -74,7 +57,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Mixins } from 'vue-property-decorator';
-import Mixin from './mixin';
+import Mixin from '../mixin';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
 
@@ -87,25 +70,20 @@ export default class Order extends Mixins(Mixin) {
   tabs = [
     { label: '全部订单', value: 0 },
     { label: '待付款', value: 1 },
-    { label: '待发货', value: 2 },
-    { label: '待收货', value: 3 },
+    { label: '待评价', value: 4 },
+    { label: '已完成', value: 5 },
   ];
 
   currentTab = 0;
 
-  get thead() {
-    const price = [2, 3];
-    const selectAll = this.currentTab === 2 ? [{ label: '', type: 'checked', width: 10 }] : [];
-    return [
-      ...selectAll,
-      { label: '商品信息' },
-      { label: '单价' },
-      { label: '数量' },
-      { label: '买家信息' },
-      { label: price.includes(this.currentTab) ? '实收款' : '状态' },
-      { label: '操作' },
-    ];
-  }
+  thead = [
+    { label: '商品信息' },
+    { label: '单价' },
+    { label: '数量' },
+    { label: '买家信息' },
+    { label: '状态' },
+    { label: '操作' },
+  ];
 
   get tableConfig(): ScTable.TableConfig {
     return {

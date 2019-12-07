@@ -21,20 +21,17 @@
         <p>认证信息：</p>
         <el-row class="mb-20"
                 type="flex">
-          <el-col :span="8">姓名：{{data.realname}}</el-col>
+          <el-col :span="8">姓名：{{data.username}}</el-col>
           <el-col :span="8">电话：{{data.com_phone}}</el-col>
-          <!-- TODO: 编辑没有地址字段 -->
-          <el-col :span="8">地址：{{data.address}}</el-col>
-        </el-row>
-        <el-row class="mb-20"
-                type="flex">
-          <!-- TODO: 编辑没有证件号码 -->
-          <el-col :span="8">证件号码：{{data.number}}</el-col>
           <el-col :span="8">认证通过时间：{{data.opentime}}</el-col>
         </el-row>
         <el-row class="mb-20"
                 type="flex">
-          <el-col :span="8">经营品类：{{data.typeid}}</el-col>
+          <el-col :span="8">证件号码：{{data.number}}</el-col>
+          <el-col :span="8">经营品类：{{getType(data.typeid)}}</el-col>
+        </el-row>
+        <el-row class="mb-20"
+                type="flex">
           <el-col class="flex"
                   :span="8">营业执照：
             <el-image fit="contain"
@@ -48,7 +45,11 @@
   </div>
 </template>
 <script lang='ts'>
-import { Component, Vue, Prop } from 'vue-property-decorator';
+import { Component, Vue, Mixins } from 'vue-property-decorator';
+import { namespace } from 'vuex-class';
+import GetIds from '../mixins/getIds';
+import { State } from '@/store/common';
+import { obj } from '@/lib/@types/sc-param.d';
 
 const STATUS = {
   1: '提交申请，审核中',
@@ -59,13 +60,15 @@ const STATUS = {
 };
 
 @Component
-export default class ShopAuth extends Vue {
-  userInfo = this.$utils._Storage.get('user_info');
+export default class ShopAuth extends Mixins(GetIds) {
+  @(namespace('common').Action) getShopTypes!: () => Promise<State['shopTypes']>;
 
   data = {};
 
+  typeList: obj[] = [];
+
   async getDetail() {
-    const { id: uid, shopid } = this.userInfo;
+    const { uid, shopid } = this;
     const loading = this.$utils._Loading.show();
     try {
       const res = await this.$http.get(this.$api.merchant.shop.show, { uid, shopid });
@@ -84,12 +87,18 @@ export default class ShopAuth extends Vue {
     return STATUS[status];
   }
 
+  getType(id: string) {
+    const item = this.typeList.find((v) => v.value === id);
+    return item ? item.label : '';
+  }
+
   handleEdit() {
     this.$router.push('/shop/baseinfo');
   }
 
-  mounted() {
+  async mounted() {
     this.getDetail();
+    this.typeList = await this.getShopTypes();
   }
 }
 </script>

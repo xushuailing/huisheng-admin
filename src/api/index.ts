@@ -120,7 +120,7 @@ export default {
     shop: {
       index: `${url}/admin/getUserShopList`,
       show: `${url}/admin/getUserShop`,
-      update: `${url}/admin/userJoinShop`,
+      update: `${url}/admin/setUserShop`,
       /** 客服 */
       service: {
         index: `${url}/admin/CustomerServiceList`,
