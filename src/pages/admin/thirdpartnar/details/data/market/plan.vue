@@ -26,8 +26,9 @@ export default class TpMarketPlan extends Vue {
 
   columnsHandler = ['detail', { name: 'upload', title: '上传' }];
 
+  // TODO: 缺少接口
   tableConfig: ScTable.TableConfig = {
-    api: this.$api.platform,
+    api: this.$api.test,
     breadcrumbButtons: [],
   };
 

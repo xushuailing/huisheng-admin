@@ -21,8 +21,9 @@ export default class TpDays extends Vue {
 
   columnsHandler = ['edit'];
 
+  // TODO: 缺少接口
   tableConfig: ScTable.TableConfig = {
-    api: this.$api.platform,
+    api: this.$api.test,
     breadcrumbButtons: [],
   };
 

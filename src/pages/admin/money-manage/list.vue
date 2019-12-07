@@ -25,8 +25,9 @@ export default class SettingRoleList extends Vue {
 
   columnsHandler = [{ name: 'look', title: '查看' }];
 
+  // TODO: 缺少接口
   tableConfig = {
-    api: this.$api.role,
+    api: this.$api.test,
   };
 
   searchConfig = {

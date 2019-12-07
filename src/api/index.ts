@@ -2,14 +2,14 @@
 const url = process.env.NODE_ENV === 'development' ? '/api' : 'https://restaurant.isoft.mobi';
 
 export default {
-  // test: {
-  //   index: `${url}/service-uaa/sys/user/index`,
-  //   create: `${url}/service-uaa/sys/user/create`,
-  //   update: `${url}/service-uaa/sys/user/update`,
-  //   delete: `${url}/service-uaa/sys/user/delete`,
-  //   export: `${url}/service-uaa/sys/user/export`,
-  //   show: `${url}/service-uaa/sys/user/show`,
-  // },
+  test: {
+    index: `${url}/service-uaa/sys/user/index`,
+    create: `${url}/service-uaa/sys/user/create`,
+    update: `${url}/service-uaa/sys/user/update`,
+    delete: `${url}/service-uaa/sys/user/delete`,
+    export: `${url}/service-uaa/sys/user/export`,
+    show: `${url}/service-uaa/sys/user/show`,
+  },
   login: `${url}/admin/admin_login`,
   files: {
     upload: `${url}/api/insert_img`,

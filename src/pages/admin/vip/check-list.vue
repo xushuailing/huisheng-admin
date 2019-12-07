@@ -34,8 +34,9 @@ export default class SettingRoleList extends Vue {
 
   columnsHandler = [{ name: 'pass', title: '通过' }, { name: 'reject', title: '驳回' }];
 
+  // TODO: 缺少接口
   tableConfig = {
-    api: this.$api.role,
+    api: this.$api.test,
     // breadcrumbButtons: ['add'],
   };
 
@@ -115,7 +116,7 @@ export default class SettingRoleList extends Vue {
     onAddComplete() {},
   };
 
-  onTableHandlerClick({ row, type }) {
+  onTableHandlerClick({ row, type }:ScTable.Event.TableHandlerClick) {
     console.log('type', type);
     if (type === 'pass') {
       this.passForm.visible = true;

@@ -28,8 +28,9 @@ export default class TpCost extends Vue {
 
   columnsHandler = ['edit', 'del'];
 
+  // TODO: 缺少接口
   tableConfig: ScTable.TableConfig = {
-    api: this.$api.platform,
+    api: this.$api.test,
     breadcrumbButtons: [],
   };
 

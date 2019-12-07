@@ -97,7 +97,7 @@ export default class MerchantShopDetail extends Vue {
     id: 0,
   };
 
-  detail: obj = [
+  detail: obj[] = [
     { label: '店铺名称：', value: '', prop: 'shopname' },
     { label: '店铺状态：', value: '', prop: 'company_state' },
     {

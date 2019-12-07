@@ -19,7 +19,8 @@ export default class TpPmInfo extends Vue {
   @Prop({ type: [String, Number], required: true })
   id!: string;
 
-  api = this.$api.platform.create;
+  // TODO: 缺少接口
+  api = this.$api.test.create;
 
   config: ScForm.Edit = {
     type: 'specialty',

@@ -40,8 +40,10 @@ export default class TpServiceDetail extends Vue {
 
   columnsHandler = ['detail'];
 
+
+  // TODO: 缺少接口
   tableConfig: ScTable.TableConfig = {
-    api: this.$api.platform,
+    api: this.$api.test,
     breadcrumbButtons: [],
   };
 

@@ -44,7 +44,7 @@
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
 import Info from '@/components/img-name';
-import { ScTable } from '../../../lib/@types/sc-table.d';
+import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
 
 @Component
@@ -80,8 +80,9 @@ export default class TpIndex extends Vue {
     { name: 'service', title: '去服务' },
   ];
 
+  // TODO: 缺少接口
   tableConfig: ScTable.TableConfig = {
-    api: this.$api.platform,
+    api: this.$api.test,
     breadcrumbButtons: [],
   };
 
@@ -140,10 +141,11 @@ export default class TpIndex extends Vue {
   }
 
   // 获取店铺列表
+  // TODO: 缺少接口
   getShops() {
     this.loading = true;
     this.$http
-      .post(this.$api.platform.create)
+      .post('')
       .then((res) => {
         console.log('res: ', res);
         this.shops = res.data.data;
@@ -170,7 +172,7 @@ export default class TpIndex extends Vue {
       this.$message.warning('请选择店铺名称');
       return;
     }
-    const api = this.$api.platform.create;
+    const api = '';
     const param = { id: this.selectedShop };
     this.$http
       .post(api, param)

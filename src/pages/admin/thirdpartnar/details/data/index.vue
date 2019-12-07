@@ -36,8 +36,9 @@ export default class TpDetailData extends Vue {
 
   columnsHandler = ['detail', 'edit', { name: 'upload', title: '上传数据' }];
 
+  // TODO: 缺少接口
   tableConfig: ScTable.TableConfig = {
-    api: this.$api.platform,
+    api: this.$api.test,
     breadcrumbButtons: [],
   };
 
