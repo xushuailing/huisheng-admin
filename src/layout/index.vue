@@ -8,7 +8,8 @@
       <!-- <el-aside width="200px">
         <Aside></Aside>
       </el-aside> -->
-      <el-main class="flex-column" :class="{
+      <el-main class="flex-column"
+               :class="{
           'el-main-p': breadcrumb,
         }">
         <template v-if="breadcrumb">
@@ -23,7 +24,7 @@
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import Main from './main.vue';
 import Header from './header.vue';
-import Aside from './aside.vue';
+import Aside from './aside/index.vue';
 
 @Component({ components: { Main, Header, Aside } })
 export default class App extends Vue {
