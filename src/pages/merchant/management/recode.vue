@@ -11,6 +11,7 @@
 <script lang='ts'>
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
+import { _Shopid } from '../config';
 
 @Component
 export default class ManagementRecode extends Vue {
@@ -33,7 +34,7 @@ export default class ManagementRecode extends Vue {
 
   tableConfig = {
     api: this.$api.merchant.manage.record,
-    index: { shopid: this.userInfo.shopid },
+    index: { shopid: _Shopid },
   };
 
   searchConfig: ScTable.Search = {

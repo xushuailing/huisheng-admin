@@ -3,20 +3,18 @@
     <h3 class="mt-0">订单详情</h3>
     <div class="flex-jsb font-info"
          style="width:60%">
-      <span>订单编号：{{data.id}}</span>
-      <span>创建时间：{{data.createtime}}</span>
-      <span>订单类型：{{data.type}}</span>
+      <span>订单编号：{{order.ordernumber}}</span>
+      <span>创建时间：{{order.createtime}}</span>
     </div>
 
     <goods-table :header="header"
                  :list="list"></goods-table>
 
-    <div class="mt-20 font-danger font-16">实收款：280</div>
-    <div class="mt-10 font-info font-12">运费：0.00</div>
-    <div class="mt-30">
-      <strong class="font-16">收货信息</strong>
-      <p>收货地址：某某某，12345678910，浙江省杭州市滨江区卓信大厦</p>
-    </div>
+    <div class="mt-20 font-danger font-16">实收款：{{price.payPrice}}</div>
+    <div class="mt-10 font-info font-12">运费：{{price.freight}}</div>
+
+    <address title="收货信息"
+             :data="address"></address>
     <div class="mt-30">
       <strong class="font-16">评价详情：</strong>
       <span>4星</span>
@@ -44,23 +42,17 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
-import GoodsTable from './goods-table.vue';
+import { Component, Vue, Mixins } from 'vue-property-decorator';
 import { obj } from '@/lib/@types/sc-param.d';
+import { _Shopid, _Uid } from '../../config';
+import GoodsTable from '../goods-table.vue';
+import GetValue from '../mixin';
+import Detail from './mixin';
 
 @Component({ components: { GoodsTable } })
-export default class OrderReply extends Vue {
-  @Prop({ type: String, required: true })
-  id!: string;
-
+export default class OrderReply extends Mixins(Detail, GetValue) {
   $refs!: {
     form: any;
-  };
-
-  data = {
-    id: '12345678910',
-    createtime: '2017-07-04  15:36',
-    type: '虚拟产品订单',
   };
 
   header = {
@@ -71,21 +63,11 @@ export default class OrderReply extends Vue {
     amount: '商品总价',
   };
 
-  get columns() {
-    return Object.keys(this.header);
+  get price() {
+    const order = this.data.order || {};
+    const { shop_goods_pay_price = '', freight = '' } = order;
+    return { payPrice: shop_goods_pay_price, freight };
   }
-
-  list: obj[] = [
-    {
-      info: '商品名称商品名称商品名称',
-      size: '规格1：规格2',
-      price: '125.00',
-      num: 1,
-      amount: '￥140.00',
-      image:
-        'https://didulv.didu86.com/restaurant/storage/app/uploads/2019-11-04/3bed2e7bc036770f93bcd19335ad0868.jpg',
-    },
-  ];
 
   form = {
     reply: '',
@@ -122,12 +104,11 @@ export default class OrderReply extends Vue {
       });
   }
 
-  // TODO: 缺接口
   getDetail() {
-    const api = this.$api.merchant.order.show;
-    const param = { gid: this.id, shopid: '' };
-    this.$http.post(api, param).then((res) => {
-      console.log('res: ', res);
+    const api = this.$api.merchant.order.comment.show;
+    const param = { uid: _Uid, oid: this.id };
+    this.$http.get(api, param).then((res) => {
+      this.data = res.data || {};
     });
   }
 

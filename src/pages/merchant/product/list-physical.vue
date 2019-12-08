@@ -30,6 +30,7 @@
 import { Component, Vue, Prop, Ref } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
+import { _Shopid } from '../config';
 
 const columns: ScTable.SetColumns = [
   ['商品图片', 'image', 100, null, 'img'],
@@ -73,7 +74,7 @@ export default class MerchantInject extends Vue {
 
   tableConfig: ScTable.TableConfig = {
     api: this.$api.merchant.product,
-    index: { shopid: this.userInfo.shopid, status: 1 },
+    index: { shopid: _Shopid, status: 1 },
   };
 
   searchConfig: ScTable.Search = {

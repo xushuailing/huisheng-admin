@@ -7,13 +7,11 @@
       <h3>订单详情</h3>
       <div class="flex-jsb font-info"
            style="width:60%">
-        <span>订单编号：{{data.order.ordernumber}}</span>
-        <span>创建时间：{{data.order.createtime}}</span>
-        <span>订单类型：{{data.order.type}}</span>
+        <span>订单编号：{{data.ordernumber}}</span>
+        <span>创建时间：{{data.createtime}}</span>
       </div>
       <goods-table :header="header"
                    :list="list"></goods-table>
-
       <h3 class="mt-30">买家详情</h3>
       <p>{{logisticsInfo}}</p>
 
@@ -29,8 +27,8 @@
                     type="number"
                     placeholder="请输入申请退款理由"></el-input>
         </el-form-item>
-        <div class="font-primary font-bold">付款方式：{{data.pay_type}}</div>
-        <div class="mt-30 pt-20 font-danger font-16">实收款：￥{{data.pay_price}}</div>
+        <div class="font-primary font-bold">付款方式：{{getPriceType(data.pay_type)}}</div>
+        <div class="mt-30 pt-20 font-danger font-16">实收款：￥{{data.yuan_price}}</div>
         <div class="mt-5 font-info">运费：{{data.freight}}</div>
         <el-form-item class="mt-30 font-danger"
                       label="应退款："
@@ -50,12 +48,11 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Mixins } from 'vue-property-decorator';
-import Mixin from '../mixin';
-import Status from './status.vue';
-import GoodsTable from '../goods-table.vue';
 import { obj } from '@/lib/@types/sc-param.d';
-
-const lodashString = require('lodash/string');
+import { _Uid } from '../../config';
+import Mixin from '../mixin';
+import Status from './components/status.vue';
+import GoodsTable from '../goods-table.vue';
 
 @Component({ components: { Status, GoodsTable } })
 export default class OrderReturnDetail extends Mixins(Mixin) {
@@ -63,42 +60,27 @@ export default class OrderReturnDetail extends Mixins(Mixin) {
     return this.$route.query.id;
   }
 
-  data: obj = {
-    status: null,
-    time: '72:00:00',
-    order: {
-      ordernumber: '201909101622564',
-      createtime: '12345678910',
-      paytime: '2019-07-01  15:45',
-      transactionNo: '201701234567894101235',
-      payType: '支付宝',
-      serialNumber: '123456789101112',
-    },
-    order_goods: [
-      {
-        title: '商品名称商品名称商品名称',
-        size: '规格1：规格2',
-        price: '125.00',
-        num: 1,
-        total_price: '￥140.00',
-        image:
-          'https://didulv.didu86.com/restaurant/storage/app/uploads/2019-11-04/3bed2e7bc036770f93bcd19335ad0868.jpg',
-      },
-    ],
-    refund_reason: '不想要了',
-    username: '测试',
-    phone: '18094714282',
-    address_provinces: '浙江省',
-    address_areas: '滨江区',
-    address: '我桌信大厦31',
-    pay_type: 2,
-    pay_price: '70.21',
-    freight: '10',
-  };
+  data: obj = {};
 
   get logisticsInfo() {
-    const { username, phone, address_provinces, address_areas, address } = this.data;
-    return `${username}，${phone}，${address_provinces}${address_areas}${address}`;
+    const {
+      username = '',
+      phone = '',
+      address_provinces = '',
+      address_city = '',
+      address_areas = '',
+      address = '',
+    } = this.data;
+    return `${username}，${phone}，${address_provinces}${address_city}${address_areas}${address}`;
+  }
+
+  getPriceType(price: string) {
+    const PAY_TYPE: obj = { 1: '余额', 2: '微信支付', 3: '支付宝支付' };
+    return PAY_TYPE[price] || '';
+  }
+
+  get list() {
+    return this.data.order_goods || [];
   }
 
   header = {
@@ -109,16 +91,20 @@ export default class OrderReturnDetail extends Mixins(Mixin) {
     total_price: '商品总价',
   };
 
-  get list() {
-    return this.data.order_goods || [];
-  }
+  form: obj = {
+    refund_reason: '',
+    yuan_price: '',
+  };
 
   getDetail() {
-    const api = this.$api.merchant.order.show;
-    const param = { uid: '', oid: '' };
+    const api = this.$api.merchant.order.return.show;
+    const param = { title: '' };
     this.$http.get(api, param).then((res) => {
-      console.log('res.data: ', res.data);
-      this.data = res.data || {};
+      const data = res.data || {};
+      this.data = data;
+      Object.keys(this.form).forEach((k) => {
+        this.form[k] = data[k];
+      });
     });
   }
 
@@ -129,7 +115,7 @@ export default class OrderReturnDetail extends Mixins(Mixin) {
   // TODO: 缺接口
   async handleReturn() {
     const api = this.$api.merchant.order.pay;
-    const param = { ...this.form, oid: this.id, uid: '' };
+    const param = { ...this.form, oid: this.id, uid: _Uid };
     const Loading = this.$utils._Loading.show({ text: '退货中...' });
     try {
       const { status, message }: obj = await this.$http.get(api, param);
@@ -143,14 +129,9 @@ export default class OrderReturnDetail extends Mixins(Mixin) {
     Loading.close();
   }
 
-  form = {
-    refund_reason: '',
-    yuan_price: '',
-  };
-
   async handlePay() {
     const api = this.$api.merchant.order.pay;
-    const param = { ...this.form, oid: this.id, uid: '' };
+    const param = { ...this.form, oid: this.id, uid: _Uid };
     const Loading = this.$utils._Loading.show({ text: '确认中...' });
     try {
       const { status, message }: obj = await this.$http.get(api, param);
@@ -165,7 +146,7 @@ export default class OrderReturnDetail extends Mixins(Mixin) {
   }
 
   mounted() {
-    // this.getDetail();
+    this.getDetail();
   }
 }
 </script>

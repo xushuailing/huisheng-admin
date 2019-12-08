@@ -8,10 +8,10 @@
         <o-table-row>
           <div slot="top_th"
                class="flex-jsb">
-            <span>订单编号：{{row.id}}</span>
+            <span>订单编号：{{row.ordernumber}}</span>
             <span>创建时间：{{row.createtime}}</span>
-            <span>订单类型：{{row.parameter}}</span>
-            <span>支付方式：{{row.type}}</span>
+            <!-- <span>订单类型：{{row.parameter}}</span> -->
+            <!-- <span>支付方式：{{row.type}}</span> -->
           </div>
           <div v-for="item in 1"
                :key="item"
@@ -26,8 +26,8 @@
                    class="mr-10">
               <strong class="ellipsis goods-name">{{row.title}}</strong>
             </div>
-            <div>{{row.star}}</div>
-            <div>{{row.content}}</div>
+            <!-- <div>{{row.star}}</div>
+            <div>{{row.content}}</div> -->
             <div>{{row.createtime}}</div>
             <div class="flex-jc-ac">
               <el-button type="text"
@@ -55,6 +55,7 @@ import dialogTextarea from '@/components/dialogTextarea.vue';
 import Mixin from './mixin';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
+import { _Shopid } from '../config';
 
 @Component({ components: { dialogTextarea } })
 export default class OrderEvaluate extends Mixins(Mixin) {
@@ -62,23 +63,31 @@ export default class OrderEvaluate extends Mixins(Mixin) {
 
   thead = [
     { label: '商品信息', width: 300 },
-    { label: '星级' },
-    { label: '内容呢' },
+    // { label: '星级' },
+    // { label: '内容呢' },
     { label: '创建时间' },
     { label: '操作' },
   ];
 
   tableConfig: ScTable.TableConfig = {
     api: this.$api.merchant.order.comment,
-    index: { oid: '', gid: '', uid: '' },
+    index: { shopid: _Shopid },
   };
 
   searchConfig = {
-    param: {},
+    handleSubmit: (data: any) => {
+      if (data && data.createtime) {
+        const [start, end] = data.createtime.split(',');
+        data.strtime = start;
+        data.endtime = end;
+        delete data.createtime;
+      }
+      return data;
+    },
     data: [
       {
         label: '订单编号：',
-        prop: 'id',
+        prop: 'ordernumber',
         tag: { attr: { placeholder: '请输入订单号' } },
       },
       {
@@ -93,20 +102,20 @@ export default class OrderEvaluate extends Mixins(Mixin) {
           },
         },
       },
-      {
-        label: '订单类型：',
-        prop: 'type',
-        tag: {
-          tagType: 'select',
-          options: [],
-          attr: { placeholder: '请选择订单类型' },
-        },
-      },
+      // {
+      //   label: '订单类型：',
+      //   prop: 'type',
+      //   tag: {
+      //     tagType: 'select',
+      //     options: [],
+      //     attr: { placeholder: '请选择订单类型' },
+      //   },
+      // },
     ],
   };
 
   toDetail(id: string) {
-    this.$router.push({ path: 'reply', query: { id } });
+    this.$router.push({ path: 'comment-detail', query: { id } });
   }
 
   reply = {

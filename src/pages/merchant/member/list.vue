@@ -10,6 +10,7 @@
 <script lang='ts'>
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
+import { _Uid } from '../config';
 
 const columns: ScTable.SetColumns = [
   ['会员头像', 'avatarurl', 100, null, 'img'],
@@ -37,7 +38,7 @@ export default class SettingRoleList extends Vue {
 
   tableConfig = {
     api: this.$api.merchant.member.list,
-    index: { uid: this.userInfo.id },
+    index: { uid: _Uid },
   };
 
   searchConfig: ScTable.Search = {

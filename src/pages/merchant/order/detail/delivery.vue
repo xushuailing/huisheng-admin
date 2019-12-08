@@ -4,7 +4,7 @@
     <div class="flex-jsb font-info">
       <span>订单编号：{{data.id}}</span>
       <span>创建时间：{{data.createtime}}</span>
-      <span>订单类型：{{data.parameter}}</span>
+      <!-- <span>订单类型：{{data.parameter}}</span> -->
     </div>
 
         <goods-table :header="header"
@@ -47,7 +47,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import GoodsTable from './goods-table.vue';
+import GoodsTable from '../goods-table.vue';
 import { obj } from '@/lib/@types/sc-param.d';
 
 @Component({ components: { GoodsTable } })

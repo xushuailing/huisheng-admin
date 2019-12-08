@@ -11,28 +11,31 @@
            :key="i"
            :style="colWidth"
            class="table-row">
-        <template v-for="(col,k) in row">
+        <template v-for="(col,k) in header">
           <div v-if="columns.includes(k)"
                :key="k"
-               class="p-20 flex-ac text-c">
+               class="p-20 flex-ac">
             <div v-if="k === 'title'"
                  class="flex-ac">
               <img :width="80"
                    :height="80"
                    :src="row.image"
-                   :alt="col"
                    style="object-fit: cover"
                    class="mr-10">
-              <span>{{col}}</span>
+              <span>{{row[k]}}</span>
+            </div>
+            <div v-else-if="k==='size'"
+                 class="w100">
+              {{(row.fid_val||'') + ' ' + (row.attr_val||'')}}
             </div>
             <div v-else
-                 class="w100">{{col}}</div>
+                 class="w100">{{row[k]}}</div>
           </div>
         </template>
       </div>
     </template>
     <div v-else
-         class="font-16 font-info">暂无数据</div>
+         class="p-20 font-16 font-info">暂无数据</div>
   </div>
 </template>
 <script lang="ts">

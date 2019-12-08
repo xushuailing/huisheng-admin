@@ -37,7 +37,7 @@
             <el-image fit="contain"
                       style="width:200px;height:200px;"
                       :src="data.license"
-                      :preview-src-list="data.license"></el-image>
+                      :preview-src-list="[data.license]"></el-image>
           </el-col>
         </el-row>
       </div>
@@ -47,7 +47,7 @@
 <script lang='ts'>
 import { Component, Vue, Mixins } from 'vue-property-decorator';
 import { namespace } from 'vuex-class';
-import GetIds from '../mixins/getIds';
+import { _Uid, _Shopid } from '../config';
 import { State } from '@/store/common';
 import { obj } from '@/lib/@types/sc-param.d';
 
@@ -60,7 +60,7 @@ const STATUS = {
 };
 
 @Component
-export default class ShopAuth extends Mixins(GetIds) {
+export default class ShopAuth extends Vue {
   @(namespace('common').Action) getShopTypes!: () => Promise<State['shopTypes']>;
 
   data = {};
@@ -68,10 +68,11 @@ export default class ShopAuth extends Mixins(GetIds) {
   typeList: obj[] = [];
 
   async getDetail() {
-    const { uid, shopid } = this;
     const loading = this.$utils._Loading.show();
     try {
-      const res = await this.$http.get(this.$api.merchant.shop.show, { uid, shopid });
+      const api = this.$api.merchant.shop.show;
+      const params = { uid: _Uid, shopid: _Shopid };
+      const res = await this.$http.get(api, params);
       if (res.status) {
         this.data = res.data;
       } else {

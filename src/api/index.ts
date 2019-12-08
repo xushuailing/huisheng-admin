@@ -180,11 +180,17 @@ export default {
       pay: `${url}/admin/setConfirmPayment`,
       comment: {
         // 评价列表
-        index: `${url}/admin/getCommenReply`,
+        // index: `${url}/admin/getCommenReply`,
         // TODO: 待评价列表？是不是要合并到一个接口
-        // index: `${url}/admin/getCommentList`,
+        index: `${url}/admin/getCommentList`,
         show: `${url}/admin/getCommenDatail`,
         reply: `${url}admin/getDoCommenDatail`,
+      },
+      address: {
+        province: `${url}/admin/getProvinces`,
+        city: `${url}/admin/getCities`,
+        area: `${url}api/getAreas`,
+        update: `${url}/admin/setUserAddress`,
       },
     },
   },

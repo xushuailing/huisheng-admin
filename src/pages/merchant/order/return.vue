@@ -10,7 +10,7 @@
                class="flex-jsb">
             <span>订单编号：{{row.ordernumber}}</span>
             <span>创建时间：{{row.createtime}}</span>
-            <span>订单类型：{{row.type}}</span>
+            <!-- <span>订单类型：{{row.type}}</span> -->
           </div>
           <div v-for="item in 1"
                :key="item"
@@ -61,8 +61,7 @@ import { Component, Vue, Mixins } from 'vue-property-decorator';
 import Mixin from './mixin';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
-
-const lodashArray = require('lodash/array');
+import { _Uid } from '../config';
 
 @Component
 export default class OrderReturn extends Mixins(Mixin) {
@@ -81,11 +80,10 @@ export default class OrderReturn extends Mixins(Mixin) {
 
   tableConfig: ScTable.TableConfig = {
     api: this.$api.merchant.order.return,
-    index: { uid: '123' },
+    index: { uid: _Uid },
   };
 
   searchConfig = {
-    param: { uid: '' },
     handleSubmit: (data: any) => {
       if (data.createtime) {
         const [start, end] = data.createtime.split(',');
@@ -114,15 +112,15 @@ export default class OrderReturn extends Mixins(Mixin) {
           },
         },
       },
-      {
-        label: '订单类型：',
-        prop: 'type',
-        tag: {
-          tagType: 'select',
-          options: [],
-          attr: { placeholder: '请选择订单类型' },
-        },
-      },
+      // {
+      //   label: '订单类型：',
+      //   prop: 'type',
+      //   tag: {
+      //     tagType: 'select',
+      //     options: [],
+      //     attr: { placeholder: '请选择订单类型' },
+      //   },
+      // },
     ],
   };
 

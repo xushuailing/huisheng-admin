@@ -1,12 +1,14 @@
 <template>
   <div class="Order">
     <el-radio-group v-model="currentTab"
-                    size="medium">
+                    size="medium"
+                    @change="onTabChange">
       <el-radio-button v-for="(item,i) in tabs"
                        :key="i"
                        :label="item.value">{{item.label}}</el-radio-button>
     </el-radio-group>
-    <o-table :thead="thead"
+    <o-table ref="table"
+             :thead="thead"
              :table-config="tableConfig"
              :search-config="searchConfig"
              :paginationConfig="paginationConfig"
@@ -18,50 +20,46 @@
         <o-table-row>
           <div slot="top_th">
             <span>订单编号：{{row.ordernumber}}</span>
-            <span class="ml-30">订单类型：{{row.ordertype}}</span>
+            <!-- <span class="ml-30">订单类型：{{row.ordertype}}</span> -->
             <span class="ml-30">创建时间：{{row.ordertime}}</span>
           </div>
-          <div v-for="item in 1"
-               :key="item"
+          <div v-for="item in row.ordergoods"
+               :key="item.id"
                class="flex-jc-ac text-c">
             <el-checkbox-group v-show="currentTab===2"
                                v-model="selection"
                                :style="getWidth(width[0])">
-              <el-checkbox :label="row.id">{{''}}</el-checkbox>
+              <el-checkbox :label="item.id">{{''}}</el-checkbox>
             </el-checkbox-group>
             <div class="flex-ac flex-1">
               <img :width="40"
                    :height="40"
-                   :src="row.image"
-                   :alt="row.title"
+                   :src="item.image"
                    style="object-fit: cover"
                    class="ml-20 mr-10 border-radius-100">
-              <strong>{{row.title}}</strong>
+              <strong>{{item.title}}</strong>
             </div>
-            <div>{{row.price}}</div>
-            <div>{{row.num}}</div>
+            <div>{{item.price}}</div>
+            <div>{{item.num}}</div>
             <div>
-              <div>{{row.username}}</div>
-              <div>{{row.phone}}</div>
+              <div>{{item.username}}</div>
+              <div>{{item.phone}}</div>
             </div>
             <div>
               <div v-if="currentTab===2||currentTab===3">
-                <div class="font-danger">&yen; {{row.shop_goods_pay_price}}</div>
-                <div class="font-info">含运费：{{12.00}}</div>
+                <div class="font-danger">&yen; {{item.shop_goods_pay_price}}</div>
+                <div class="font-info"
+                     v-if="item.freight">含运费：{{item.freight}}}</div>
               </div>
               <span v-else
-                    :class="currentTab===1?'font-danger':'font-primary'">
-                {{getStatus(row.status)}}
+                    :class="item.status==1?'font-danger':'font-primary'">
+                {{getStatus(item.status)}}
               </span>
             </div>
             <div class="flex-column flex-jc-ac">
               <el-button type="text"
-                         @click="toDetail(row.oid)">详情</el-button>
-              <el-button v-show="currentTab===0"
-                         type="primary"
-                         size="mini"
-                         @click="toProgress(row.oid)">查看进度</el-button>
-              <el-button v-show="currentTab===2"
+                         @click="toDetail(row.oid,item.status)">详情</el-button>
+              <el-button v-show="item.status==2"
                          type="primary"
                          size="mini"
                          @click="handleDelivery(row.oid)">发货</el-button>
@@ -73,7 +71,8 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue, Mixins } from 'vue-property-decorator';
+import { Component, Vue, Ref, Mixins } from 'vue-property-decorator';
+import { _Uid } from '../config';
 import Mixin from './mixin';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
@@ -82,7 +81,7 @@ const lodashArray = require('lodash/array');
 
 @Component
 export default class Order extends Mixins(Mixin) {
-  userInfo = this.$utils._Storage.get('user_info');
+  @Ref('table') $table!: ScTable;
 
   tabs = [
     { label: '全部订单', value: 0 },
@@ -110,20 +109,19 @@ export default class Order extends Mixins(Mixin) {
   get tableConfig(): ScTable.TableConfig {
     return {
       api: this.$api.merchant.order,
-      index: { uid: (this.userInfo && this.userInfo.uid) || 1 },
+      index: { uid: _Uid, status: this.currentTab },
     };
   }
 
   searchConfig: ScTable.Search = {
-    param: { uid: '' },
+    param: { uid: _Uid },
     handleSubmit: (data: any) => {
-      if (data.createtime) {
+      if (data && data.createtime) {
         const [start, end] = data.createtime.split(',');
         data.strtime = start;
         data.endtime = end;
         delete data.createtime;
       }
-      console.log('data: ', data);
       return data;
     },
     data: [
@@ -153,7 +151,7 @@ export default class Order extends Mixins(Mixin) {
         tag: {
           tagType: 'date-picker',
           attr: {
-            type: 'daterange',
+            type: 'datetimerange',
             'start-placeholder': '开始时间',
             'end-placeholder': '结束时间',
           },
@@ -167,6 +165,10 @@ export default class Order extends Mixins(Mixin) {
       slotAttr: { isCheckbox: true, text: ' 批量发货' },
     };
     return this.currentTab === 2 ? send : {};
+  }
+
+  onTabChange() {
+    this.$table.setDataTable({});
   }
 
   handleSendAll() {
@@ -187,12 +189,16 @@ export default class Order extends Mixins(Mixin) {
     this.tableData = response.data;
   }
 
-  toDetail(id: string) {
-    this.$router.push({ path: 'detail', query: { id } });
-  }
+  toDetail(id: string, status: string) {
+    const type: obj = {
+      1: 'pay',
+      2: 'send',
+      3: 'receive',
+      4: 'comment',
+    };
+    console.log(': ', type[status]);
 
-  toProgress(id: string) {
-    this.$router.push({ path: 'detail', query: { id } });
+    this.$router.push({ path: `${type[status] || 'invalid'}-detail`, query: { id } });
   }
 
   handleDelivery(id: string | string[]) {

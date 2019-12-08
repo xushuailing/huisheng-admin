@@ -13,6 +13,7 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 import Cascader from './cascader.vue';
 import { ScForm } from '@/lib/@types/sc-form.d';
 import { obj } from '@/lib/@types/sc-param.d';
+import { _Shopid } from '../config';
 
 @Component
 export default class OrderAddress extends Vue {
@@ -25,13 +26,14 @@ export default class OrderAddress extends Vue {
   }
 
   get api() {
-    return ''; //  this.$api.admin.activity.adsSorts.create;
+    return this.$api.merchant.order.address.update; //  this.$api.admin.activity.adsSorts.create;
   }
 
   editConfig: ScForm.Edit = {
     type: 'plain',
     width: '750px',
     'label-width': '110px',
+    params: { ordernumber: '' },
     buttons: [{ mode: 'cancel', isHide: false, sort: 7 }, { mode: 'submit', text: '确认修改' }],
     rules: [],
     data: [
@@ -66,7 +68,7 @@ export default class OrderAddress extends Vue {
   // TODO: 缺接口
   getDetail() {
     const api = this.$api.merchant.order.show;
-    const param = { gid: this.id, shopid: '' };
+    const param = { gid: this.id, shopid: _Shopid };
     this.$http.post(api, param).then((res) => {
       console.log('res: ', res);
     });

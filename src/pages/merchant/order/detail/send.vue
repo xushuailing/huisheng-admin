@@ -9,7 +9,7 @@
            style="width:60%">
         <span>订单编号：{{data.order.ordernumber}}</span>
         <span>创建时间：{{data.order.createtime}}</span>
-        <span>订单类型：{{data.order.type}}</span>
+        <!-- <span>订单类型：{{data.order.type}}</span> -->
       </div>
       <goods-table :header="header"
                    :list="list"></goods-table>
@@ -74,7 +74,7 @@
 <script lang="ts">
 import { Component, Vue, Mixins } from 'vue-property-decorator';
 import Mixin from '../mixin';
-import Status from './status.vue';
+import Status from './components/status.vue';
 import GoodsTable from '../goods-table.vue';
 import { obj } from '@/lib/@types/sc-param.d';
 
