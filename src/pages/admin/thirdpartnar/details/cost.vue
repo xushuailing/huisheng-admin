@@ -13,25 +13,20 @@ import { Component, Vue } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { ScForm } from '@/lib/@types/sc-form.d';
 
+// TODO: 94、列表，修改，删除接口
 @Component
 export default class TpCost extends Vue {
   columns: ScTable.Columns = [
     { label: '产品名称', prop: 'none1' },
     { label: '成本', prop: 'none2' },
     { label: '价格', prop: 'none3' },
-    {
-      label: '创建时间',
-      prop: 'none4',
-      formater: (row, col) => this.$utils._FormatDate(row[col.prop]),
-    },
+    { label: '创建时间', prop: 'none4' },
   ];
 
   columnsHandler = ['edit', 'del'];
 
-  // TODO: 缺少接口
   tableConfig: ScTable.TableConfig = {
     api: this.$api.test,
-    breadcrumbButtons: [],
   };
 
   editConfig: ScTable.Eidt = {

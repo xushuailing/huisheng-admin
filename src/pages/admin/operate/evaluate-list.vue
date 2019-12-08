@@ -4,7 +4,7 @@
       <el-button @click="onAddTemplate">添加</el-button>
     </sc-breadcrumb>
     <el-tabs v-model="activeName">
-      <el-tab-pane label="店铺基本信息"
+      <el-tab-pane label="好评模板"
                    lazy
                    name="1">
         <sc-min-table stripe
@@ -14,7 +14,7 @@
                       :table-config="good.tableConfig">
         </sc-min-table>
       </el-tab-pane>
-      <el-tab-pane label="产品列表"
+      <el-tab-pane label="差评模板"
                    lazy
                    name="2">
         <sc-min-table stripe
@@ -38,7 +38,7 @@ import { ScTable } from '@/lib/@types/sc-table.d';
 import { ScForm } from '../../../lib/@types/sc-form';
 
 const columns: ScTable.SetColumns = [
-  ['用户头像', 'none1', null, null, 'img'],
+  ['用户头像', 'none1', 100, null, 'img'],
   ['名称', 'none2'],
   ['内容', 'none3'],
   ['模板分类', 'none4'],
@@ -46,6 +46,7 @@ const columns: ScTable.SetColumns = [
 ];
 @Component
 export default class OperateEvaluate extends Vue {
+  // 缺少好评,差评模板列表，添加，删除，评价分类接口
   good = {
     columns: this.$utils._SetTableColumns(columns),
     columnsHandler: ['del'],
@@ -60,7 +61,6 @@ export default class OperateEvaluate extends Vue {
     columnsHandler: ['del'],
     tableConfig: {
       api: this.$api.admin.merchant.shop.goods,
-      // breadcrumbButtons: ['add'],
     },
   };
 

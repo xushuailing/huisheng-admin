@@ -20,6 +20,7 @@ const columns: ScTable.SetColumns = [
   ['创建时间', 'createtime'],
 ];
 
+// TODO: 列表，删除，添加，海报分类接口
 @Component
 export default class OperatePoster extends Vue {
   columns: ScTable.Columns = this.$utils._SetTableColumns(columns);
@@ -32,7 +33,6 @@ export default class OperatePoster extends Vue {
     },
   };
 
-  // TODO: 缺少接口
   tableConfig: ScTable.TableConfig = {
     api: this.$api.admin.activity.ads,
     breadcrumbButtons: ['add'],

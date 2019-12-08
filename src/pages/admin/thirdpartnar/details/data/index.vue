@@ -13,6 +13,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
 
+// TODO: 93、数据上传-列表，修改，发送感谢信。诊断方案，状态数据
 @Component
 export default class TpDetailData extends Vue {
   columns: ScTable.Columns = [
@@ -36,7 +37,6 @@ export default class TpDetailData extends Vue {
 
   columnsHandler = ['detail', 'edit', { name: 'upload', title: '上传数据' }];
 
-  // TODO: 缺少接口
   tableConfig: ScTable.TableConfig = {
     api: this.$api.test,
     breadcrumbButtons: [],
@@ -44,9 +44,9 @@ export default class TpDetailData extends Vue {
 
   onTableHandlerClick({ row, type }: { row: obj; type: string }) {
     if (type === 'detail') {
-      this.$router.push({ name: '店铺诊断', query: { id: row.id } });
+      this.$router.push({ path: '/thirdpartnar/shops', query: { id: row.id } });
     } else if (type === 'upload') {
-      this.$router.push({ name: '营销策划', query: { id: row.id } });
+      this.$router.push({ name: '/thirdpartnar/market', query: { id: row.id } });
     }
   }
 }

@@ -15,11 +15,12 @@ import { ScForm } from '@/lib/@types/sc-form.d';
 import { obj } from '@/lib/@types/sc-param.d';
 
 const columns: ScTable.SetColumns = [
-  ['海报分类', 'none1'],
+  ['图片分类', 'none1'],
   ['图片', 'none2', 200, null, 'img'],
   ['创建时间', 'createtime'],
 ];
 
+// TODO: 列表，删除，添加，图片分类接口
 @Component
 export default class OperateImages extends Vue {
   columns: ScTable.Columns = this.$utils._SetTableColumns(columns);
@@ -32,7 +33,6 @@ export default class OperateImages extends Vue {
     },
   };
 
-  // TODO: 缺少接口
   tableConfig: ScTable.TableConfig = {
     api: this.$api.admin.activity.ads,
     breadcrumbButtons: ['add'],
@@ -49,7 +49,7 @@ export default class OperateImages extends Vue {
     rules: [
       {
         none1: {
-          value: [{ required: true, message: '请输入海报分类', trigger: 'change' }],
+          value: [{ required: true, message: '请输入图片分类', trigger: 'change' }],
         },
         none2: {
           value: [{ required: true, message: '请添加图片', trigger: 'change' }],
@@ -59,7 +59,7 @@ export default class OperateImages extends Vue {
     data: [
       [
         {
-          label: '海报图片：',
+          label: '图片图片：',
           prop: 'none2',
           tag: {
             tagType: 'upload-img',
@@ -67,9 +67,9 @@ export default class OperateImages extends Vue {
           },
         },
         {
-          label: '海报分类：',
+          label: '图片分类：',
           prop: 'none1',
-          tag: { options: [], tagType: 'select', attr: { placeholder: '请输入海报分类' } },
+          tag: { options: [], tagType: 'select', attr: { placeholder: '请输入图片分类' } },
         },
       ],
     ],

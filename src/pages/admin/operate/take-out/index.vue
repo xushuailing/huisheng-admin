@@ -31,6 +31,8 @@ import manage from './manage-list.vue';
 import noob from './noob-list.vue';
 import video from './video-list.vue';
 
+const types = [{ value: 1, label: '外卖学院' }, { value: 2, label: '视频教程' }];
+
 @Component
 export default class TpSetting extends Vue {
   tabs = [
@@ -63,7 +65,7 @@ export default class TpSetting extends Vue {
         {
           label: '类型：',
           prop: 'none7',
-          tag: { tagType: 'select', attr: { placeholder: '请选择类型' }, options: [] },
+          tag: { tagType: 'select', attr: { placeholder: '请选择类型' }, options: types },
         },
         {
           label: '添加问题：',
@@ -74,6 +76,17 @@ export default class TpSetting extends Vue {
           label: '回答：',
           prop: 'none9',
           tag: { attr: { type: 'textarea', rows: 6, placeholder: '请输入回答' } },
+        },
+        {
+          label: '添加视频：',
+          prop: 'none10',
+          tag: {
+            tagType: 'upload-file',
+            attr: {
+              limit: 1,
+              fileSize: 50,
+            },
+          },
         },
       ],
     ],

@@ -298,7 +298,7 @@ export default [
       },
       {
         path: 'take-out',
-        name: '图片精选',
+        name: '外卖学院',
         component: () => import('../pages/admin/operate/take-out/index.vue'),
         meta: {
           breadcrumbHide: true,

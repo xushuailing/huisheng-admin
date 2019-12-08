@@ -15,6 +15,7 @@ import Info from '@/components/img-name';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
 
+// TODO: 缺少列表，详情，运营，套餐类型，状态
 @Component
 export default class TpIndex extends Vue {
   columns: ScTable.Columns = [
@@ -39,7 +40,6 @@ export default class TpIndex extends Vue {
     { name: 'upload', title: '上传' },
   ];
 
-  // TODO: 缺少接口
   tableConfig: ScTable.TableConfig = {
     api: this.$api.admin.activity.ads,
   };

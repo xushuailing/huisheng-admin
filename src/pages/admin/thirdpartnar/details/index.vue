@@ -1,7 +1,8 @@
 
 <template>
   <div class="tp-detail">
-    <el-button class="tp-detail__send"
+    <el-button v-if="activeName=='data'"
+               class="tp-detail__send"
                size="small"
                type="primary">发送感谢信</el-button>
     <el-tabs v-model="activeName"
@@ -40,9 +41,9 @@ export default class TpDetail extends Vue {
 }
 </script>
 <style lang="scss" scoped>
-.tp-detail{
+.tp-detail {
   position: relative;
-  &__send{
+  &__send {
     position: absolute;
     top: 0;
     right: 0;
