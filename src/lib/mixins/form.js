@@ -148,7 +148,6 @@ export default {
      * JSON TO FormData
      */
     jsonToFromData(data) {
-      debugger;
       if (typeof data == 'object' && data) {
         const formData = new FormData();
 
