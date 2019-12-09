@@ -16,7 +16,7 @@
              @select-all="onSelectAll"
              @emitGetTableDataComplete="getTableData"
              class="mt-20">
-      <template slot-scope="{ row, width }">
+      <template slot-scope="{ row }">
         <o-table-row>
           <div slot="top_th">
             <span>订单编号：{{row.ordernumber}}</span>
@@ -26,11 +26,6 @@
           <div v-for="item in row.ordergoods"
                :key="item.id"
                class="flex-jc-ac text-c">
-            <el-checkbox-group v-show="currentTab===2"
-                               v-model="selection"
-                               :style="getWidth(width[0])">
-              <el-checkbox :label="item.id">{{''}}</el-checkbox>
-            </el-checkbox-group>
             <div class="flex-ac flex-1">
               <img :width="40"
                    :height="40"
@@ -45,24 +40,10 @@
               <div>{{item.username}}</div>
               <div>{{item.phone}}</div>
             </div>
-            <div>
-              <div v-if="currentTab===2||currentTab===3">
-                <div class="font-danger">&yen; {{item.shop_goods_pay_price}}</div>
-                <div class="font-info"
-                     v-if="item.freight">含运费：{{item.freight}}}</div>
-              </div>
-              <span v-else
-                    :class="item.status==1?'font-danger':'font-primary'">
-                {{getStatus(item.status)}}
-              </span>
-            </div>
+            <div class="font-danger">{{getStatus(item.status)}}</div>
             <div class="flex-column flex-jc-ac">
               <el-button type="text"
-                         @click="toDetail(row.oid,item.status)">详情</el-button>
-              <el-button v-show="item.status==2"
-                         type="primary"
-                         size="mini"
-                         @click="handleDelivery(row.oid)">发货</el-button>
+                         @click="toDetail(row.oid)">详情</el-button>
             </div>
           </div>
         </o-table-row>
@@ -72,8 +53,8 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Ref, Mixins } from 'vue-property-decorator';
-import { _Uid } from '../config';
-import Mixin from './mixin';
+import { _Uid } from '../../config';
+import Mixin from '../mixin';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
 
@@ -86,25 +67,20 @@ export default class Order extends Mixins(Mixin) {
   tabs = [
     { label: '全部订单', value: 0 },
     { label: '待付款', value: 1 },
-    { label: '待发货', value: 2 },
-    { label: '待收货', value: 3 },
+    { label: '待评价', value: 4 },
+    { label: '已完成', value: 5 },
   ];
 
   currentTab = 0;
 
-  get thead() {
-    const price = [2, 3];
-    const selectAll = this.currentTab === 2 ? [{ label: '', type: 'checked', width: 10 }] : [];
-    return [
-      ...selectAll,
-      { label: '商品信息' },
-      { label: '单价' },
-      { label: '数量' },
-      { label: '买家信息' },
-      { label: price.includes(this.currentTab) ? '实收款' : '状态' },
-      { label: '操作' },
-    ];
-  }
+  thead = [
+    { label: '商品信息' },
+    { label: '单价' },
+    { label: '数量' },
+    { label: '买家信息' },
+    { label: '状态' },
+    { label: '操作' },
+  ];
 
   get tableConfig(): ScTable.TableConfig {
     return {
@@ -114,9 +90,9 @@ export default class Order extends Mixins(Mixin) {
   }
 
   searchConfig: ScTable.Search = {
-    param: { uid: _Uid },
+    param: { uid: '' },
     handleSubmit: (data: any) => {
-      if (data && data.createtime) {
+      if (data.createtime) {
         const [start, end] = data.createtime.split(',');
         data.strtime = start;
         data.endtime = end;
@@ -189,16 +165,12 @@ export default class Order extends Mixins(Mixin) {
     this.tableData = response.data;
   }
 
-  toDetail(id: string, status: string) {
-    const type: obj = {
-      1: 'pay',
-      2: 'send',
-      3: 'receive',
-      4: 'comment',
-    };
-    console.log(': ', type[status]);
+  toDetail(id: string) {
+    this.$router.push({ path: 'detail', query: { id } });
+  }
 
-    this.$router.push({ path: `${type[status] || 'invalid'}-detail`, query: { id } });
+  toProgress(id: string) {
+    this.$router.push({ path: 'detail', query: { id } });
   }
 
   handleDelivery(id: string | string[]) {

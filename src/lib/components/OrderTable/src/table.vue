@@ -9,36 +9,39 @@
       </sc-search>
     </div>
 
-    <div class="thead flex-jc-ac bg-white border-radius-8">
-      <div :class="['p-15 font-bold text-c font-16',!item.width&&'flex-1']"
-           v-for="(item,index) in thead"
-           :key="index"
-           :style="{width:item.width?item.width+'px':'auto'}">
-        <el-checkbox v-if="item.type==='checked'"
-                     @change="handleSelectAll"></el-checkbox>
-        <span v-else>{{item.label}}</span>
-      </div>
-    </div>
-    <div class="tbody">
-      <template v-if="tableData.length">
-        <div class="tbody-item"
-             v-for="(item, index) in tableData"
-             :key="index">
-          <slot :row="item"
-                :width="widths"
-                :index="index"></slot>
+    <div ref="table">
+      <div class="thead flex-jc-ac bg-white border-radius-8">
+        <div :class="['p-15 font-bold text-c font-16',!item.width&&'flex-1']"
+             v-for="(item,index) in thead"
+             :key="index"
+             :style="{width:item.width?item.width+'px':'auto'}">
+          <el-checkbox v-if="item.type==='checked'"
+                       @change="handleSelectAll"></el-checkbox>
+          <span v-else>{{item.label}}</span>
         </div>
-      </template>
-      <div v-else class="p-30 text-c font-16 font-info">暂无数据</div>
-    </div>
-    <div class="tfoot">
-      <sc-pagination ref="scPagination"
-                     v-if="tableConfig.isPagination!==false"
-                     v-bind="paginationConfig"
-                     @size-change="handleSizeChange"
-                     @current-change="handleCurrentChange"
-                     v-on="listeners.pagination">
-      </sc-pagination>
+      </div>
+      <div class="tbody">
+        <template v-if="tableData.length">
+          <div class="tbody-item"
+               v-for="(item, index) in tableData"
+               :key="index">
+            <slot :row="item"
+                  :width="widths"
+                  :index="index"></slot>
+          </div>
+        </template>
+        <div v-else
+             class="p-30 text-c font-16 font-info">暂无数据</div>
+      </div>
+      <div class="tfoot">
+        <sc-pagination ref="scPagination"
+                       v-if="tableConfig.isPagination!==false"
+                       v-bind="paginationConfig"
+                       @size-change="handleSizeChange"
+                       @current-change="handleCurrentChange"
+                       v-on="listeners.pagination">
+        </sc-pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -150,6 +153,7 @@ export default {
       this.tableLoading = true;
       const api = this.api.index;
 
+      const loading = this.$utils._Loading.show({ target: this.$refs.table });
       this.$http
         .get(api, param)
         .then((data) => {
@@ -184,6 +188,7 @@ export default {
         })
         .finally(() => {
           this.tableLoading = false;
+          loading.close();
         });
     },
 

@@ -14,7 +14,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Mixins, Prop, Watch } from 'vue-property-decorator';
-import Mixin from '../mixin';
+import Mixin from '../../mixin';
 import { obj } from '@/lib/@types/sc-param.d';
 
 @Component
@@ -32,7 +32,11 @@ export default class OrderStatus extends Mixins(Mixin) {
   @Watch('time', { immediate: true })
   onTimeChange(time: string) {
     this.remainTime = time;
-    this.timeDown();
+
+    if (time) {
+      console.log('time: ', time);
+      this.timeDown();
+    }
   }
 
   timer: any = null;

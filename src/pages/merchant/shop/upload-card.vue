@@ -26,7 +26,7 @@ interface Card {
 export default class UploadCard extends Vue {
   @Prop(Object) value!: Card;
 
-  @Watch('value')
+  @Watch('value', { immediate: true })
   onValueChange(value: Card) {
     this.card = value;
   }

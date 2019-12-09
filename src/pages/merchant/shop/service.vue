@@ -12,6 +12,7 @@
 <script lang='ts'>
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
+import { _Shopid } from '../config';
 
 const columns: ScTable.SetColumns = [
   ['头像', 'default_img', 100, null, 'img'],
@@ -29,7 +30,7 @@ export default class ShopService extends Vue {
 
   tableConfig = {
     api: this.$api.merchant.shop.service,
-    index: { shopid: this.userInfo.shopid },
+    index: { shopid: _Shopid },
     breadcrumbButtons: ['add'],
   };
 }

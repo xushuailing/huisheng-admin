@@ -1,7 +1,8 @@
 <template>
   <div class="order-address bg-white border-radius-8 p-30 mb-20">
     <h3 class="mt-0">收货信息</h3>
-    <sc-edit mode="page"
+    <sc-edit v-if="isInit"
+             mode="page"
              :api="api"
              :config="editConfig">
       <template slot="edit-header">&nbsp;</template>
@@ -13,6 +14,7 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 import Cascader from './cascader.vue';
 import { ScForm } from '@/lib/@types/sc-form.d';
 import { obj } from '@/lib/@types/sc-param.d';
+import { _Uid } from '../config';
 
 @Component
 export default class OrderAddress extends Vue {
@@ -20,56 +22,85 @@ export default class OrderAddress extends Vue {
     form: any;
   };
 
+  isInit = false;
+
   get id() {
     return this.$route.query.id;
   }
 
   get api() {
-    return ''; //  this.$api.admin.activity.adsSorts.create;
+    return this.$api.merchant.order.address.update; //  this.$api.admin.activity.adsSorts.create;
   }
 
-  editConfig: ScForm.Edit = {
-    type: 'plain',
-    width: '750px',
-    'label-width': '110px',
-    buttons: [{ mode: 'cancel', isHide: false, sort: 7 }, { mode: 'submit', text: '确认修改' }],
-    rules: [],
-    data: [
-      [
-        {
-          label: '收货人姓名：',
-          prop: 'username',
-          tag: { attr: { placeholder: '请输入收货人姓名' } },
-        },
-        {
-          label: '收货人手机号：',
-          prop: 'phone',
-          tag: { attr: { type: 'tel', placeholder: '请输入收货人手机号' } },
-        },
-        {
-          label: '所属辖区：',
-          prop: 'address_group',
-          tag: { tagType: 'component', components: Cascader },
-        },
-        {
-          label: '详细地址：',
-          prop: 'address',
-          tag: { attr: { placeholder: '请输入详细地址' } },
-        },
+  get editConfig(): ScForm.Edit {
+    return {
+      type: 'plain',
+      width: '820px',
+      'label-width': '110px',
+      params: { ordernumber: this.id },
+      buttons: [{ mode: 'submit', text: '确认修改' }],
+      rules: [],
+      data: [
+        [
+          {
+            label: '收货人姓名：',
+            prop: 'username',
+            tag: { attr: { placeholder: '请输入收货人姓名' } },
+          },
+          {
+            label: '收货人手机号：',
+            prop: 'phone',
+            tag: { attr: { type: 'tel', placeholder: '请输入收货人手机号' } },
+          },
+          {
+            label: '所属辖区：',
+            prop: 'address_group',
+            tag: { tagType: 'component', components: Cascader },
+          },
+          {
+            label: '详细地址：',
+            prop: 'address_title',
+            tag: { attr: { placeholder: '请输入详细地址' } },
+          },
+        ],
       ],
-    ],
-    handleSubmit: (data) => {
-      console.log('data :', data);
-    },
-  };
+      handleSubmit: (data) => {
+        console.log('data :', data);
+        return {};
+      },
+    };
+  }
 
-  // TODO: 缺接口
   getDetail() {
+    const loading = this.$utils._Loading.show();
     const api = this.$api.merchant.order.show;
-    const param = { gid: this.id, shopid: '' };
-    this.$http.post(api, param).then((res) => {
-      console.log('res: ', res);
-    });
+    const param = { uid: _Uid, oid: this.id };
+    this.$http
+      .get(api, param)
+      .then((res) => {
+        const data = res.data && res.data.address;
+        if (data) {
+          data.address_group = {
+            address_provinces_id: data.address_provinces_id,
+            address_city_id: data.address_city_id,
+            address_areas_id: data.address_areas_id,
+          };
+          console.log('data: ', data);
+
+          this.editConfig.data.forEach((v, i) => {
+            v.forEach((e, ii) => {
+              const defaultData = e.handleEdit ?
+                e.handleEdit(data[e.prop], e.prop, data) :
+                data[e.prop];
+              this.$set(this.editConfig.data[i][ii], 'default', defaultData);
+            });
+          });
+        }
+      })
+      .finally(() => {
+        this.isInit = true;
+        loading.close();
+      });
   }
 
   mounted() {

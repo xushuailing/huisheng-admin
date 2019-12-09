@@ -20,18 +20,21 @@
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
+import { _Shopid } from '../config';
 
 const columns: ScTable.SetColumns = [
   ['产品图片', 'image', 100, null, 'img'],
-  ['产品规格', 'nickname'],
-  ['产品分类', 'name'],
+  ['产品规格', 'parameter'],
+  ['产品分类', 'tags'],
   ['价格', 'price'],
-  ['商品类型', 'idCard'],
+  ['商品类型', 'type'],
   ['销量', 'pnum'],
 ];
 
 @Component
 export default class MerchantInject extends Vue {
+  userInfo = this.$utils._Storage.get('user_info');
+
   columns = this.$utils._SetTableColumns(columns);
 
   columnsHandler: ScTable.ColumnsHandler = [
@@ -48,7 +51,7 @@ export default class MerchantInject extends Vue {
 
   tableConfig: ScTable.TableConfig = {
     api: this.$api.merchant.product,
-    index: { shopid: '' },
+    index: { shopid: _Shopid },
   };
 
   onTableHandlerClick({ row, type }: { row: obj; type: string }) {
@@ -64,7 +67,7 @@ export default class MerchantInject extends Vue {
   }
 
   handleAdd() {
-    this.$router.push('add-physical');
+    this.$router.push('add');
   }
 
   onSlotClick() {

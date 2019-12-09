@@ -1,17 +1,7 @@
 <template>
   <div class="order-detail bg-white border-radius-4 p-30 mb-20">
-    <el-tag type="warning"
-            class="w100 font-14 p-10 pl-20"
-            style="height:auto">
-      <div>
-        <span>当前订单状态：</span>
-        <!-- TODO：拿不到 mixin 的 getStatus -->
-        <span class="font-primary">{{data.status}}</span>
-      </div>
-      <div v-if="data.status===1">
-        若用户在 <span class="font-danger">{{time}}</span> 内未收货，系统将自动确认收货
-      </div>
-    </el-tag>
+    <status :status="data.status"
+            :time="time"></status>
 
     <el-radio-group v-if="isVirtual"
                     v-model="currentTab"
@@ -56,47 +46,85 @@
     <div v-else
          class="mt-20">
       <h3 class="mt-0">确认交易详情</h3>
-      <div class="flex-jsb font-info">
+      <div class="flex-jsb font-info" style="width:60%">
         <span>订单编号：{{data.order.ordernumber}}</span>
         <span>创建时间：{{data.order.createtime}}</span>
-        <span>订单类型：{{data.order.type}}</span>
+        <!-- <span>订单类型：{{data.order.type}}</span> -->
       </div>
       <goods-table :header="header"
                    :list="list"></goods-table>
 
-      <div class="mt-20 font-danger font-16">实收款：&yen; 280</div>
-      <div class="mt-5 font-info">含运费：0.00</div>
-      <div class="mt-40">
-        <strong class="font-16">确认收货信息</strong>
-        <p>收货地址：某某某，12345678910，浙江省杭州市滨江区卓信大厦</p>
-        <el-button type="primary"
-                   size="small"
-                   class="mt-10"
-                   @click="handleEditAddress">修改收货地址</el-button>
-      </div>
+      <template v-if="data.status===1">
+        <el-form ref="form"
+                 :model="payForm"
+                 size="small"
+                 class="mt-30"
+                 label-position="left">
+          <el-form-item label="应付款："
+                        prop="shop_goods_pay_price">
+            <el-input v-model="payForm.shop_goods_pay_price"
+                      type="number"
+                      placeholder="请输入应付款">
+              <template slot="prepend">&yen;</template>
+            </el-input>
+          </el-form-item>
+          <el-form-item label="运费："
+                        prop="freight">
+            <el-input v-model="payForm.freight"
+                      type="number"
+                      placeholder="请输入运费">
+              <template slot="prepend">&yen;</template>
+            </el-input>
+          </el-form-item>
 
-      <div class="mt-40">
-        <h3>选择物流服务</h3>
-        <el-input v-model="awb"
-                  placeholder="请输入运单号，在选择对应物流公司"
-                  style="width:350px">
-          <el-button slot="append"
-                     :disabled="enableSubmit"
-                     @click="handleSubmit">发货</el-button>
-        </el-input>
-      </div>
+          <div class="mt-40">
+            <strong class="font-16">确认收货信息</strong>
+            <p>收货地址：某某某，12345678910，浙江省杭州市滨江区卓信大厦</p>
+          </div>
+          <el-form-item class="pt-20">
+            <el-button type="primary"
+                       class="pl-30 pr-30"
+                       @click="handlePay">确认</el-button>
+          </el-form-item>
+        </el-form>
+      </template>
+
+      <template v-else>
+        <div class="mt-20 font-danger font-16">实收款：&yen; 280</div>
+        <div class="mt-5 font-info">含运费：0.00</div>
+        <div class="mt-40">
+          <strong class="font-16">确认收货信息</strong>
+          <p>收货地址：某某某，12345678910，浙江省杭州市滨江区卓信大厦</p>
+          <el-button type="primary"
+                     size="small"
+                     class="mt-10"
+                     @click="handleEditAddress">修改收货地址</el-button>
+        </div>
+
+        <div class="mt-40">
+          <h3>选择物流服务</h3>
+          <el-input v-model="awb"
+                    placeholder="请输入运单号，在选择对应物流公司"
+                    style="width:350px">
+            <el-button slot="append"
+                       :disabled="enableSubmit"
+                       @click="handleSend">发货</el-button>
+          </el-input>
+        </div>
+      </template>
     </div>
   </div>
 </template>
 <script lang="ts">
 import { Component, Vue, Mixins } from 'vue-property-decorator';
-import Mixin from './mixin';
-import GoodsTable from './goods-table.vue';
+import Mixin from '../mixin';
+import Status from './status.vue';
+import GoodsTable from '../goods-table.vue';
 import { obj } from '@/lib/@types/sc-param.d';
 
 const lodashString = require('lodash/string');
 
-@Component({ components: { GoodsTable } })
+@Component({ components: { Status, GoodsTable } })
 export default class OrderDetail extends Mixins(Mixin) {
   isVirtual = false;
 
@@ -112,7 +140,7 @@ export default class OrderDetail extends Mixins(Mixin) {
     name: '哎呦喂',
     phone: '12345678910',
     position: '浙江  杭州',
-    status: 2,
+    status: 1,
     order: {
       ordernumber: '201909101622564',
       createtime: '12345678910',
@@ -225,14 +253,43 @@ export default class OrderDetail extends Mixins(Mixin) {
 
   awb = '';
 
-  get enableSubmit() {
-    console.log('!this.awb: ', !this.awb);
+  express = '';
 
+  expressOptions = [];
+
+  get enableSubmit() {
     return !this.awb;
   }
 
-  handleSubmit() {
-    console.log('%csubmit', 'color:#fff;background:#40b883;border-radius:5px;padding:2px 5px;');
+  handleSend() {
+    const api = this.$api.merchant.order.delivery;
+    const param = { oid: this.id, name: this.express, number: this.awb };
+    this.$http.get(api, param).then(({ status }: obj) => {
+      if (status) {
+        this.$message.success('发货成功');
+        this.$nextTick(() => {
+          this.$router.go(-1);
+        });
+      }
+    });
+  }
+
+  payForm = {
+    shop_goods_pay_price: '',
+    freight: '',
+  };
+
+  handlePay() {
+    const api = this.$api.merchant.order.pay;
+    const param = { ...this.payForm, oid: this.id, uid: '' };
+    this.$http.get(api, param).then(({ status }: obj) => {
+      if (status) {
+        this.$message.success('确认付款成功');
+        this.$nextTick(() => {
+          this.$router.go(-1);
+        });
+      }
+    });
   }
 
   mounted() {
@@ -258,7 +315,7 @@ export default class OrderDetail extends Mixins(Mixin) {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
     }
-    .mt-40{
+    .mt-40 {
       margin-top: 40px;
     }
   }

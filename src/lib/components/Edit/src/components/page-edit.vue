@@ -1,11 +1,11 @@
 <template>
   <div class='sc-edit sc-edit_page'>
-    <slot name="edit-header">
+    <!-- <slot name="edit-header">
       <sc-header class="mb-30"
                  :header="config.header">
         <slot name="edit-header-btn"></slot>
       </sc-header>
-    </slot>
+    </slot> -->
     <div v-if="form"
          :style="{width:config.width||'50%'}"
          class="sc-edit_center">
@@ -110,9 +110,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .sc-edit {
-    &_center {
-      margin: 0 auto;
-    }
-  }
+  // .sc-edit {
+  // &_center {
+  //   margin: 0 auto;
+  // }
+  // }
 </style>

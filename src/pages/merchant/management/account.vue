@@ -10,7 +10,7 @@
 
     <sc-min-table stripe
                   ref="table"
-                  class="mt-30"
+                  class="mt-20"
                   :columns="columns"
                   :search-config="searchConfig"
                   :table-config="tableConfig"
@@ -20,9 +20,10 @@
   </div>
 </template>
 <script lang='ts'>
-import { Component, Vue, Prop } from 'vue-property-decorator';
+import { Component, Vue, Prop, Ref } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
+import { _Shopid } from '../config';
 
 const columns: ScTable.SetColumns = [
   ['日期', 'date'],
@@ -33,18 +34,21 @@ const columns: ScTable.SetColumns = [
 
 @Component
 export default class ManagementAccount extends Vue {
+  @Ref('table') $table!:ScTable;
+
   userInfo = this.$utils._Storage.get('user_info');
 
   tabs = [
-    { label: '账户日汇总', value: 'date' },
-    { label: '账户月汇总', value: 'month' },
-    { label: '账户年汇总', value: 'year' },
+    { label: '账户日汇总', value: 1 },
+    { label: '账户月汇总', value: 2 },
+    { label: '账户年汇总', value: 3 },
   ];
 
   currentTab = this.tabs[0].value;
 
-  onTabChange(tab: string) {
-    console.log('tab: ', tab);
+  onTabChange(tab: number) {
+    this.tableConfig.index.typetime = tab;
+    this.$table.setDataTable({});
   }
 
   columns: ScTable.Columns = [
@@ -60,7 +64,7 @@ export default class ManagementAccount extends Vue {
 
   tableConfig = {
     api: this.$api.merchant.manage.account,
-    index: { shopid: this.userInfo.shopid, classify: 1, typetime: 1 },
+    index: { shopid: _Shopid, classify: 1, typetime: 1 },
   };
 
   columnsHandler: ScTable.ColumnsHandler = [{ name: 'export', title: '导出' }];
@@ -94,15 +98,15 @@ export default class ManagementAccount extends Vue {
           },
         },
       },
-      {
-        label: '项目类别：',
-        prop: 'type',
-        tag: {
-          tagType: 'select',
-          options: [],
-          attr: { 'label-width': '100px', placeholder: '请选择订单类型' },
-        },
-      },
+      // {
+      //   label: '项目类别：',
+      //   prop: 'type',
+      //   tag: {
+      //     tagType: 'select',
+      //     options: [],
+      //     attr: { 'label-width': '100px', placeholder: '请选择订单类型' },
+      //   },
+      // },
     ],
   };
 

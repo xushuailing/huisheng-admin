@@ -142,7 +142,22 @@ export default {
     /**
      * 关闭当前路由
      */
-    onCancelViews() {
+    onCancelViews() {},
+
+    /**
+     * JSON TO FormData
+     */
+    jsonToFromData(data) {
+      if (typeof data == 'object' && data) {
+        const formData = new FormData();
+
+        Object.keys(data).forEach((v) => {
+          formData.append(v, data[v]);
+        });
+        return formData;
+      }
+
+      return data;
     },
   },
   watch: {

@@ -59,6 +59,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
+import { _Uid } from '../config';
 
 @Component
 export default class Vip extends Vue {
@@ -128,7 +129,7 @@ export default class Vip extends Vue {
 
   tableConfig: ScTable.TableConfig = {
     api: this.$api.merchant.member,
-    index: { uid: this.userInfo.id },
+    index: { uid: _Uid },
   };
 
   showDetail() {

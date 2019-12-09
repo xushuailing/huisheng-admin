@@ -80,6 +80,7 @@ import EditTable from '@/components/editTable.vue';
 import { ScEditTable } from '@/components/@types/sc-edit-table.d';
 import { _GetTableSpan, _ObjectSpanMethod, TableColumns, MergeKey } from '@/utils/handleTableSpan';
 import { obj } from '@/lib/@types/sc-param.d';
+import { _Shopid } from '../config';
 
 interface Form {
   sort: string;
@@ -256,7 +257,7 @@ export default class ProductAdd extends Vue {
   submit() {
     console.log('%c提交', 'color:#fff;background:#40b883;border-radius:5px;padding:2px 5px;');
     const api = this.$api.merchant.product.update;
-    const param = { gid: this.id, shopid: '' };
+    const param = { gid: this.id, shopid: _Shopid };
     // this.$http.post(api, param).then((res) => {
     //   console.log('res: ', res);
     // });
@@ -264,7 +265,7 @@ export default class ProductAdd extends Vue {
 
   getDetail() {
     const api = this.$api.merchant.product.show;
-    const param = { gid: this.id, shopid: '' };
+    const param = { gid: this.id, shopid: _Shopid };
     this.$http.post(api, param).then((res) => {
       console.log('res: ', res);
     });

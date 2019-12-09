@@ -1,6 +1,8 @@
+import { RouteConfig } from 'vue-router/types/router.d';
 import layoutView from '../layout/index.vue';
+import _Storage from '@/utils/storage';
 
-export default [
+const router: RouteConfig[] = [
   {
     path: '/shop',
     name: '店铺管理',
@@ -40,6 +42,12 @@ export default [
         path: 'list',
         name: '商品列表',
         component: () => import('../pages/merchant/product/list.vue'),
+        meta: { breadcrumb: [{ title: '商品管理' }, { title: '全部商品' }] },
+      },
+      {
+        path: 'list-physical',
+        name: '商品列表',
+        component: () => import('../pages/merchant/product/list-physical.vue'),
         meta: { breadcrumb: [{ title: '商品管理' }, { title: '全部商品' }] },
       },
       {
@@ -171,6 +179,12 @@ export default [
         meta: { breadcrumb: [{ title: '订单管理' }, { title: '全部订单' }] },
       },
       {
+        path: 'index-virtual',
+        name: '全部订单',
+        component: () => import('../pages/merchant/order/virtual/index.vue'),
+        meta: { breadcrumb: [{ title: '订单管理' }, { title: '全部订单' }] },
+      },
+      {
         path: 'return',
         name: '退货管理',
         component: () => import('../pages/merchant/order/return.vue'),
@@ -183,15 +197,21 @@ export default [
         meta: { breadcrumb: [{ title: '订单管理' }, { title: '评价管理' }] },
       },
       {
-        path: 'reply',
+        path: 'comment-user',
+        name: '评价管理',
+        component: () => import('../pages/merchant/order/comment-user.vue'),
+        meta: { breadcrumb: [{ title: '订单管理' }, { title: '评价管理' }, { title: '查看' }] },
+      },
+      {
+        path: 'comment-detail',
         name: '评价详情',
-        component: () => import('../pages/merchant/order/reply.vue'),
+        component: () => import('../pages/merchant/order/detail/comment.vue'),
         meta: { breadcrumb: [{ title: '订单管理' }, { title: '详情' }] },
       },
       {
         path: 'delivery',
         name: '待发货订单',
-        component: () => import('../pages/merchant/order/delivery.vue'),
+        component: () => import('../pages/merchant/order/detail/delivery.vue'),
         meta: {
           breadcrumb: [{ title: '订单管理' }, { title: '待发货订单' }, { title: '发货' }],
         },
@@ -221,6 +241,18 @@ export default [
         name: '退货详情',
         component: () => import('../pages/merchant/order/detail/return.vue'),
         meta: { breadcrumb: [{ title: '退货管理' }, { title: '详情' }] },
+      },
+      {
+        path: 'invalid-detail',
+        name: '取消/虚拟待付款/待评价详情',
+        component: () => import('../pages/merchant/order/detail/invalid.vue'),
+        meta: { breadcrumb: [{ title: '订单管理' }, { title: '详情' }] },
+      },
+      {
+        path: 'finish-detail',
+        name: '已完成详情',
+        component: () => import('../pages/merchant/order/detail/finish.vue'),
+        meta: { breadcrumb: [{ title: '订单管理' }, { title: '详情' }] },
       },
       {
         path: 'address',
@@ -288,3 +320,15 @@ export default [
     ],
   },
 ];
+
+export default router.map((item: RouteConfig) => {
+  item.beforeEnter = (to, from, next) => {
+    const userInfo = _Storage.get('user_info');
+    if (userInfo) {
+      next();
+      return;
+    }
+    next('/login');
+  };
+  return item;
+});

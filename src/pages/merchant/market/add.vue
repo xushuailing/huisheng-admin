@@ -68,6 +68,7 @@ import { ScEditTable } from '@/components/@types/sc-edit-table.d';
 import { _GetTableSpan, _ObjectSpanMethod, TableColumns, MergeKey } from '@/utils/handleTableSpan';
 import EffectTime from '@/components/effective-date.vue';
 import { obj } from '@/lib/@types/sc-param.d';
+import { _Shopid } from '../config';
 
 interface Form {
   title: string;
@@ -225,7 +226,7 @@ export default class MarketAdd extends Vue {
   }
 
   getDetail() {
-    this.$http.post(this.$api.merchant.product.show, { gid: this.id, shopid: '' }).then((res) => {
+    this.$http.post(this.$api.merchant.product.show, { gid: this.id, shopid: _Shopid }).then((res) => {
       console.log('res: ', res);
     });
   }

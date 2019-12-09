@@ -111,12 +111,15 @@
       </el-form-item>
       <el-form-item label="商品详情："
                     prop="detail">
-        <div class="font-info">仅支持尺寸1:1、jpg格式</div>
-        <sc-editor v-model="form.detail"
-                   :disabled="isDetail"
+        <div class="font-info">{{!isDetail?'仅支持尺寸1:1、jpg格式':'&nbsp;'}}</div>
+        <sc-editor v-if="!isDetail"
+                   v-model="form.detail"
                    ref="scEditor"
                    class="mt-10">
         </sc-editor>
+        <pre v-else
+             v-html="form.detail"
+             class="border-solid border-radius-4 p-15"></pre>
       </el-form-item>
       <el-form-item label="售后信息设置："
                     prop="afterSales"
@@ -157,6 +160,9 @@ import EditTable from '@/components/editTable.vue';
 import { ScEditTable } from '@/components/@types/sc-edit-table.d';
 import { _GetTableSpan, _ObjectSpanMethod, TableColumns, MergeKey } from '@/utils/handleTableSpan';
 import { obj } from '@/lib/@types/sc-param.d';
+import { _Shopid } from '../config';
+
+const _toPairs = require('lodash/toPairs');
 
 interface Form extends obj {
   sort: string;
@@ -179,6 +185,8 @@ export default class ProductAdd extends Vue {
     table: any;
     form: any;
   };
+
+  userInfo = this.$utils._Storage.get('user_info');
 
   get id() {
     return this.$route.query.id;
@@ -340,18 +348,32 @@ export default class ProductAdd extends Vue {
   submit() {
     console.log('%c提交', 'color:#fff;background:#40b883;border-radius:5px;padding:2px 5px;');
     const api = this.$api.merchant.product.update;
-    const param = { gid: this.id, shopid: '' };
+    const param = { gid: this.id, shopid: _Shopid };
     // this.$http.post(api, param).then((res) => {
     //   console.log('res: ', res);
     // });
   }
 
-  getDetail() {
+  async getDetail() {
+    const loading = this.$utils._Loading.show();
     const api = this.$api.merchant.product.show;
-    const param = { gid: this.id, shopid: '' };
-    this.$http.post(api, param).then((res) => {
+    const param = { gid: this.id, shopid: _Shopid };
+
+    try {
+      const res = await this.$http.post(api, param);
       console.log('res: ', res);
-    });
+      if (res.status) {
+        const data = res.data;
+        _toPairs(this.form).forEach(([k, v]: any[]) => {
+          v = data[k];
+        });
+      } else {
+        this.$message.error('获取数据失败');
+      }
+    } catch (error) {
+      this.$utils._ResponseError(error);
+    }
+    loading.close();
   }
 
   mounted() {
