@@ -24,16 +24,15 @@
                       prop="refund_reason"
                       class="font-bold font-danger">
           <el-input v-model="form.refund_reason"
-                    type="number"
-                    placeholder="请输入申请退款理由"></el-input>
+                    :disabled="true"></el-input>
         </el-form-item>
         <div class="font-primary font-bold">付款方式：{{getPriceType(data.pay_type)}}</div>
-        <div class="mt-30 pt-20 font-danger font-16">实收款：￥{{data.yuan_price}}</div>
+        <div class="mt-30 pt-20 font-danger font-16">实收款：￥{{data.refund_price}}</div>
         <div class="mt-5 font-info">运费：{{data.freight}}</div>
         <el-form-item class="mt-30 font-danger"
                       label="应退款："
-                      prop="yuan_price">
-          <el-input v-model="form.yuan_price"
+                      prop="refund_price">
+          <el-input v-model="form.refund_price"
                     type="number"
                     placeholder="请输入应退款"></el-input>
         </el-form-item>
@@ -93,7 +92,7 @@ export default class OrderReturnDetail extends Mixins(Mixin) {
 
   form: obj = {
     refund_reason: '',
-    yuan_price: '',
+    refund_price: '',
   };
 
   getDetail() {
@@ -108,14 +107,9 @@ export default class OrderReturnDetail extends Mixins(Mixin) {
     });
   }
 
-  handleEditAddress() {
-    this.$router.push({ path: 'address', query: { id: this.id } });
-  }
-
-  // TODO: 缺接口
   async handleReturn() {
-    const api = this.$api.merchant.order.pay;
-    const param = { ...this.form, oid: this.id, uid: _Uid };
+    const api = this.$api.merchant.order.return.return;
+    const param = { refund_price: this.form.refund_price, id: this.id };
     const Loading = this.$utils._Loading.show({ text: '退货中...' });
     try {
       const { status, message }: obj = await this.$http.get(api, param);

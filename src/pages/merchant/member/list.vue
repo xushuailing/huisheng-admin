@@ -23,8 +23,6 @@ const columns: ScTable.SetColumns = [
 
 @Component
 export default class SettingRoleList extends Vue {
-  userInfo = this.$utils._Storage.get('user_info');
-
   columns = this.$utils._SetTableColumns(columns);
 
   columnsSchema: ScTable.ColumnsSchema = {

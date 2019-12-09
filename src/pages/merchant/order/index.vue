@@ -162,7 +162,7 @@ export default class Order extends Mixins(Mixin) {
 
   get paginationConfig() {
     const send = {
-      slotAttr: { isCheckbox: true, text: ' 批量发货' },
+      // slotAttr: { isCheckbox: true, text: ' 批量发货' },
     };
     return this.currentTab === 2 ? send : {};
   }

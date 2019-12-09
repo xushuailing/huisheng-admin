@@ -1,131 +1,61 @@
 <template>
   <div class="order-send-detail bg-white border-radius-4 p-30 mb-20">
-    <status :status="data.status"
-            :time="data.time"></status>
+    <status :status="data.status"></status>
 
     <div class="mt-30">
       <h3>确认交易详情</h3>
       <div class="flex-jsb font-info"
            style="width:60%">
-        <span>订单编号：{{data.order.ordernumber}}</span>
-        <span>创建时间：{{data.order.createtime}}</span>
+        <span>订单编号：{{order.ordernumber}}</span>
+        <span>创建时间：{{order.createtime}}</span>
         <!-- <span>订单类型：{{data.order.type}}</span> -->
       </div>
       <goods-table :header="header"
                    :list="list"></goods-table>
-      <el-form v-if="isVirtual"
-               ref="form"
-               :model="form"
-               size="small"
-               class="mt-30"
-               label-position="left">
-        <el-form-item label="实收款："
-                      prop="collection"
-                      class="font-danger">
-          <el-input v-model="form.collection"
-                    type="number"></el-input>
-        </el-form-item>
-        <h3 class="mt-30">确认收货信息</h3>
-        <el-form-item label="收货人姓名："
-                      prop="name">
-          <el-input v-model="form.name"></el-input>
-        </el-form-item>
-        <el-form-item label="收货人电话号码："
-                      prop="phone">
-          <el-input v-model="form.phone"
-                    type="tel"></el-input>
-        </el-form-item>
-        <el-form-item label="收货地址："
-                      prop="address">
-          <el-input v-model="form.address"
-                    style="width:50%"></el-input>
-        </el-form-item>
-        <el-form-item class="pt-20">
-          <el-button type="primary"
-                     class="pl-30 pr-30"
-                     @click="handleSubmit">确认</el-button>
-        </el-form-item>
-      </el-form>
-      <template v-else>
-        <div class="mt-20 font-danger font-16">实收款：&yen; 280</div>
-        <div class="mt-5 font-info">含运费：0.00</div>
-        <div class="mt-40">
-          <strong class="font-16">确认收货信息</strong>
-          <p>收货地址：{{logisticsInfo}}</p>
-          <el-button type="primary"
-                     size="small"
-                     class="mt-10"
-                     @click="handleEditAddress">修改收货地址</el-button>
-        </div>
-        <div class="mt-40">
-          <h3>选择物流服务</h3>
-          <el-input v-model="awb"
-                    placeholder="请输入运单号，在选择对应物流公司"
-                    style="width:350px">
-            <el-button slot="append"
-                       :disabled="enableSubmit"
-                       @click="handleSend">发货</el-button>
-          </el-input>
-        </div>
-      </template>
+      <div class="mt-20 font-danger font-16">实收款：{{price.payPrice?'&yen; '+price.payPrice:''}}</div>
+      <div class="mt-5 font-info">含运费：{{price.freight}}</div>
+
+      <div class="pt-10">
+        <address :data="address"
+                 class="pt-10"></address>
+        <!-- <strong class="font-16">确认收货信息</strong>
+        <p>收货地址：{{logisticsInfo}}</p> -->
+        <el-button type="primary"
+                   size="small"
+                   @click="handleEditAddress">修改收货地址</el-button>
+      </div>
+      <div class="mt-40">
+        <h3>选择物流服务</h3>
+        <sc-edit ref="scEdit"
+                 mode="page"
+                 :api="api"
+                 :config="config"
+                 style="margin-left:-10px">
+        </sc-edit>
+      </div>
     </div>
   </div>
 </template>
 <script lang="ts">
 import { Component, Vue, Mixins } from 'vue-property-decorator';
-import Mixin from '../mixin';
+import { ScForm } from '@/lib/@types/sc-form.d';
+import { obj } from '@/lib/@types/sc-param.d';
+import { _Uid } from '../../config';
+import GetValue from '../mixin';
+import Detail from './mixin';
 import Status from './components/status.vue';
 import GoodsTable from '../goods-table.vue';
-import { obj } from '@/lib/@types/sc-param.d';
+import Address from './components/address.vue';
 
-const lodashString = require('lodash/string');
-
-@Component({ components: { Status, GoodsTable } })
-export default class OrderSendDetail extends Mixins(Mixin) {
-  isVirtual = true;
-
+@Component({ components: { Status, GoodsTable, Address } })
+export default class OrderSendDetail extends Mixins(Detail, GetValue) {
   get id() {
     return this.$route.query.id;
   }
 
-  data: obj = {
-    name: '哎呦喂',
-    phone: '12345678910',
-    position: '浙江  杭州',
-    status: 2,
-    order: {
-      ordernumber: '201909101622564',
-      createtime: '12345678910',
-      paytime: '2019-07-01  15:45',
-      transactionNo: '201701234567894101235',
-      payType: '支付宝',
-      serialNumber: '123456789101112',
-    },
-    order_goods: [
-      {
-        title: '商品名称商品名称商品名称',
-        size: '规格1：规格2',
-        price: '125.00',
-        num: 1,
-        total_price: '￥140.00',
-        image:
-          'https://didulv.didu86.com/restaurant/storage/app/uploads/2019-11-04/3bed2e7bc036770f93bcd19335ad0868.jpg',
-      },
-    ],
-    shop_goods_pay_price: '280.00',
-    address: {
-      username: '测试',
-      phone: '18094714282',
-      address_provinces: '浙江省',
-      address_areas: '滨江区',
-      address: '我桌信大厦31',
-    },
-  };
+  api = this.$api.merchant.order.delivery;
 
-  get logisticsInfo() {
-    const { username, phone, address_provinces, address_areas, address } = this.data.address;
-    return `${username}，${phone}，${address_provinces}${address_areas}${address}`;
-  }
+  data: obj = {};
 
   header = {
     title: '商品信息',
@@ -135,75 +65,90 @@ export default class OrderSendDetail extends Mixins(Mixin) {
     total_price: '商品总价',
   };
 
-  get list() {
-    return this.data.order_goods || [];
-  }
-
-  getDetail() {
-    const api = this.$api.merchant.order.show;
-    const param = { uid: '', oid: '' };
-    this.$http.get(api, param).then((res) => {
-      console.log('res.data: ', res.data);
-      this.data = res.data || {};
-    });
+  get price() {
+    const order = this.data.order || {};
+    const { shop_goods_pay_price = '', freight = '' } = order;
+    return { payPrice: shop_goods_pay_price, freight };
   }
 
   handleEditAddress() {
     this.$router.push({ path: 'address', query: { id: this.id } });
   }
 
-  awb = '';
+  expresses: obj[] = [];
 
-  express = '';
+  get config(): ScForm.Edit {
+    return {
+      type: 'senior',
+      'label-width': '180px',
+      params: { oid: this.id },
+      formAttr: { 'label-position': 'left', 'label-width': '110px' },
+      data: [
+        [
+          {
+            label: '选择快递：',
+            prop: 'name',
+            handle: (data) => {
+              console.log('this.expresses, data: ', this.expresses, data);
 
-  expressOptions = [];
+              const item = this.expresses.find((e) => e.id == data);
+              return (item && item.name) || '';
+            },
+            tag: {
+              tagType: 'select',
+              options: this.getexpresses,
+              attr: { placeholder: '请选择物流公司' },
+            },
+          },
+          {
+            label: '输入快递单号：',
+            prop: 'number',
+            tag: { attr: { placeholder: '输入快递单号' } },
+          },
+        ],
+      ],
+      handleSubmit: (data) => {
+        console.log('data: ', data);
 
-  get enableSubmit() {
-    return !this.awb;
+        return {};
+      },
+    };
   }
 
-  async handleSend() {
-    const api = this.$api.merchant.order.delivery;
-    const param = { oid: this.id, name: this.express, number: this.awb };
-    const Loading = this.$utils._Loading.show({ text: '发货中...' });
-    try {
-      const { status, message }: obj = await this.$http.get(api, param);
-      this.$message.success(message);
-      this.$nextTick(() => {
-        this.$router.go(-1);
-      });
-    } catch (err) {
-      this.$message.error(err.message);
-    }
-    Loading.close();
+  getexpresses() {
+    return new Promise<obj[]>((resolve) => {
+      this.$http
+        .get(this.$api.merchant.order.expresses)
+        .then((res) => {
+          const options =
+            res.data && res.data.map((e: obj) => ({ ...e, label: e.title, value: e.id }));
+          this.expresses = options;
+          resolve(options || []);
+        })
+        .catch((err) => {
+          resolve([]);
+          this.$utils._ResponseError(err);
+        });
+    });
   }
 
-  form = {
-    collection: '',
-    name: '',
-    phone: '',
-    address: '',
-  };
-
-  // 虚拟端缺接口
-  async handleSubmit() {
-    const api = this.$api.merchant.order.delivery;
-    const param = { oid: this.id, name: this.express, number: this.awb };
-    const Loading = this.$utils._Loading.show({ text: '发货中...' });
-    try {
-      const { status, message }: obj = await this.$http.get(api, param);
-      this.$message.success(message);
-      this.$nextTick(() => {
-        this.$router.go(-1);
+  getDetail() {
+    const loading = this.$utils._Loading.show();
+    const api = this.$api.merchant.order.show;
+    const param = { uid: _Uid, oid: this.id };
+    this.$http
+      .get(api, param)
+      .then((res) => {
+        this.data = res.data || {};
+      })
+      .finally(() => {
+        loading.close();
       });
-    } catch (err) {
-      this.$message.error(err.message);
-    }
-    Loading.close();
   }
 
   mounted() {
-    // this.getDetail();
+    this.getDetail();
+    this.getexpresses();
   }
 }
 </script>

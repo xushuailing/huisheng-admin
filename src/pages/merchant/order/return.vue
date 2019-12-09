@@ -12,39 +12,37 @@
             <span>创建时间：{{row.createtime}}</span>
             <!-- <span>订单类型：{{row.type}}</span> -->
           </div>
-          <div v-for="item in 1"
+          <div v-for="item in row.goods"
                :key="item"
                class="flex-jc-ac text-c pt-10 pb-10">
             <div class="flex-ac"
                  :style="getWidth(width[0])">
               <img :width="80"
                    :height="80"
-                   :src="row.image"
-                   :alt="row.title"
+                   :src="item.image"
                    style="object-fit: cover"
                    class="mr-10">
-              <strong class="ellipsis goods-name">{{row.title}}</strong>
+              <strong class="ellipsis goods-name">{{item.title}}</strong>
             </div>
-            <div>{{row.price}}</div>
-            <div>{{row.num}}</div>
+            <div>{{item.price}}</div>
+            <div>{{item.num}}</div>
             <div>
-              <div>{{row.pay_type}}</div>
-              <div>{{row.phone}}</div>
+              <div>{{item.username}}</div>
+              <div>{{item.phone}}</div>
             </div>
-            <div :class="currentTab==='pay'?'font-danger':'font-primary'">
-              {{getStatus(row.status)}}
+            <div class="font-primary">{{getStatus(item.status)}}
             </div>
             <div>{{row.pay_type}}</div>
             <div>{{row.createtime}}</div>
             <div class="flex-jc-ac">
               <el-button type="text"
                          class="font-black"
-                         @click="toDetail(row.oid)">详情</el-button>
+                         @click="toDetail(item.oid)">详情</el-button>
               <el-button type="text"
-                         @click="handleRefund(row.oid)">退款</el-button>
+                         @click="handleRefund(item.oid)">退款</el-button>
               <el-button type="text"
                          class="font-danger"
-                         @click="handleReject(row.oid)">驳回</el-button>
+                         @click="handleReject(item.oid)">驳回</el-button>
             </div>
           </div>
           <div slot="footer_th">
@@ -57,7 +55,7 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue, Mixins } from 'vue-property-decorator';
+import { Component, Vue, Ref, Mixins } from 'vue-property-decorator';
 import Mixin from './mixin';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
@@ -65,11 +63,11 @@ import { _Uid } from '../config';
 
 @Component
 export default class OrderReturn extends Mixins(Mixin) {
-  currentTab = 'all';
+  @Ref('table') $table!: ScTable;
 
   thead = [
     { label: '商品信息', width: 300 },
-    { label: '单价' },
+    { label: '退款金额' },
     { label: '数量' },
     { label: '买家信息' },
     { label: '状态' },
@@ -91,7 +89,6 @@ export default class OrderReturn extends Mixins(Mixin) {
         data.endtime = end;
         delete data.createtime;
       }
-      console.log('data: ', data);
       return data;
     },
     data: [
@@ -129,11 +126,24 @@ export default class OrderReturn extends Mixins(Mixin) {
   }
 
   handleRefund(id: string) {
-    //
+    this.$router.push({ path: 'return-detail', query: { id } });
   }
 
   handleReject(id: string) {
-    //
+    const loading = this.$utils._Loading.show({ text: '正在驳回...' });
+    const api = this.$api.merchant.order.return.reject;
+    this.$http
+      .get(api, { id })
+      .then((res) => {
+        if (res.status) {
+          this.$table.setDataTable({});
+        } else {
+          console.error('驳回失败: ', res.data.message);
+        }
+      })
+      .finally(() => {
+        loading.close();
+      });
   }
 }
 </script>

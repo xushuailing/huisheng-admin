@@ -31,33 +31,22 @@
             <div>{{row.createtime}}</div>
             <div class="flex-jc-ac">
               <el-button type="text"
-                         class="font-black"
-                         @click="toDetail(row.id)">详情</el-button>
-              <el-button type="text"
-                         @click="handleReply(row.id)">回复</el-button>
+                         @click="handleReply(row.gid)">回复</el-button>
             </div>
           </div>
         </o-table-row>
       </template>
     </o-table>
-
-    <dialog-textarea title="请输入回复内容"
-                     placeholder="请输入回复内容"
-                     prop="reply_content"
-                     :api='reply.api'
-                     :id="reply.id"
-                     :visible.sync="reply.visible" />
   </div>
 </template>
 <script lang="ts">
 import { Component, Vue, Mixins } from 'vue-property-decorator';
-import dialogTextarea from '@/components/dialogTextarea.vue';
 import Mixin from './mixin';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
 import { _Shopid } from '../config';
 
-@Component({ components: { dialogTextarea } })
+@Component
 export default class OrderEvaluate extends Mixins(Mixin) {
   currentTab = 'all';
 
@@ -114,19 +103,8 @@ export default class OrderEvaluate extends Mixins(Mixin) {
     ],
   };
 
-  toDetail(id: string) {
-    this.$router.push({ path: 'comment-detail', query: { id } });
-  }
-
-  reply = {
-    api: this.$api.merchant.order.comment.reply,
-    id: '',
-    visible: false,
-  };
-
   handleReply(id: string) {
-    this.reply.id = id;
-    this.reply.visible = true;
+    this.$router.push({ path: 'comment-user', query: { id } });
   }
 }
 </script>

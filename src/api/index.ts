@@ -170,21 +170,24 @@ export default {
       index: `${url}/admin/getOrderList`,
       show: `${url}/admin/getOrderDetail`,
       delivery: `${url}/admin/setDeliverGoods`,
+      expresses: `${url}/admin/getExpressList`,
       return: {
         index: `${url}/admin/refundOrderList`,
         show: `${url}/admin/doAddKeyword`,
+        return: `${url}/admin/confirmRefundOrder`,
+        reject: `${url}/admin/rejectRefundOrder`,
       },
       logistics: {
         index: `${url}/admin/getLogistics`,
       },
       pay: `${url}/admin/setConfirmPayment`,
       comment: {
-        // 评价列表
-        // index: `${url}/admin/getCommenReply`,
-        // TODO: 待评价列表？是不是要合并到一个接口
         index: `${url}/admin/getCommentList`,
         show: `${url}/admin/getCommenDatail`,
         reply: `${url}admin/getDoCommenDatail`,
+      },
+      commentUser: {
+        index: `${url}/admin/getCommenReply`,
       },
       address: {
         province: `${url}/admin/getProvinces`,

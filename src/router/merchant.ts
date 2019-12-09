@@ -197,6 +197,12 @@ const router: RouteConfig[] = [
         meta: { breadcrumb: [{ title: '订单管理' }, { title: '评价管理' }] },
       },
       {
+        path: 'comment-user',
+        name: '评价管理',
+        component: () => import('../pages/merchant/order/comment-user.vue'),
+        meta: { breadcrumb: [{ title: '订单管理' }, { title: '评价管理' }, { title: '查看' }] },
+      },
+      {
         path: 'comment-detail',
         name: '评价详情',
         component: () => import('../pages/merchant/order/detail/comment.vue'),

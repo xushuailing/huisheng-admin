@@ -24,8 +24,7 @@
     <el-select v-model="form.address_areas_id"
                filterable
                class="ml-30"
-               placeholder="请选择直辖区"
-               @change="onAreaChange">
+               placeholder="请选择直辖区">
       <el-option v-for="item in  areas"
                  :key="item.value"
                  :label="item.label"
@@ -47,7 +46,7 @@ interface Option extends obj {
 export default class Cascader extends Vue {
   @Prop(Object) value!: object;
 
-  @Watch('value')
+  @Watch('value', { immediate: true })
   onValueChange(val: any) {
     if (val) {
       this.form = val;
@@ -60,7 +59,7 @@ export default class Cascader extends Vue {
     address_areas_id: '',
   };
 
-  @Watch('form')
+  @Watch('form', { deep: true })
   onFormChange(form: obj) {
     this.$emit('update:value', form);
   }
@@ -73,14 +72,58 @@ export default class Cascader extends Vue {
 
   onProvinceChange(value: string) {
     console.log('province: ', value);
+    this.getCity(value);
   }
 
   onCityChange(value: string) {
     console.log('city: ', value);
+    this.getArea(value);
   }
 
-  onAreaChange(value: string) {
-    console.log('area: ', value);
+  getProvince() {
+    this.$http
+      .get(this.$api.merchant.order.address.province, {})
+      .then((res) => {
+        const options =
+          res.data && res.data.map((e: obj) => ({ label: e.province, value: e.provinceid }));
+        this.provinces = options || [];
+      })
+      .catch((err) => {
+        this.$utils._ResponseError(err);
+      });
+  }
+
+  getCity(id: string) {
+    const api = this.$api.merchant.order.address.city;
+    const params = { provinceid: id };
+    this.$http
+      .get(api, params)
+      .then((res) => {
+        const options = res.data && res.data.map((e: obj) => ({ label: e.city, value: e.cityid }));
+        this.citys = options || [];
+      })
+      .catch((err) => {
+        this.$utils._ResponseError(err);
+      });
+  }
+
+  getArea(id: string) {
+    const api = this.$api.merchant.order.address.area;
+    const params = { cityid: id };
+    this.$http
+      .get(api, params)
+      .then((res) => {
+        const options =
+          res.data && res.data.map((e: obj) => ({ label: e.province, value: e.provinceid }));
+        this.areas = options || [];
+      })
+      .catch((err) => {
+        this.$utils._ResponseError(err);
+      });
+  }
+
+  mounted() {
+    this.getProvince();
   }
 }
 </script>

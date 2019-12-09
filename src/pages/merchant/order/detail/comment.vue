@@ -44,7 +44,6 @@
 <script lang="ts">
 import { Component, Vue, Mixins } from 'vue-property-decorator';
 import { obj } from '@/lib/@types/sc-param.d';
-import { _Shopid, _Uid } from '../../config';
 import GoodsTable from '../goods-table.vue';
 import GetValue from '../mixin';
 import Detail from './mixin';
@@ -106,7 +105,7 @@ export default class OrderReply extends Mixins(Detail, GetValue) {
 
   getDetail() {
     const api = this.$api.merchant.order.comment.show;
-    const param = { uid: _Uid, oid: this.id };
+    const param = { id: this.id };
     this.$http.get(api, param).then((res) => {
       this.data = res.data || {};
     });
