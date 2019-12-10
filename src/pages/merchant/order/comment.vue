@@ -9,19 +9,14 @@
           <div slot="top_th"
                class="flex-jsb">
             <span>订单编号：{{row.ordernumber}}</span>
-            <span>创建时间：{{row.createtime}}</span>
-            <!-- <span>订单类型：{{row.parameter}}</span> -->
-            <!-- <span>支付方式：{{row.type}}</span> -->
+            <span>提交时间：{{row.createtime}}</span>
           </div>
-          <div v-for="item in 1"
-               :key="item"
-               class="flex-jc-ac text-c pt-10 pb-10">
+          <div class="flex-jc-ac text-c pt-10 pb-10">
             <div class="flex-ac"
                  :style="getWidth(width[0])">
               <img :width="80"
                    :height="80"
                    :src="row.image"
-                   :alt="row.title"
                    style="object-fit: cover"
                    class="mr-10">
               <strong class="ellipsis goods-name">{{row.title}}</strong>

@@ -118,7 +118,7 @@
 <script lang="ts">
 import { Component, Vue, Mixins } from 'vue-property-decorator';
 import Mixin from '../mixin';
-import Status from './status.vue';
+import Status from './components/status.vue';
 import GoodsTable from '../goods-table.vue';
 import { obj } from '@/lib/@types/sc-param.d';
 
@@ -183,9 +183,8 @@ export default class OrderDetail extends Mixins(Mixin) {
       { label: '订单编号：', value: order.ordernumber },
       { label: '创建时间：', value: order.createtime },
       { label: '付款时间：', value: order.paytime },
-      { label: '交易号：', value: order.transactionNo },
       { label: '支付方式：', value: order.payType },
-      { label: '支付流水：', value: order.serialNumber },
+      { label: '支付流水：', value: order.transaction_id },
     ];
   }
 

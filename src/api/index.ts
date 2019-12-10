@@ -186,7 +186,7 @@ export default {
       comment: {
         index: `${url}/admin/getCommentList`,
         show: `${url}/admin/getCommenDatail`,
-        reply: `${url}admin/getDoCommenDatail`,
+        reply: `${url}/admin/getDoCommenDatail`,
       },
       commentUser: {
         index: `${url}/admin/getCommenReply`,

@@ -62,7 +62,7 @@
               <el-button v-show="item.status==2"
                          type="primary"
                          size="mini"
-                         @click="handleDelivery(row.oid)">发货</el-button>
+                         @click="toDetail(row.oid,item.status)">发货</el-button>
             </div>
           </div>
         </o-table-row>
@@ -72,7 +72,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Ref, Mixins } from 'vue-property-decorator';
-import { _Uid } from '../config';
+import { _Uid, _Shopid } from '../config';
 import Mixin from './mixin';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
@@ -109,7 +109,7 @@ export default class Order extends Mixins(Mixin) {
   get tableConfig(): ScTable.TableConfig {
     return {
       api: this.$api.merchant.order,
-      index: { uid: _Uid, status: this.currentTab },
+      index: { uid: _Uid, shopid: _Shopid, status: this.currentTab },
     };
   }
 
@@ -168,7 +168,7 @@ export default class Order extends Mixins(Mixin) {
   }
 
   onTabChange() {
-    this.$table.setDataTable({});
+    this.$table.setDataTable({ pagination: { page: 1 } });
   }
 
   handleSendAll() {

@@ -9,11 +9,11 @@
           <div slot="top_th"
                class="flex-jsb">
             <span>订单编号：{{row.ordernumber}}</span>
-            <span>创建时间：{{row.createtime}}</span>
+            <span>创建时间：{{row.addtime}}</span>
             <!-- <span>订单类型：{{row.type}}</span> -->
           </div>
           <div v-for="item in row.goods"
-               :key="item"
+               :key="item.id"
                class="flex-jc-ac text-c pt-10 pb-10">
             <div class="flex-ac"
                  :style="getWidth(width[0])">
@@ -32,17 +32,17 @@
             </div>
             <div class="font-primary">{{getStatus(item.status)}}
             </div>
-            <div>{{row.pay_type}}</div>
-            <div>{{row.createtime}}</div>
+            <div>{{getPayType(row.pay_type)}}</div>
+            <div>{{item.createtime}}</div>
             <div class="flex-jc-ac">
               <el-button type="text"
                          class="font-black"
-                         @click="toDetail(item.oid)">详情</el-button>
+                         @click="toDetail(item.id)">详情</el-button>
               <el-button type="text"
-                         @click="handleRefund(item.oid)">退款</el-button>
+                         @click="handleRefund(item.id)">退款</el-button>
               <el-button type="text"
                          class="font-danger"
-                         @click="handleReject(item.oid)">驳回</el-button>
+                         @click="handleReject(item.id)">驳回</el-button>
             </div>
           </div>
           <div slot="footer_th">
@@ -59,7 +59,7 @@ import { Component, Vue, Ref, Mixins } from 'vue-property-decorator';
 import Mixin from './mixin';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
-import { _Uid } from '../config';
+import { _Uid, _Shopid, _PayType } from '../config';
 
 @Component
 export default class OrderReturn extends Mixins(Mixin) {
@@ -78,7 +78,7 @@ export default class OrderReturn extends Mixins(Mixin) {
 
   tableConfig: ScTable.TableConfig = {
     api: this.$api.merchant.order.return,
-    index: { uid: _Uid },
+    index: { uid: _Uid, shopid: _Shopid },
   };
 
   searchConfig = {
@@ -121,8 +121,12 @@ export default class OrderReturn extends Mixins(Mixin) {
     ],
   };
 
+  getPayType(id: keyof typeof _PayType) {
+    return _PayType[id] || '';
+  }
+
   toDetail(id: string) {
-    this.$router.push({ path: 'detail', query: { id } });
+    this.$router.push({ path: 'return-detail', query: { id } });
   }
 
   handleRefund(id: string) {

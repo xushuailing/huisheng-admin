@@ -19,7 +19,7 @@ import { obj } from '@/lib/@types/sc-param.d';
 
 @Component
 export default class OrderStatus extends Mixins(Mixin) {
-  @Prop(Number) status!: number;
+  @Prop([Number, String]) status!: number | string;
 
   get tips() {
     return this.status == 1 ? '未付款，系统将自动取消订单' : '未收货，系统将自动确认收货';

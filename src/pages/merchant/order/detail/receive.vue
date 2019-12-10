@@ -1,6 +1,6 @@
 <template>
   <div class="order-receive-detail bg-white border-radius-4 p-30 mb-20">
-    <status :status="data.status"
+    <status :status="order.status"
             :time="data.time"></status>
 
     <el-radio-group v-model="currentTab"
@@ -35,7 +35,7 @@
 <script lang="ts">
 import { Component, Vue, Mixins } from 'vue-property-decorator';
 import { obj } from '@/lib/@types/sc-param.d';
-import { _Uid } from '../../config';
+import { _Uid, _PayType } from '../../config';
 import GetValue from '../mixin';
 import Detail from './mixin';
 import Status from './components/status.vue';
@@ -58,15 +58,13 @@ export default class OrderReceiveDetail extends Mixins(Detail, GetValue) {
   }
 
   get orderInfo() {
-    const PAY_TYPE: obj = { 1: '余额', 2: '微信支付', 3: '支付宝支付' };
     const { ordernumber = '', createtime = '', paytime = '', transaction_id = '', pay_type = '' } =
       this.data.order || {};
     return [
       { label: '订单编号：', value: ordernumber },
       { label: '创建时间：', value: createtime },
       { label: '付款时间：', value: paytime },
-      { label: '交易号：', value: transaction_id },
-      { label: '支付方式：', value: PAY_TYPE[pay_type] || '' },
+      { label: '支付方式：', value: (_PayType as obj)[pay_type] || '' },
       { label: '支付流水：', value: transaction_id },
     ];
   }
@@ -105,11 +103,20 @@ export default class OrderReceiveDetail extends Mixins(Detail, GetValue) {
   };
 
   getDetail() {
+    const loading = this.$utils._Loading.show();
     const api = this.$api.merchant.order.show;
     const param = { uid: _Uid, oid: this.id };
-    this.$http.get(api, param).then((res) => {
-      this.data = res.data || {};
-    });
+    this.$http
+      .get(api, param)
+      .then((res) => {
+        this.data = res.data || {};
+      })
+      .catch((err) => {
+        this.$utils._ResponseError(err);
+      })
+      .finally(() => {
+        loading.close();
+      });
   }
 
   form = {

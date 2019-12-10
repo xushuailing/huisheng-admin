@@ -1,6 +1,6 @@
 <template>
   <div class="order-pay-detail bg-white border-radius-4 p-30 mb-20">
-    <status :status="data.status"
+    <status :status="order.status"
             :time="data.time"></status>
 
     <div class="mt-30">
@@ -34,8 +34,8 @@
             <template slot="prepend">&yen;</template>
           </el-input>
         </el-form-item>
-        <address :data="address"
-                 class="pt-10"></address>
+        <order-address :data="address"
+                 class="pt-10"></order-address>
         <el-form-item class="pt-20">
           <el-button type="primary"
                      class="pl-30 pr-30"
@@ -49,14 +49,13 @@
 import { Component, Vue, Mixins } from 'vue-property-decorator';
 import { obj } from '@/lib/@types/sc-param.d';
 import { _Uid } from '../../config';
-import GetValue from '../mixin';
-import Detail from './mixin';
+import Mixin from './mixin';
 import GoodsTable from '../goods-table.vue';
 import Status from './components/status.vue';
-import Address from './components/address.vue';
+import OrderAddress from './components/address.vue';
 
-@Component({ components: { Status, GoodsTable, Address } })
-export default class OrderPayDetail extends Mixins(Detail, GetValue) {
+@Component({ components: { Status, GoodsTable, OrderAddress } })
+export default class OrderPayDetail extends Mixins(Mixin) {
   header = {
     title: '商品信息',
     size: '规格',

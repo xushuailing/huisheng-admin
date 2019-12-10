@@ -1,6 +1,6 @@
 <template>
   <div class="order-send-detail bg-white border-radius-4 p-30 mb-20">
-    <status :status="data.status"></status>
+    <status :status="order.status"></status>
 
     <div class="mt-30">
       <h3>订单详情</h3>
@@ -41,12 +41,6 @@ export default class OrderInvalidDetail extends Mixins(Detail, GetValue) {
     num: '数量',
     total_price: '价格',
   };
-
-  get order() {
-    const order = this.data.order || {};
-    const { ordernumber = '', createtime = '', deliveryTime = '', finishTime = '' } = order;
-    return { ordernumber, createtime, deliveryTime, finishTime };
-  }
 
   get price() {
     const order = this.data.order || {};

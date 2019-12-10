@@ -76,7 +76,6 @@ export default {
       btnText: false,
       tableData: [],
       pagination: {
-        total: 0,
         page: 1,
         limit: 20,
       },
@@ -147,9 +146,6 @@ export default {
         return;
       }
 
-      // 如果有 treeParams 删除该属性
-      if (param.treeParams) delete param.treeParams;
-
       this.tableLoading = true;
       const api = this.api.index;
 
@@ -160,14 +156,6 @@ export default {
           const limit = Number(data.limit);
           const page = Number(data.page);
           const count = Number(data.count);
-
-          /** 全部删除最后一页数据时,再次调用接口并且 page-1 */
-          if (page > 1 && !data.data.length) {
-            this.pagination.page = this.pagination.page - 1;
-            this.getDataTable();
-            return;
-          }
-
           const content = data.data;
 
           this.paginationConfig.pageSize = limit; // 分页配置页面数量

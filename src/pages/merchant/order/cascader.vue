@@ -50,6 +50,8 @@ export default class Cascader extends Vue {
   onValueChange(val: any) {
     if (val) {
       this.form = val;
+      this.getCity();
+      this.getArea();
     }
   }
 
@@ -72,11 +74,15 @@ export default class Cascader extends Vue {
 
   onProvinceChange(value: string) {
     console.log('province: ', value);
+
+    this.form.address_city_id = '';
+    this.form.address_areas_id = '';
     this.getCity(value);
   }
 
   onCityChange(value: string) {
     console.log('city: ', value);
+    this.form.address_areas_id = '';
     this.getArea(value);
   }
 
@@ -85,7 +91,8 @@ export default class Cascader extends Vue {
       .get(this.$api.merchant.order.address.province, {})
       .then((res) => {
         const options =
-          res.data && res.data.map((e: obj) => ({ label: e.province, value: e.provinceid }));
+          res.data &&
+          res.data.map((e: obj) => ({ label: e.province, value: Number(e.provinceid) }));
         this.provinces = options || [];
       })
       .catch((err) => {
@@ -93,13 +100,17 @@ export default class Cascader extends Vue {
       });
   }
 
-  getCity(id: string) {
+  getCity(id = this.form.address_provinces_id) {
+    if (!id) return;
+    this.citys = [];
+
     const api = this.$api.merchant.order.address.city;
     const params = { provinceid: id };
     this.$http
       .get(api, params)
       .then((res) => {
-        const options = res.data && res.data.map((e: obj) => ({ label: e.city, value: e.cityid }));
+        const options =
+          res.data && res.data.map((e: obj) => ({ label: e.city, value: Number(e.cityid) }));
         this.citys = options || [];
       })
       .catch((err) => {
@@ -107,14 +118,17 @@ export default class Cascader extends Vue {
       });
   }
 
-  getArea(id: string) {
+  getArea(id = this.form.address_city_id) {
+    if (!id) return;
+    this.areas = [];
+
     const api = this.$api.merchant.order.address.area;
     const params = { cityid: id };
     this.$http
       .get(api, params)
       .then((res) => {
         const options =
-          res.data && res.data.map((e: obj) => ({ label: e.province, value: e.provinceid }));
+          res.data && res.data.map((e: obj) => ({ label: e.area, value: Number(e.areaid) }));
         this.areas = options || [];
       })
       .catch((err) => {

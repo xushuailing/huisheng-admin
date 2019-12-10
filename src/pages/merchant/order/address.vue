@@ -5,7 +5,6 @@
              mode="page"
              :api="api"
              :config="editConfig">
-      <template slot="edit-header">&nbsp;</template>
     </sc-edit>
   </div>
 </template>
@@ -29,7 +28,7 @@ export default class OrderAddress extends Vue {
   }
 
   get api() {
-    return this.$api.merchant.order.address.update; //  this.$api.admin.activity.adsSorts.create;
+    return this.$api.merchant.order.address.update;
   }
 
   get editConfig(): ScForm.Edit {
@@ -39,7 +38,23 @@ export default class OrderAddress extends Vue {
       'label-width': '110px',
       params: { ordernumber: this.id },
       buttons: [{ mode: 'submit', text: '确认修改' }],
-      rules: [],
+      rules: [
+        {
+          phone: {
+            value: [
+              {
+                trigger: ['blur'],
+                validator: (rule, value, callback) => {
+                  if (this.$utils._ValidatePhone(value)) {
+                    return callback();
+                  }
+                  return callback(new Error('手机号格式错误'));
+                },
+              },
+            ],
+          },
+        },
+      ],
       data: [
         [
           {
@@ -64,10 +79,6 @@ export default class OrderAddress extends Vue {
           },
         ],
       ],
-      handleSubmit: (data) => {
-        console.log('data :', data);
-        return {};
-      },
     };
   }
 
