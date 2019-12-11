@@ -1,6 +1,6 @@
 <template>
   <div class="order-send-detail bg-white border-radius-4 p-30 mb-20">
-    <status :status="data.status"></status>
+    <status :status="order.status"></status>
 
     <div class="mt-30">
       <h3>确认交易详情</h3>
@@ -16,22 +16,20 @@
       <div class="mt-5 font-info">含运费：{{price.freight}}</div>
 
       <div class="pt-10">
-        <address :data="address"
-                 class="pt-10"></address>
-        <!-- <strong class="font-16">确认收货信息</strong>
-        <p>收货地址：{{logisticsInfo}}</p> -->
+        <order-address :data="address"
+                       class="pt-10"></order-address>
+
         <el-button type="primary"
                    size="small"
                    @click="handleEditAddress">修改收货地址</el-button>
       </div>
       <div class="mt-40">
         <h3>选择物流服务</h3>
-        <sc-edit ref="scEdit"
-                 mode="page"
-                 :api="api"
-                 :config="config"
-                 style="margin-left:-10px">
-        </sc-edit>
+        <sc-add-form mode="page"
+                     :api="api"
+                     :config="config"
+                     style="margin-left:-10px">
+        </sc-add-form>
       </div>
     </div>
   </div>
@@ -41,14 +39,15 @@ import { Component, Vue, Mixins } from 'vue-property-decorator';
 import { ScForm } from '@/lib/@types/sc-form.d';
 import { obj } from '@/lib/@types/sc-param.d';
 import { _Uid } from '../../config';
-import GetValue from '../mixin';
-import Detail from './mixin';
+import Mixin from './mixin';
 import Status from './components/status.vue';
 import GoodsTable from '../goods-table.vue';
-import Address from './components/address.vue';
+import OrderAddress from './components/address.vue';
 
-@Component({ components: { Status, GoodsTable, Address } })
-export default class OrderSendDetail extends Mixins(Detail, GetValue) {
+// const _GroupBy = require('lodash/groupBy');
+
+@Component({ components: { Status, GoodsTable, OrderAddress } })
+export default class OrderSendDetail extends Mixins(Mixin) {
   get id() {
     return this.$route.query.id;
   }
@@ -82,6 +81,7 @@ export default class OrderSendDetail extends Mixins(Detail, GetValue) {
       type: 'senior',
       'label-width': '180px',
       params: { oid: this.id },
+      requestMethod: 'get',
       formAttr: { 'label-position': 'left', 'label-width': '110px' },
       data: [
         [
@@ -97,7 +97,7 @@ export default class OrderSendDetail extends Mixins(Detail, GetValue) {
             tag: {
               tagType: 'select',
               options: this.getexpresses,
-              attr: { placeholder: '请选择物流公司' },
+              attr: { placeholder: '请选择物流公司', filterable: true },
             },
           },
           {
@@ -107,11 +107,6 @@ export default class OrderSendDetail extends Mixins(Detail, GetValue) {
           },
         ],
       ],
-      handleSubmit: (data) => {
-        console.log('data: ', data);
-
-        return {};
-      },
     };
   }
 
@@ -122,6 +117,19 @@ export default class OrderSendDetail extends Mixins(Detail, GetValue) {
         .then((res) => {
           const options =
             res.data && res.data.map((e: obj) => ({ ...e, label: e.title, value: e.id }));
+          // const arrObj = _GroupBy(res.data, 'name');
+          // console.log(
+          //   '%c重复数据',
+          //   'color:#fff;background:#40b883;border-radius:5px;padding:2px 5px;',
+          // );
+          // const arr: any = [];
+          // Object.keys(arrObj).forEach((k) => {
+          //   if (arrObj[k].length > 1) {
+          //     arr.push(...arrObj[k]);
+          //   }
+          // });
+          // console.table(arr);
+
           this.expresses = options;
           resolve(options || []);
         })

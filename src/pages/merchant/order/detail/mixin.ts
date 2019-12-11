@@ -1,4 +1,4 @@
-import { Component, Vue, Prop } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 import { obj } from '@/lib/@types/sc-param.d';
 
 @Component
@@ -11,8 +11,14 @@ export default class Detail extends Vue {
 
   get order() {
     const order = this.data.order || {};
-    const { ordernumber = '', createtime = '' } = order;
-    return { ordernumber, createtime };
+    const {
+      status = '',
+      ordernumber = '',
+      createtime = '',
+      deliveryTime = '',
+      finishTime = '',
+    } = order;
+    return { status, ordernumber, createtime, deliveryTime, finishTime };
   }
 
   get list() {

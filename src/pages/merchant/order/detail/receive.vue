@@ -1,6 +1,6 @@
 <template>
   <div class="order-receive-detail bg-white border-radius-4 p-30 mb-20">
-    <status :status="data.status"
+    <status :status="order.status"
             :time="data.time"></status>
 
     <el-radio-group v-model="currentTab"
@@ -22,11 +22,13 @@
       <div v-show="currentTab==='logistics'">
         <div class="font-16">物流信息</div>
         <div class="mt-20">
-          <div v-for="item in logisticsInfo"
-               :key="item.label"
-               class="mt-10">{{item.label}}{{item.value}}</div>
-          <!-- 只有实物有 -->
+          <order-address title=" "
+                         :data="address"
+                         style="margin-top:0"></order-address>
+          <!-- TODO: 只有实物有 -->
           <div class="mt-10">运送方式：快递</div>
+          <div class="h100"
+               ref="logistics"></div>
         </div>
       </div>
     </div>
@@ -35,14 +37,18 @@
 <script lang="ts">
 import { Component, Vue, Mixins } from 'vue-property-decorator';
 import { obj } from '@/lib/@types/sc-param.d';
-import { _Uid } from '../../config';
-import GetValue from '../mixin';
-import Detail from './mixin';
+import { _Uid, _PayType } from '../../config';
+import Mixin from './mixin';
 import Status from './components/status.vue';
 import OrderInfo from './components/order-info.vue';
+import OrderAddress from './components/address.vue';
 
-@Component({ components: { Status, OrderInfo } })
-export default class OrderReceiveDetail extends Mixins(Detail, GetValue) {
+@Component({ components: { Status, OrderInfo, OrderAddress } })
+export default class OrderReceiveDetail extends Mixins(Mixin) {
+  $refs!: {
+    logistics: any;
+  };
+
   tabs = [{ label: '订单详情', value: 'detail' }, { label: '收货与物流信息', value: 'logistics' }];
 
   currentTab = this.tabs[0].value;
@@ -58,15 +64,13 @@ export default class OrderReceiveDetail extends Mixins(Detail, GetValue) {
   }
 
   get orderInfo() {
-    const PAY_TYPE: obj = { 1: '余额', 2: '微信支付', 3: '支付宝支付' };
     const { ordernumber = '', createtime = '', paytime = '', transaction_id = '', pay_type = '' } =
       this.data.order || {};
     return [
       { label: '订单编号：', value: ordernumber },
       { label: '创建时间：', value: createtime },
       { label: '付款时间：', value: paytime },
-      { label: '交易号：', value: transaction_id },
-      { label: '支付方式：', value: PAY_TYPE[pay_type] || '' },
+      { label: '支付方式：', value: (_PayType as obj)[pay_type] || '' },
       { label: '支付流水：', value: transaction_id },
     ];
   }
@@ -104,14 +108,6 @@ export default class OrderReceiveDetail extends Mixins(Detail, GetValue) {
     total_price: '商品总价',
   };
 
-  getDetail() {
-    const api = this.$api.merchant.order.show;
-    const param = { uid: _Uid, oid: this.id };
-    this.$http.get(api, param).then((res) => {
-      this.data = res.data || {};
-    });
-  }
-
   form = {
     shop_goods_pay_price: '',
     freight: '',
@@ -133,8 +129,43 @@ export default class OrderReceiveDetail extends Mixins(Detail, GetValue) {
     Loading.close();
   }
 
+  getLogistics() {
+    const loading = this.$utils._Loading.show({ target: this.$refs.logistics.$el });
+    const api = this.$api.merchant.order.logistics;
+    const param = { oid: this.id };
+    this.$http
+      .get(api, param)
+      .then((res) => {
+        this.data = res.data || {};
+      })
+      .catch((err) => {
+        this.$utils._ResponseError(err);
+      })
+      .finally(() => {
+        loading.close();
+      });
+  }
+
+  getDetail() {
+    const loading = this.$utils._Loading.show();
+    const api = this.$api.merchant.order.show;
+    const param = { uid: _Uid, oid: this.id };
+    this.$http
+      .get(api, param)
+      .then((res) => {
+        this.data = res.data || {};
+      })
+      .catch((err) => {
+        this.$utils._ResponseError(err);
+      })
+      .finally(() => {
+        loading.close();
+      });
+  }
+
   mounted() {
     this.getDetail();
+    this.getLogistics();
   }
 }
 </script>

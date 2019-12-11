@@ -52,7 +52,7 @@ export default class OrderEvaluate extends Vue {
 
   onTableHandlerClick({ row, type }: any) {
     if (type === 'reply') {
-      this.$router.push({ path: 'comment-detail', query: { id: row.id } });
+      this.$router.push({ path: 'comment-detail', query: { id: row.id, oid: row.oid } });
     }
   }
 }

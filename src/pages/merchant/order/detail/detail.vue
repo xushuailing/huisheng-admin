@@ -6,12 +6,12 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Mixins } from 'vue-property-decorator';
-import GetIds from '../../mixins/getIds';
 import Pay from './pay.vue';
 import Receive from './receive.vue';
 import Return from './return.vue';
 import Send from './send.vue';
 import { obj } from '@/lib/@types/sc-param.d';
+import { _Uid } from '../../config';
 
 const Components: obj = {
   1: Pay,
@@ -21,7 +21,7 @@ const Components: obj = {
 };
 
 @Component({ components: {} })
-export default class OrderDetail extends Mixins(GetIds) {
+export default class OrderDetail extends Vue {
   get id() {
     return this.$route.query.id;
   }
@@ -34,7 +34,7 @@ export default class OrderDetail extends Mixins(GetIds) {
 
   getDetail() {
     const api = this.$api.merchant.order.show;
-    const param = { uid: this.uid, oid: this.id };
+    const param = { uid: _Uid, oid: this.id };
     this.$http.get(api, param).then((res) => {
       this.data = res.data || {};
     });

@@ -5,7 +5,6 @@
              mode="page"
              :api="api"
              :config="editConfig">
-      <template slot="edit-header">&nbsp;</template>
     </sc-edit>
   </div>
 </template>
@@ -29,47 +28,63 @@ export default class OrderAddress extends Vue {
   }
 
   get api() {
-    return this.$api.merchant.order.address.update; //  this.$api.admin.activity.adsSorts.create;
+    return this.$api.merchant.order.address.update;
   }
 
-  get editConfig(): ScForm.Edit {
-    return {
-      type: 'plain',
-      width: '820px',
-      'label-width': '110px',
-      params: { ordernumber: this.id },
-      buttons: [{ mode: 'submit', text: '确认修改' }],
-      rules: [],
-      data: [
-        [
-          {
-            label: '收货人姓名：',
-            prop: 'username',
-            tag: { attr: { placeholder: '请输入收货人姓名' } },
-          },
-          {
-            label: '收货人手机号：',
-            prop: 'phone',
-            tag: { attr: { type: 'tel', placeholder: '请输入收货人手机号' } },
-          },
-          {
-            label: '所属辖区：',
-            prop: 'address_group',
-            tag: { tagType: 'component', components: Cascader },
-          },
-          {
-            label: '详细地址：',
-            prop: 'address_title',
-            tag: { attr: { placeholder: '请输入详细地址' } },
-          },
-        ],
-      ],
-      handleSubmit: (data) => {
-        console.log('data :', data);
-        return {};
+  editConfig: ScForm.Edit = {
+    type: 'plain',
+    width: '820px',
+    'label-width': '110px',
+    requestMethod: 'get',
+    params: { ordernumber: '' },
+    buttons: [{ mode: 'submit', text: '确认修改' }],
+    rules: [
+      {
+        phone: {
+          value: [
+            {
+              trigger: ['blur'],
+              validator: (rule, value, callback) => {
+                if (this.$utils._ValidatePhone(value)) {
+                  return callback();
+                }
+                return callback(new Error('手机号格式错误'));
+              },
+            },
+          ],
+        },
       },
-    };
-  }
+    ],
+    data: [
+      [
+        {
+          label: '收货人姓名：',
+          prop: 'username',
+          tag: { attr: { placeholder: '请输入收货人姓名' } },
+        },
+        {
+          label: '收货人手机号：',
+          prop: 'phone',
+          tag: { attr: { type: 'tel', placeholder: '请输入收货人手机号' } },
+        },
+        {
+          label: '所属辖区：',
+          prop: 'address_group',
+          tag: { tagType: 'component', components: Cascader },
+        },
+        {
+          label: '详细地址：',
+          prop: 'address_title',
+          tag: { attr: { placeholder: '请输入详细地址' } },
+        },
+      ],
+    ],
+    handleSubmit: (data) => {
+      const res = { ...data, ...(data.address_group || {}) };
+      delete res.address_group;
+      return res;
+    },
+  };
 
   getDetail() {
     const loading = this.$utils._Loading.show();
@@ -78,6 +93,9 @@ export default class OrderAddress extends Vue {
     this.$http
       .get(api, param)
       .then((res) => {
+        const { ordernumber = '' } = (res.data && res.data.order) || {};
+        this.editConfig.params!.ordernumber = ordernumber;
+
         const data = res.data && res.data.address;
         if (data) {
           data.address_group = {
@@ -85,8 +103,6 @@ export default class OrderAddress extends Vue {
             address_city_id: data.address_city_id,
             address_areas_id: data.address_areas_id,
           };
-          console.log('data: ', data);
-
           this.editConfig.data.forEach((v, i) => {
             v.forEach((e, ii) => {
               const defaultData = e.handleEdit ?

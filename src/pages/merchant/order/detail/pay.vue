@@ -1,6 +1,6 @@
 <template>
   <div class="order-pay-detail bg-white border-radius-4 p-30 mb-20">
-    <status :status="data.status"
+    <status :status="order.status"
             :time="data.time"></status>
 
     <div class="mt-30">
@@ -19,7 +19,8 @@
                class="mt-30"
                label-position="left">
         <el-form-item label="应付款："
-                      prop="shop_goods_pay_price">
+                      prop="shop_goods_pay_price"
+                      class="font-danger font-16">
           <el-input v-model="form.shop_goods_pay_price"
                     type="number"
                     placeholder="请输入应付金额">
@@ -34,8 +35,8 @@
             <template slot="prepend">&yen;</template>
           </el-input>
         </el-form-item>
-        <address :data="address"
-                 class="pt-10"></address>
+        <order-address :data="address"
+                       class="pt-10"></order-address>
         <el-form-item class="pt-20">
           <el-button type="primary"
                      class="pl-30 pr-30"
@@ -49,14 +50,13 @@
 import { Component, Vue, Mixins } from 'vue-property-decorator';
 import { obj } from '@/lib/@types/sc-param.d';
 import { _Uid } from '../../config';
-import GetValue from '../mixin';
-import Detail from './mixin';
+import Mixin from './mixin';
 import GoodsTable from '../goods-table.vue';
 import Status from './components/status.vue';
-import Address from './components/address.vue';
+import OrderAddress from './components/address.vue';
 
-@Component({ components: { Status, GoodsTable, Address } })
-export default class OrderPayDetail extends Mixins(Detail, GetValue) {
+@Component({ components: { Status, GoodsTable, OrderAddress } })
+export default class OrderPayDetail extends Mixins(Mixin) {
   header = {
     title: '商品信息',
     size: '规格',
@@ -86,8 +86,10 @@ export default class OrderPayDetail extends Mixins(Detail, GetValue) {
 
   async handlePay() {
     const api = this.$api.merchant.order.pay;
-    const param = { ...this.form, oid: this.id, uid: '' };
+    const param = { ...this.form, oid: this.id, uid: _Uid };
     const Loading = this.$utils._Loading.show({ text: '确认中...' });
+    console.log('param: ', param);
+
     try {
       const { status, message }: obj = await this.$http.get(api, param);
       this.$message.success(message);
@@ -95,7 +97,7 @@ export default class OrderPayDetail extends Mixins(Detail, GetValue) {
         this.$router.go(-1);
       });
     } catch (err) {
-      this.$message.error(err.message);
+      console.error('err: ', err);
     }
     Loading.close();
   }
@@ -105,3 +107,13 @@ export default class OrderPayDetail extends Mixins(Detail, GetValue) {
   }
 }
 </script>
+<style lang="scss">
+  .order-pay-detail {
+    .font-danger {
+      .el-form-item__label {
+        color: inherit;
+        font-size: inherit;
+      }
+    }
+  }
+</style>

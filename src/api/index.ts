@@ -175,18 +175,16 @@ export default {
       expresses: `${url}/admin/getExpressList`,
       return: {
         index: `${url}/admin/refundOrderList`,
-        show: `${url}/admin/doAddKeyword`,
+        show: `${url}/admin/refundOrderDetail`,
         return: `${url}/admin/confirmRefundOrder`,
         reject: `${url}/admin/rejectRefundOrder`,
       },
-      logistics: {
-        index: `${url}/admin/getLogistics`,
-      },
+      logistics: `${url}/admin/getLogistics`,
       pay: `${url}/admin/setConfirmPayment`,
       comment: {
         index: `${url}/admin/getCommentList`,
         show: `${url}/admin/getCommenDatail`,
-        reply: `${url}admin/getDoCommenDatail`,
+        reply: `${url}/admin/getDoCommenDatail`,
       },
       commentUser: {
         index: `${url}/admin/getCommenReply`,

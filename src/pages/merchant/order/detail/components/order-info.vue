@@ -9,9 +9,12 @@
     <div class="pt-20">
       <div class="font-16">订单信息</div>
       <div class="info mt-10">
-        <span v-for="item in orderInfo"
+        <span v-for="(item, i) in orderInfo"
               :key="item.label"
-              class="mt-10">{{item.label}}{{item.value}}</span>
+              class="mt-10"
+              :style="{'grid-column': i==orderInfo.length-1?'1/span 2':'auto'}">
+          {{item.label}}{{item.value}}
+        </span>
       </div>
     </div>
     <goods-table :header="header"
