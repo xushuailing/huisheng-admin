@@ -151,7 +151,7 @@ export default {
      * 提交表单
      */
     async submitForm() {
-      const { handleSubmit, params, id } = this.config;
+      const { handleSubmit, params, id, requestMethod = 'post' } = this.config;
       const data = {};
       data.id = id;
 
@@ -170,7 +170,7 @@ export default {
       const allData = { ...data, ...params };
       let submitData = handleSubmit ? await handleSubmit(allData, this) : allData;
 
-      if (this.config.bodyType === 'formData' || !this.config.bodyType) {
+      if (requestMethod === 'post' && (this.config.bodyType === 'formData' || !this.config.bodyType)) {
         submitData = this.jsonToFromData(submitData);
       }
 
@@ -183,8 +183,8 @@ export default {
       }
 
       const Loading = this.$utils._Loading.show({ text: '修改中...' });
-      this.$http
-        .post(this.api, submitData)
+
+      this.$http[requestMethod](this.api, submitData)
         .then((res) => {
           const errmsg = (res.data && res.data.errmsg) || '修改成功';
 

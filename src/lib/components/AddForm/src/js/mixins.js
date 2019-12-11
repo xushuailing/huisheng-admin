@@ -146,7 +146,7 @@ export default {
      * 提交表单
      */
     async submitForm(submitType) {
-      const { handleSubmit, params, data } = this.config;
+      const { handleSubmit, params, data, requestMethod = 'post' } = this.config;
       const formData = {};
       this.form.data.forEach((e) => {
         for (const k in e) {
@@ -164,7 +164,7 @@ export default {
       const allData = { ...formData, ...params };
       let submitData = handleSubmit ? await handleSubmit(allData, this) : allData;
 
-      if (this.config.bodyType === 'formData' || !this.config.bodyType) {
+      if (requestMethod === 'post' && (this.config.bodyType === 'formData' || !this.config.bodyType)) {
         submitData = this.jsonToFromData(submitData);
       }
 
@@ -178,8 +178,7 @@ export default {
 
       const Loading = this.$utils._Loading.show({ text: '新增中...' });
 
-      this.$http
-        .post(this.api, submitData)
+      this.$http[requestMethod](this.api, submitData)
         .then((res) => {
           const errmsg = (res.data && res.data.errmsg) || '新增成功';
 

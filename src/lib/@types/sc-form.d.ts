@@ -223,6 +223,9 @@ declare class FormConfig {
   /** 表单事件 `form-events` */
   public formListeners?: obj;
 
+  /** 接口请求方式（默认：`post`） */
+  public requestMethod?: 'post' | 'get';
+
   /** 接口额外参数 */
   public params?: obj;
 
