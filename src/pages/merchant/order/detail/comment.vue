@@ -18,14 +18,15 @@
 
     <div class="mt-30">
       <strong class="font-16">评价详情：</strong>
-      <span>{{data.comment}}星</span>
+      <span>{{data.star}}星</span>
     </div>
 
-    <sc-add-form mode="page"
-                 :api="api"
-                 :config="addConfig"
-                 style="margin-left:-10px;margin-right:-10px">
-    </sc-add-form>
+    <sc-edit mode="page"
+             :api="api"
+             :config="addConfig"
+             style="margin-left:-10px;margin-right:-10px"
+             @emitEditComplete="onEditComplete">
+    </sc-edit>
 
   </div>
 </template>
@@ -71,6 +72,7 @@ export default class OrderReply extends Mixins(Mixin) {
       'label-width': '0',
       formAttr: { 'label-position': 'top' },
       params: { id: this.id },
+      requestMethod: 'get',
       buttons: [{ mode: 'submit', text: '回复' }],
       rules: [
         { reply: { value: [{ required: true, message: '请输入回复内容', trigger: 'blur' }] } },
@@ -86,6 +88,12 @@ export default class OrderReply extends Mixins(Mixin) {
         ],
       ],
     };
+  }
+
+  onEditComplete({ status }: any) {
+    if (status) {
+      this.$router.go(-1);
+    }
   }
 
   getDetail() {

@@ -28,6 +28,8 @@
                  class="w100">
               {{(row.fid_val||'') + ' ' + (row.attr_val||'')}}
             </div>
+            <div v-else-if="col=='商品总价'"
+                 class="w100">{{row[k]?'￥'+row[k]:''}}</div>
             <div v-else
                  class="w100">{{row[k]}}</div>
           </div>

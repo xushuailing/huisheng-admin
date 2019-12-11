@@ -140,11 +140,11 @@ export default class Order extends Mixins(Mixin) {
         prop: 'phone',
         tag: { attr: { placeholder: '请输入手机号' } },
       },
-      {
-        label: '商品名称：',
-        prop: 'title',
-        tag: { attr: { placeholder: '请输入商品名称' } },
-      },
+      // {
+      //   label: '商品名称：',
+      //   prop: 'title',
+      //   tag: { attr: { placeholder: '请输入商品名称' } },
+      // },
       {
         label: '创建时间',
         prop: 'createtime',

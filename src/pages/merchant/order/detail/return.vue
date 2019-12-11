@@ -32,9 +32,9 @@
         <el-form-item class="mt-30 font-danger"
                       label="应退款："
                       prop="refund_price">
-          <el-input v-model="form.refund_price"
-                    type="number"
-                    placeholder="请输入应退款"></el-input>
+          <el-input-number v-model="form.refund_price"
+                           :controls="false"
+                           placeholder="请输入应退款"></el-input-number>
         </el-form-item>
         <el-form-item class="mt-30 pt-20 font-16">
           <el-button type="primary"
@@ -79,7 +79,7 @@ export default class OrderReturnDetail extends Mixins(Mixin) {
   }
 
   get list() {
-    return this.data.order_goods || [];
+    return this.data.goods || [];
   }
 
   header = {
@@ -110,6 +110,8 @@ export default class OrderReturnDetail extends Mixins(Mixin) {
   async handleReturn() {
     const api = this.$api.merchant.order.return.return;
     const param = { refund_price: this.form.refund_price, id: this.id };
+    console.log('param: ', param);
+
     const Loading = this.$utils._Loading.show({ text: '退货中...' });
     try {
       const { status, message }: obj = await this.$http.get(api, param);
@@ -147,8 +149,8 @@ export default class OrderReturnDetail extends Mixins(Mixin) {
 <style lang="scss">
   .order-return-detail {
     .font-danger {
-      .el-form-item__label,
-      .el-input__inner {
+      // .el-input__inner,
+      .el-form-item__label {
         color: inherit;
       }
     }

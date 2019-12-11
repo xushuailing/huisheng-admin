@@ -17,7 +17,7 @@
 
       <div class="pt-10">
         <order-address :data="address"
-                 class="pt-10"></order-address>
+                       class="pt-10"></order-address>
 
         <el-button type="primary"
                    size="small"
@@ -25,12 +25,11 @@
       </div>
       <div class="mt-40">
         <h3>选择物流服务</h3>
-        <sc-edit ref="scEdit"
-                 mode="page"
-                 :api="api"
-                 :config="config"
-                 style="margin-left:-10px">
-        </sc-edit>
+        <sc-add-form mode="page"
+                     :api="api"
+                     :config="config"
+                     style="margin-left:-10px">
+        </sc-add-form>
       </div>
     </div>
   </div>
@@ -44,6 +43,8 @@ import Mixin from './mixin';
 import Status from './components/status.vue';
 import GoodsTable from '../goods-table.vue';
 import OrderAddress from './components/address.vue';
+
+// const _GroupBy = require('lodash/groupBy');
 
 @Component({ components: { Status, GoodsTable, OrderAddress } })
 export default class OrderSendDetail extends Mixins(Mixin) {
@@ -80,6 +81,7 @@ export default class OrderSendDetail extends Mixins(Mixin) {
       type: 'senior',
       'label-width': '180px',
       params: { oid: this.id },
+      requestMethod: 'get',
       formAttr: { 'label-position': 'left', 'label-width': '110px' },
       data: [
         [
@@ -95,7 +97,7 @@ export default class OrderSendDetail extends Mixins(Mixin) {
             tag: {
               tagType: 'select',
               options: this.getexpresses,
-              attr: { placeholder: '请选择物流公司' },
+              attr: { placeholder: '请选择物流公司', filterable: true },
             },
           },
           {
@@ -105,11 +107,6 @@ export default class OrderSendDetail extends Mixins(Mixin) {
           },
         ],
       ],
-      handleSubmit: (data) => {
-        console.log('data: ', data);
-
-        return {};
-      },
     };
   }
 
@@ -120,6 +117,19 @@ export default class OrderSendDetail extends Mixins(Mixin) {
         .then((res) => {
           const options =
             res.data && res.data.map((e: obj) => ({ ...e, label: e.title, value: e.id }));
+          // const arrObj = _GroupBy(res.data, 'name');
+          // console.log(
+          //   '%c重复数据',
+          //   'color:#fff;background:#40b883;border-radius:5px;padding:2px 5px;',
+          // );
+          // const arr: any = [];
+          // Object.keys(arrObj).forEach((k) => {
+          //   if (arrObj[k].length > 1) {
+          //     arr.push(...arrObj[k]);
+          //   }
+          // });
+          // console.table(arr);
+
           this.expresses = options;
           resolve(options || []);
         })

@@ -1,6 +1,7 @@
 <template>
   <div class="order-return">
-    <o-table :thead="thead"
+    <o-table ref="table"
+             :thead="thead"
              :table-config="tableConfig"
              :search-config="searchConfig"
              class="mt-20">
@@ -30,19 +31,18 @@
               <div>{{item.username}}</div>
               <div>{{item.phone}}</div>
             </div>
-            <div class="font-primary">{{getStatus(item.status)}}
+            <div class="font-primary">{{getRefundStatus(row.refund_status)}}
             </div>
             <div>{{getPayType(row.pay_type)}}</div>
             <div>{{item.createtime}}</div>
             <div class="flex-jc-ac">
-              <el-button type="text"
-                         class="font-black"
-                         @click="toDetail(item.id)">详情</el-button>
-              <el-button type="text"
-                         @click="handleRefund(item.id)">退款</el-button>
-              <el-button type="text"
+              <el-button v-if="hasHandler(row.refund_status)"
+                         type="text"
+                         @click="handleRefund(row.id)">退款</el-button>
+              <el-button v-if="hasHandler(row.refund_status)"
+                         type="text"
                          class="font-danger"
-                         @click="handleReject(item.id)">驳回</el-button>
+                         @click="handleReject(row.id)">驳回</el-button>
             </div>
           </div>
           <div slot="footer_th">
@@ -59,7 +59,7 @@ import { Component, Vue, Ref, Mixins } from 'vue-property-decorator';
 import Mixin from './mixin';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
-import { _Uid, _Shopid, _PayType } from '../config';
+import { _Uid, _Shopid, _PayType, _RefundStatus } from '../config';
 
 @Component
 export default class OrderReturn extends Mixins(Mixin) {
@@ -125,6 +125,14 @@ export default class OrderReturn extends Mixins(Mixin) {
     return _PayType[id] || '';
   }
 
+  getRefundStatus(status: keyof typeof _RefundStatus) {
+    return _RefundStatus[status] || '';
+  }
+
+  hasHandler(status: keyof typeof _RefundStatus) {
+    return status == 0;
+  }
+
   toDetail(id: string) {
     this.$router.push({ path: 'return-detail', query: { id } });
   }
@@ -134,7 +142,10 @@ export default class OrderReturn extends Mixins(Mixin) {
   }
 
   handleReject(id: string) {
-    const loading = this.$utils._Loading.show({ text: '正在驳回...' });
+    const loading = this.$utils._Loading.show({
+      target: this.$table.$el as any,
+      text: '正在驳回...',
+    });
     const api = this.$api.merchant.order.return.reject;
     this.$http
       .get(api, { id })
