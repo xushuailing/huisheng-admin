@@ -25,11 +25,12 @@
       </div>
       <div class="mt-40">
         <h3>选择物流服务</h3>
-        <sc-add-form mode="page"
-                     :api="api"
-                     :config="config"
-                     style="margin-left:-10px">
-        </sc-add-form>
+        <sc-edit mode="page"
+                 :api="api"
+                 :config="config"
+                 style="margin-left:-10px"
+                 @emitEditComplete="onEditComplete">
+        </sc-edit>
       </div>
     </div>
   </div>
@@ -108,6 +109,13 @@ export default class OrderSendDetail extends Mixins(Mixin) {
         ],
       ],
     };
+  }
+
+  onEditComplete({ status }: any) {
+    if (status) {
+      this.$message.success('发货成功！');
+      this.$router.go(-1);
+    }
   }
 
   getexpresses() {

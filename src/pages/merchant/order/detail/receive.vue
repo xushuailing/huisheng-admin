@@ -1,6 +1,6 @@
 <template>
   <div class="order-receive-detail bg-white border-radius-4 p-30 mb-20">
-    <status :status="order.status"
+    <status :status="data.order && data.order.status"
             :time="data.time"></status>
 
     <el-radio-group v-model="currentTab"

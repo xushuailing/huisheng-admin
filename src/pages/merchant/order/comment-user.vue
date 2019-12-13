@@ -41,7 +41,9 @@ export default class OrderEvaluate extends Vue {
     },
   };
 
-  columnsHandler: ScTable.ColumnsHandler = [{ name: 'reply', title: '回复' }];
+  columnsHandler: ScTable.ColumnsHandler = [
+    { name: 'reply', title: '回复', handler: ({ row }) => row.comment_status },
+  ];
 
   get tableConfig(): ScTable.TableConfig {
     return {

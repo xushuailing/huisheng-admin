@@ -10,8 +10,8 @@
     <goods-table :header="header"
                  :list="list"></goods-table>
 
-    <div class="mt-20 font-danger font-16">实收款：{{price.payPrice}}</div>
-    <div class="mt-10 font-info font-12">运费：{{price.freight}}</div>
+    <div class="mt-20 font-danger font-16">实收款：{{data.totalprice}}</div>
+    <div class="mt-10 font-info font-12">运费：{{data.freight}}</div>
 
     <order-address title="收货信息"
                    :data="address"></order-address>
@@ -55,12 +55,6 @@ export default class OrderReply extends Mixins(Mixin) {
     num: '数量',
     total_price: '商品总价',
   };
-
-  get price() {
-    const order = this.data.order || {};
-    const { shop_goods_pay_price = '', freight = '' } = order;
-    return { payPrice: shop_goods_pay_price, freight };
-  }
 
   get api() {
     return this.$api.merchant.order.comment.reply;

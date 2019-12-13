@@ -4,7 +4,8 @@
     <sc-edit v-if="isInit"
              mode="page"
              :api="api"
-             :config="editConfig">
+             :config="editConfig"
+             @emitEditComplete="onEditComplete">
     </sc-edit>
   </div>
 </template>
@@ -85,6 +86,12 @@ export default class OrderAddress extends Vue {
       return res;
     },
   };
+
+  onEditComplete({ status }: any) {
+    if (status) {
+      this.$router.go(-1);
+    }
+  }
 
   getDetail() {
     const loading = this.$utils._Loading.show();
