@@ -3,12 +3,12 @@ const url = process.env.NODE_ENV === 'development' ? '/api' : 'https://restauran
 
 export default {
   test: {
-    index: `${url}/service-uaa/sys/user/index`,
-    create: `${url}/service-uaa/sys/user/create`,
-    update: `${url}/service-uaa/sys/user/update`,
-    delete: `${url}/service-uaa/sys/user/delete`,
-    export: `${url}/service-uaa/sys/user/export`,
-    show: `${url}/service-uaa/sys/user/show`,
+    index: `${url}/index`,
+    create: `${url}/create`,
+    update: `${url}/update`,
+    delete: `${url}/delete`,
+    export: `${url}/export`,
+    show: `${url}/show`,
   },
   login: `${url}/admin/admin_login`,
   files: {
@@ -95,9 +95,15 @@ export default {
     /** 活动管理 */
     activity: {
       index: {
-        index: `${url}/admin/shopJoinActivityList`,
+        index: `${url}/admin/getHomeActivity`,
         /** 上传/修改首页活动图片 */
         setActivity: `${url}/admin/setHomeActivity`,
+      },
+      /** 发现好货活动/今日上新 */
+      goods: {
+        index: `${url}/admin/getFindGoods`,
+        delete: `${url}/admin/delFindGoods`,
+        create: `${url}/admin/setBindingGoods`,
       },
       ads: {
         index: `${url}/admin/getBannerList`,

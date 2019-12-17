@@ -23,22 +23,29 @@ export default class ActvGood extends Vue {
   columns: ScTable.Columns = [
     {
       label: '商品信息',
-      prop: 'none',
-      propsHandler: ({ col, row }: obj) => ({ url: row.pic, text: row[col.prop], $vm: this }),
+      prop: 'goodstitle',
+      propsHandler: ({ col, row }: obj) => ({
+        url: row.goodsimage,
+        text: row[col.prop],
+      }),
       component: GoodsInfo,
     },
-    { label: '店铺信息', prop: 'none1' },
-    { label: '推广类型', prop: 'none2' },
-    { label: '有效期', prop: 'none3' },
-    { label: '申请时间', prop: 'createtime' },
+    { label: '店铺信息', prop: 'shopname', width: 300 },
+    { label: '推广类型', prop: 'bannertitle', width: 150 },
+    {
+      label: '有效期',
+      prop: 'none3',
+      formater: (row, col) => `${row.startime} - ${row.endtime}`,
+    },
+    { label: '申请时间', prop: 'createtime', width: 150 },
   ];
 
   columnsHandler: ScTable.ColumnsHandler = ['del'];
 
-  // TODO: 缺少所有接口
   tableConfig: ScTable.TableConfig = {
-    api: this.$api.admin.activity.ads,
+    api: this.$api.admin.activity.goods,
     breadcrumbButtons: ['add'],
+    delMethod: 'get',
   };
 
   searchConfig: ScTable.Search = {
@@ -46,7 +53,7 @@ export default class ActvGood extends Vue {
     data: [
       {
         label: '商家店铺名称：',
-        prop: 'none1',
+        prop: 'shopname',
         tag: {
           attr: { placeholder: '请输入商家店铺名称' },
         },
@@ -75,13 +82,13 @@ export default class ActvGood extends Vue {
     ],
     rules: [
       {
-        none1: {
-          value: [{ required: true, trigger: 'blur', message: '请输入店铺名称' }],
+        shopid: {
+          value: [{ required: true, trigger: 'change', message: '请选择店铺' }],
         },
-        none4: {
-          value: [{ required: true, trigger: 'blur', message: '请输入商品ID' }],
+        gid: {
+          value: [{ required: true, trigger: 'change', message: '请选择商品' }],
         },
-        none3: {
+        startime_endtime: {
           value: [{ required: true, trigger: 'change', message: '请选择有效期' }],
         },
       },
@@ -90,17 +97,17 @@ export default class ActvGood extends Vue {
       [
         {
           label: '店铺名称：',
-          prop: 'none1',
-          tag: { attr: { placeholder: '请输入店铺名称' } },
+          prop: 'shopid',
+          tag: { options: [], attr: { placeholder: '请选择店铺' } },
         },
         {
           label: '添加产品：',
-          prop: 'none4',
-          tag: { attr: { placeholder: '请输入商品ID' } },
+          prop: 'gid',
+          tag: { options: [], attr: { placeholder: '请选择商品' } },
         },
         {
           label: '有效期：',
-          prop: 'none3',
+          prop: 'startime_endtime',
           tag: {
             tagType: 'date-picker',
             attr: { type: 'datetime', placeholder: '请选择有效期' },
@@ -109,5 +116,23 @@ export default class ActvGood extends Vue {
       ],
     ],
   };
+
+  mounted() {
+    this.getMerchantShopList();
+  }
+
+  async getMerchantShopList() {
+    try {
+      const api = this.$api.admin.merchant.shop.index;
+      const { data } = await this.$http.get(api, { limit: 9e6 });
+
+
+      // const item =
+
+      console.log('data', data);
+    } catch (error) {
+      console.log('error', error);
+    }
+  }
 }
 </script>
