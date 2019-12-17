@@ -472,8 +472,9 @@ export default {
         param.ids = ids;
       }
 
-      this.$http
-        .post(api, { ...this.tableConfig.deleteParams, ...param })
+      const delMethod = this.tableConfig.delMethod || 'post';
+
+      this.$http[delMethod](api, { ...this.tableConfig.deleteParams, ...param })
         .then((res) => {
           this.$message({
             message: (res.data && res.data.errmsg) || '删除成功',
