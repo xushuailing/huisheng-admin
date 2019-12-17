@@ -18,6 +18,11 @@ import { ScTable } from '@/lib/@types/sc-table.d';
 import { ScForm } from '@/lib/@types/sc-form.d';
 import { obj } from '@/lib/@types/sc-param.d';
 
+interface Select {
+  value: string | number;
+  label: string;
+}
+
 @Component
 export default class ActvGood extends Vue {
   columns: ScTable.Columns = [
@@ -98,38 +103,84 @@ export default class ActvGood extends Vue {
         {
           label: '店铺名称：',
           prop: 'shopid',
-          tag: { options: [], attr: { placeholder: '请选择店铺' } },
+          tag: {
+            tagType: 'select',
+            options: [],
+            listeners: {
+              change: (id: number) => {
+                this.getMerchantShopGoodsList(id);
+              },
+            },
+            attr: { placeholder: '请选择店铺' },
+          },
         },
         {
           label: '添加产品：',
           prop: 'gid',
-          tag: { options: [], attr: { placeholder: '请选择商品' } },
+          tag: { tagType: 'select', options: [], attr: { placeholder: '请选择商品' } },
         },
         {
           label: '有效期：',
           prop: 'startime_endtime',
           tag: {
             tagType: 'date-picker',
-            attr: { type: 'datetime', placeholder: '请选择有效期' },
+            attr: {
+              type: 'datetimerange',
+              placeholder: '请选择有效期',
+              'range-separator': '至',
+              'start-placeholder': '开始日期',
+              'end-placeholder': '结束日期',
+            },
           },
         },
       ],
     ],
+    handleSubmit: (data) => {
+      const [startime, endtime] = this.$utils._DataTypeChange(data.startime_endtime);
+      delete data.startime_endtime;
+      return {
+        ...data,
+        startime,
+        endtime,
+      };
+    },
   };
+
+  goodsList: Select[] = [];
+
+  shopsList: Select[] = [];
 
   mounted() {
     this.getMerchantShopList();
   }
 
+  async getMerchantShopGoodsList(shopid: number) {
+    try {
+      const api = this.$api.admin.merchant.shop.goods.index;
+      const { data } = await this.$http.get<any[]>(api, { limit: 9e6, shopid });
+      const item = this.$utils._GetConfigItemData(this.addConfig.data, 'gid');
+      const list = data.map((v) => ({ label: v.title, value: v.id }));
+
+      this.goodsList = list;
+      if (item) item.tag!.options = list;
+      console.log('getMerchantShopGoodsList', data);
+    } catch (error) {
+      console.log('error', error);
+    }
+  }
+
   async getMerchantShopList() {
     try {
       const api = this.$api.admin.merchant.shop.index;
-      const { data } = await this.$http.get(api, { limit: 9e6 });
+      const { data } = await this.$http.get<any[]>(api, { limit: 9e6 });
+      const item = this.$utils._GetConfigItemData(this.addConfig.data, 'shopid');
 
+      const list = data.map((v) => ({ label: v.shopname, value: v.id }));
+      this.shopsList = list;
 
-      // const item =
+      if (item) item.tag!.options = list;
 
-      console.log('data', data);
+      console.log('getMerchantShopList', data, item);
     } catch (error) {
       console.log('error', error);
     }
