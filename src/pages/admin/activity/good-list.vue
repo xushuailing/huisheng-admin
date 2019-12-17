@@ -39,7 +39,7 @@ export default class ActvGood extends Vue {
     { label: '推广类型', prop: 'bannertitle', width: 150 },
     {
       label: '有效期',
-      prop: 'none3',
+      prop: 'startime_endtime',
       formater: (row, col) => `${row.startime} - ${row.endtime}`,
     },
     { label: '申请时间', prop: 'createtime', width: 150 },

@@ -14,11 +14,12 @@
                   v-model="form[i].price">
           <span slot="prefix">￥</span>
         </el-input>
+        <span class="font-16 ml-10">/个月</span>
       </el-form-item>
-      <el-form-item label="有效期：">
+      <!-- <el-form-item label="有效期：">
         <el-input placeholder="请输入有效期"
                   v-model="form[i].validity"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="介绍：">
         <el-input placeholder="请输入介绍"
                   v-model="form[i].desc"
@@ -38,7 +39,7 @@ import { obj } from '@/lib/@types/sc-param.d';
 interface SortItem {
   title: string;
   price: string;
-  validity: string;
+  // validity: string;
   desc: string;
 }
 
@@ -51,7 +52,12 @@ export default class ActvSortsAdd extends Vue {
     pass: '',
   };
 
-  temp: SortItem = { title: '', price: '', validity: '', desc: '' };
+  temp: SortItem = {
+    title: '',
+    price: '',
+    // validity: '',
+    desc: '',
+  };
 
   form = [this.temp];
 

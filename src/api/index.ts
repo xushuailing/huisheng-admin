@@ -105,15 +105,21 @@ export default {
         delete: `${url}/admin/delFindGoods`,
         create: `${url}/admin/setBindingGoods`,
       },
+      /** 广告管理 */
       ads: {
         index: `${url}/admin/getBannerList`,
         create: `${url}/admin/setBanner`,
       },
 
+      /** 审核 */
+      audit: {
+        index: `${url}/admin/getUserBannerList`,
+      },
+      /** 广告分类 */
       adsSorts: {
         index: `${url}/admin/getBanner`,
-        create: `${url}/admin/doaAddBanner`,
-        show: `${url}/admin/lookBanner`,
+        create: `${url}/admin/doAddBanner`,
+        show: `${url}/admin/getBannerDetail`,
       },
       /** 自营产品管理 > 优惠活动 */
       coupon: {

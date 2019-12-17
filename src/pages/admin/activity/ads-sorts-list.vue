@@ -8,7 +8,7 @@
                   :search-config="searchConfig"
                   @table-emitTableHandlerClick="onTableHandlerClick">
       <template slot="breadcrumb">
-        <el-button @click="onAdd">新增</el-button>
+        <el-button @click="onAdd()">新增</el-button>
       </template>
     </sc-min-table>
   </div>
@@ -27,11 +27,11 @@ export const ADS_TYPE: obj = {
 
 @Component
 export default class ActvAdsSorts extends Vue {
-  // TODO: 缺少有效期
+  // TODO: 缺少有效期广告类型
   columns: ScTable.Columns = [
     {
       label: '广告类型',
-      prop: 'type',
+      prop: 'none',
       formater: (row, col) => ADS_TYPE[row[col.prop]] || '',
     },
     { label: '名称', prop: 'title' },
@@ -51,7 +51,7 @@ export default class ActvAdsSorts extends Vue {
     breadcrumbButtons: ['add'],
   };
 
-  // TODO: 查询需加字段：广告类型、创建时间
+  // TODO: 查询需加字段：广告类型
   searchConfig: ScTable.Search = {
     data: [
       {
@@ -81,7 +81,7 @@ export default class ActvAdsSorts extends Vue {
   }
 
   onAdd(id?: string) {
-    this.$router.push(`/activity/ads-sorts-detail?id=${id}`);
+    this.$router.push(`/activity/ads-sorts-detail${id ? `?id=${id}` : ''}`);
   }
 }
 </script>

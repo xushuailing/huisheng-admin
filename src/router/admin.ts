@@ -172,7 +172,7 @@ export default [
         meta: { breadcrumbHide: true, breadcrumb: [{ title: '活动管理' }, { title: '发现好物' }] },
       },
       {
-        path: 'preferential',
+        path: 'preferential-list',
         name: '优惠活动',
         component: () => import('../pages/admin/activity/preferential-list.vue'),
         meta: { breadcrumb: [{ title: '自营产品管理' }, { title: '优惠活动' }] },

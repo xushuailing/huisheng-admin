@@ -35,13 +35,13 @@ export default class ActvAdsSortsDetail extends Vue {
         },
         {
           label: '介绍：',
-          prop: 'none3',
+          prop: 'introduction',
           inline: false,
           tag: { attr: { type: 'textarea', rows: 6, placeholder: '请输入介绍' } },
         },
         {
           label: '',
-          prop: 'sort',
+          prop: 'banner_list',
           inline: false,
           tag: { tagType: 'component', components: SortAdd },
         },
@@ -59,7 +59,6 @@ export default class ActvAdsSortsDetail extends Vue {
     if (id) this.getDetails(id);
   }
 
-  // TODO: 缺少详情接口
   getDetails(id: string) {
     this.$http.get(this.$api.admin.activity.adsSorts.show, { id }).then(({ data }: obj) => {
       console.log('res: ', data);

@@ -19,15 +19,15 @@ import { ScForm } from '@/lib/@types/sc-form.d';
 import { obj } from '@/lib/@types/sc-param.d';
 
 const STATUS: obj<string> = {
-  1: '审核中',
-  2: '审核通过',
-  3: '审核不通过',
+  0: '待审核',
+  1: '已审核',
+  2: '驳回',
 };
 const columns: ScTable.SetColumns = [
-  ['店铺信息', 'none1'],
-  ['推广类型', 'title'],
-  ['价格', 'none2'],
-  ['有效期', 'endtime'],
+  ['店铺信息', 'shopname'],
+  ['推广类型', 'banner_title'],
+  ['价格', 'price'],
+  ['有效期', 'startime_endtime'],
   ['申请时间', 'createtime'],
   ['状态', 'status'],
 ];
@@ -41,6 +41,16 @@ export default class ActvAdsList extends Vue {
   columns = this.$utils._SetTableColumns(columns);
 
   columnsSchema: ScTable.ColumnsSchema = {
+    价格: {
+      formater: (row, col) => `￥${row[col.prop]}`,
+    },
+    有效期: {
+      formater: (row, col, column) => {
+        const [startime, endtime] = this.$utils._DataTypeChange(col.prop, '_');
+        if (!(row[startime] && row[endtime])) return '';
+        return `${row[startime].split(' ')[0]} - ${row[endtime].split(' ')[0]}`;
+      },
+    },
     状态: {
       formater: (row, col) => {
         const value = row[col.prop];
@@ -55,9 +65,11 @@ export default class ActvAdsList extends Vue {
     { name: 'reject', title: '驳回', type: 'danger' },
   ];
 
-  // TODO: 缺少所有接口
   tableConfig: ScTable.TableConfig = {
-    api: this.$api.admin.activity.ads,
+    api: this.$api.admin.activity.audit,
+    index: {
+      status: '0',
+    },
   };
 
   searchConfig: ScTable.Search = {

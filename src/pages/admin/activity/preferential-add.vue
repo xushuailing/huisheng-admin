@@ -13,7 +13,7 @@ import { ScForm } from '@/lib/@types/sc-form.d';
 
 @Component
 export default class ActvPreferentialAdd extends Vue {
-  api = this.$api.admin.activity.ads.create;
+  api = this.$api.admin.activity.coupon.create;
 
   addConfig: ScForm.Add = {
     'label-width': '150px',
