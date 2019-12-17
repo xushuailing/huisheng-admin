@@ -1,7 +1,11 @@
+const isDev = process.env.NODE_ENV === 'development';
+const baseURI = isDev ? '' : './';
+
 /**
  * @type {import('@vue/cli-service').ProjectOptions}
  */
 module.exports = {
+  publicPath: `${baseURI}`, // 根域上下文目录
   css: {
     loaderOptions: {
       scss: {
