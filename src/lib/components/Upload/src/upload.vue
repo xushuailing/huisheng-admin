@@ -1,45 +1,49 @@
 <template>
-  <section class="sc-upload">
-    <template v-if="type === 'img'">
-      <el-upload ref="elUploadImg"
-                 v-bind="attrs"
-                 :class="['img-uploader', { 'hide-load': isLoad }]"
-                 list-type="picture-card"
-                 :file-list="fileList"
-                 :on-preview="onPreview"
-                 :on-success="onSuccess"
-                 :on-remove="onRemove"
-                 :before-upload="BeforeAvatarUpload"
-                 :http-request="httpRequest"
-                 v-on="listeners">
-        <i class="el-icon-plus avatar-uploader-icon"></i>
-      </el-upload>
+  <div>
+    <section class="sc-upload">
+      <template v-if="type === 'img'">
+        <el-upload ref="elUploadImg"
+                   v-bind="attrs"
+                   :class="['img-uploader', { 'hide-load': isLoad }]"
+                   list-type="picture-card"
+                   :file-list="fileList"
+                   :on-preview="onPreview"
+                   :on-success="onSuccess"
+                   :on-remove="onRemove"
+                   :before-upload="BeforeAvatarUpload"
+                   :http-request="httpRequest"
+                   v-on="listeners">
+          <i class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
 
-      <sc-dialog ref="scDialog"
-                 :visible.sync="dialogVisible"
-                 :isOpenFull="false"
-                 custom-class="sc-dialog__img">
-        <img slot="conter"
-             style="max-width:900px;max-height:500px"
-             :src="dialogImageUrl"
-             alt />
-      </sc-dialog>
-    </template>
-    <template v-if="type === 'file'">
-      <el-upload ref="elUploadFile"
-                 v-bind="attrs"
-                 :class="['file-uploader', { 'hide-load': isLoad }]"
-                 :file-list="fileList"
-                 :on-success="onSuccess"
-                 :on-remove="onRemove"
-                 :before-upload="BeforeAvatarUpload"
-                 :http-request="httpRequest"
-                 v-on="listeners">
-        <el-button size="small"
-                   v-show="!isLoad">点击上传</el-button>
-      </el-upload>
-    </template>
-  </section>
+      </template>
+      <template v-if="type === 'file'">
+        <el-upload ref="elUploadFile"
+                   v-bind="attrs"
+                   :class="['file-uploader', { 'hide-load': isLoad }]"
+                   :file-list="fileList"
+                   :on-success="onSuccess"
+                   :on-remove="onRemove"
+                   :before-upload="BeforeAvatarUpload"
+                   :http-request="httpRequest"
+                   v-on="listeners">
+          <el-button size="small"
+                     v-show="!isLoad">点击上传</el-button>
+        </el-upload>
+      </template>
+    </section>
+
+    <sc-dialog ref="scDialog"
+               append-to-body
+               custom-class="sc-dialog__img"
+               :visible.sync="dialogVisible">
+      <img slot="conter"
+           :src="dialogImageUrl"
+           alt />
+    </sc-dialog>
+
+  </div>
+
 </template>
 
 <script lang="js">

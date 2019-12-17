@@ -38,8 +38,8 @@ import { LoginDate } from '../../@types';
 @Component
 export default class Login extends Vue {
   form = {
-    username: '',
-    password: '',
+    username: 'qiang1',
+    password: '111111',
     memory: false,
   };
 
@@ -47,8 +47,8 @@ export default class Login extends Vue {
     const loginForm = this.$utils._Storage.get('user_login_form');
 
     this.form = loginForm || {
-      username: '',
-      password: '',
+      username: 'qiang1',
+      password: '111111',
       memory: false,
     };
   }

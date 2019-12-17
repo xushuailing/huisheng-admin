@@ -96,6 +96,8 @@ export default {
     activity: {
       index: {
         index: `${url}/admin/shopJoinActivityList`,
+        /** 上传/修改首页活动图片 */
+        setActivity: `${url}/admin/setHomeActivity`,
       },
       ads: {
         index: `${url}/admin/getBannerList`,
