@@ -25,5 +25,8 @@
       // 属性强制折行对齐
       "wrap_attributes": "force-aligned"
     }
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
   }
 }

@@ -1,3 +1,5 @@
+import qs from 'qs';
+
 export default {
   props: {
     api: String,
@@ -148,16 +150,7 @@ export default {
      * JSON TO FormData
      */
     jsonToFromData(data) {
-      if (typeof data == 'object' && data) {
-        const formData = new FormData();
-
-        Object.keys(data).forEach((v) => {
-          formData.append(v, data[v]);
-        });
-        return formData;
-      }
-
-      return data;
+      return qs.stringify(data);
     },
   },
   watch: {

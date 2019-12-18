@@ -164,7 +164,10 @@ export default {
       const allData = { ...formData, ...params };
       let submitData = handleSubmit ? await handleSubmit(allData, this) : allData;
 
-      if (requestMethod === 'post' && (this.config.bodyType === 'formData' || !this.config.bodyType)) {
+      if (
+        requestMethod === 'post' &&
+        (this.config.bodyType === 'formData' || !this.config.bodyType)
+      ) {
         submitData = this.jsonToFromData(submitData);
       }
 
@@ -178,7 +181,11 @@ export default {
 
       const Loading = this.$utils._Loading.show({ text: '新增中...' });
 
-      this.$http[requestMethod](this.api, submitData)
+      this.$http[requestMethod](this.api, submitData, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      })
         .then((res) => {
           const errmsg = (res.data && res.data.errmsg) || '新增成功';
 
