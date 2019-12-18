@@ -1,16 +1,3 @@
-<template>
-  <div class='famous-list'>
-    <sc-min-table stripe
-                  ref="table"
-                  :columns-handler="columnsHandler"
-                  :columns="columns"
-                  :table-config="tableConfig"
-                  :formAddConfig="addConfig"
-                  :search-config="searchConfig">
-    </sc-min-table>
-  </div>
-</template>
-<script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
 import GoodsInfo from '@/components/img-name';
 import { ScTable } from '@/lib/@types/sc-table.d';
@@ -23,8 +10,8 @@ interface Select {
 }
 
 @Component
-export default class ActvFamous extends Vue {
-  activity_id = '6';
+export default class ListMixin extends Vue {
+  activity_id!: string;
 
   columns: ScTable.Columns = [
     {
@@ -36,6 +23,7 @@ export default class ActvFamous extends Vue {
       }),
       component: GoodsInfo,
     },
+    { label: '店铺信息', prop: 'shopname', width: 300 },
     { label: '推广类型', prop: 'bannertitle', width: 150 },
     {
       label: '有效期',
@@ -49,7 +37,7 @@ export default class ActvFamous extends Vue {
 
   get tableConfig(): ScTable.TableConfig {
     return {
-      api: this.$api.admin.activity.famous,
+      api: this.$api.admin.activity.goods,
       breadcrumbButtons: ['add'],
       delMethod: 'get',
       index: { activity_id: this.activity_id },
@@ -95,6 +83,9 @@ export default class ActvFamous extends Vue {
           shopid: {
             value: [{ required: true, trigger: 'change', message: '请选择店铺' }],
           },
+          gid: {
+            value: [{ required: true, trigger: 'change', message: '请选择商品' }],
+          },
           startime_endtime: {
             value: [{ required: true, trigger: 'change', message: '请选择有效期' }],
           },
@@ -108,8 +99,18 @@ export default class ActvFamous extends Vue {
             tag: {
               tagType: 'select',
               options: [],
+              listeners: {
+                change: (id: number) => {
+                  this.getMerchantShopGoodsList(id);
+                },
+              },
               attr: { placeholder: '请选择店铺' },
             },
+          },
+          {
+            label: '添加产品：',
+            prop: 'gid',
+            tag: { tagType: 'select', options: [], attr: { placeholder: '请选择商品' } },
           },
           {
             label: '有效期：',
@@ -147,6 +148,21 @@ export default class ActvFamous extends Vue {
     this.getMerchantShopList();
   }
 
+  async getMerchantShopGoodsList(shopid: number) {
+    try {
+      const api = this.$api.admin.merchant.shop.goods.index;
+      const { data } = await this.$http.get<any[]>(api, { limit: 9e6, shopid });
+      const item = this.$utils._GetConfigItemData(this.addConfig.data, 'gid');
+      const list = data.map((v) => ({ label: v.title, value: v.id }));
+
+      this.goodsList = list;
+      if (item) item.tag!.options = list;
+      console.log('getMerchantShopGoodsList', data);
+    } catch (error) {
+      console.log('error', error);
+    }
+  }
+
   async getMerchantShopList() {
     try {
       const api = this.$api.admin.merchant.shop.index;
@@ -164,4 +180,3 @@ export default class ActvFamous extends Vue {
     }
   }
 }
-</script>
