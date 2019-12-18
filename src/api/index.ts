@@ -105,6 +105,14 @@ export default {
         delete: `${url}/admin/delFindGoods`,
         create: `${url}/admin/setBindingGoods`,
       },
+
+      /** 大牌榜单 */
+      famous: {
+        index: `${url}/admin/getFindGoods`,
+        delete: `${url}/admin/delFindGoods`,
+        create: `${url}/admin/setBrandShop`,
+        show: `${url}/admin/setFindShop`,
+      },
       /** 广告管理 */
       ads: {
         index: `${url}/admin/getBannerList`,
@@ -114,6 +122,8 @@ export default {
       /** 审核 */
       audit: {
         index: `${url}/admin/getUserBannerList`,
+        pass: `${url}/admin/passUserBanner`,
+        reject: `${url}/admin/rejectUserBanner`,
       },
       /** 广告分类 */
       adsSorts: {

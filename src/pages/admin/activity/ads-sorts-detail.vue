@@ -31,12 +31,14 @@ export default class ActvAdsSortsDetail extends Vue {
         {
           label: '广告位名称：',
           prop: 'title',
+          default: '',
           tag: { attr: { placeholder: '请输入广告位名称' } },
         },
         {
           label: '介绍：',
           prop: 'introduction',
           inline: false,
+          default: '',
           tag: { attr: { type: 'textarea', rows: 6, placeholder: '请输入介绍' } },
         },
         {
@@ -47,21 +49,34 @@ export default class ActvAdsSortsDetail extends Vue {
         },
       ],
     ],
-    handleSubmit: (data) => {
-      if (this.id) return { ...data, id: this.id };
-      return data;
-    },
+    handleSubmit: this.onSubmit,
   };
 
   created() {
     const id = this.$route.query.id as string;
-    this.id = id;
     if (id) this.getDetails(id);
   }
 
+  onSubmit(data: any) {
+    if (this.id) return { ...data, id: this.id };
+    return data;
+  }
+
   getDetails(id: string) {
+    this.id = id;
+
     this.$http.get(this.$api.admin.activity.adsSorts.show, { id }).then(({ data }: obj) => {
       console.log('res: ', data);
+
+      for (let i = 0; i < this.addConfig.data.length; i++) {
+        const item = this.addConfig.data[i];
+        for (let index = 0; index < item.length; index++) {
+          const e = item[index];
+          if (data[e.prop]) {
+            this.$set(e, 'default', data[e.prop]);
+          }
+        }
+      }
     });
   }
 }

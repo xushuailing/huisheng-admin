@@ -18,7 +18,7 @@
                      prop="reject"
                      :id="{shopid:rejectForm.id}"
                      :visible.sync="rejectForm.visible"
-                     @onConfirm="onRejectConfirm" />
+                     @onSuccess="onRejectSuccess" />
   </div>
 </template>
 <script lang='ts'>
@@ -176,7 +176,7 @@ export default class SettingUsernameList extends Vue {
     }
   }
 
-  onRejectConfirm(flag: boolean) {
+  onRejectSuccess(flag: boolean) {
     if (flag) this.$table.emitRefresh();
   }
 }

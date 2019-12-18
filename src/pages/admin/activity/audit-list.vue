@@ -1,22 +1,35 @@
 <template>
-  <sc-min-table stripe
-                ref="table"
-                :columns-type="['selection']"
-                :columns-handler="columnsHandler"
-                :columns="columns"
-                :columns-props="{align:'center'}"
-                :columns-schema="columnsSchema"
-                :table-config="tableConfig"
-                :search-config="searchConfig"
-                @table-emitTableHandlerClick="onTableHandlerClick">
-  </sc-min-table>
-  <!-- TODO: 全选通过 -->
+  <div>
+    <sc-min-table stripe
+                  ref="table"
+                  :columns-type="['selection']"
+                  :columns-handler="columnsHandler"
+                  :columns="columns"
+                  :columns-props="{align:'center'}"
+                  :columns-schema="columnsSchema"
+                  :table-config="tableConfig"
+                  :search-config="searchConfig"
+                  :paginationConfig="paginationConfig"
+                  @pagination-onSlotClick="onSlotClick"
+                  @table-emitTableHandlerClick="onTableHandlerClick">
+    </sc-min-table>
+
+    <dialog-textarea title="请输入驳回理由"
+                     placeholder="请输入驳回理由~"
+                     :api='rejectApi'
+                     prop="reject"
+                     :id="{id:rejectForm.id,type:rejectForm.type}"
+                     :visible.sync="rejectForm.visible"
+                     @onSuccess="onRejectSuccess" />
+  </div>
 </template>
 <script lang='ts'>
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Ref } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { ScForm } from '@/lib/@types/sc-form.d';
 import { obj } from '@/lib/@types/sc-param.d';
+
+import dialogTextarea from '@/components/dialogTextarea.vue';
 
 const STATUS: obj<string> = {
   0: '待审核',
@@ -32,11 +45,9 @@ const columns: ScTable.SetColumns = [
   ['状态', 'status'],
 ];
 
-@Component
+@Component({ components: { dialogTextarea } })
 export default class ActvAdsList extends Vue {
-  $refs!: {
-    table: ScTable;
-  };
+  @Ref('table') table!: ScTable;
 
   columns = this.$utils._SetTableColumns(columns);
 
@@ -54,7 +65,7 @@ export default class ActvAdsList extends Vue {
     状态: {
       formater: (row, col) => {
         const value = row[col.prop];
-        const style = value === '1' ? 'font-danger' : 'font-primary';
+        const style = value == '0' ? 'font-danger' : 'font-primary';
         return [{ class: style }, STATUS[value]];
       },
     },
@@ -67,9 +78,6 @@ export default class ActvAdsList extends Vue {
 
   tableConfig: ScTable.TableConfig = {
     api: this.$api.admin.activity.audit,
-    index: {
-      status: '0',
-    },
   };
 
   searchConfig: ScTable.Search = {
@@ -77,14 +85,14 @@ export default class ActvAdsList extends Vue {
     data: [
       {
         label: '商家店铺名称：',
-        prop: 'none1',
+        prop: 'shopname',
         tag: {
           attr: { placeholder: '请输入商家店铺名称' },
         },
       },
       {
         label: '推广类型：',
-        prop: 'title',
+        prop: 'banner_pid',
         tag: {
           tagType: 'select',
           options: [],
@@ -93,7 +101,7 @@ export default class ActvAdsList extends Vue {
       },
       {
         label: '申请时间：',
-        prop: 'createtime',
+        prop: 'strtime',
         tag: {
           tagType: 'date-picker',
           attr: {
@@ -105,32 +113,80 @@ export default class ActvAdsList extends Vue {
     ],
   };
 
+  paginationConfig = {
+    slotAttr: {
+      isCheckbox: true,
+      text: '通过',
+    },
+  };
+
+  rejectForm = {
+    visible: false,
+    id: '',
+    type: '',
+  };
+
+  get rejectApi() {
+    return this.$api.admin.activity.audit.reject;
+  }
+
+  mounted() {
+    this.getBannerData();
+  }
+
+  async getBannerData() {
+    const api = this.$api.admin.activity.adsSorts.index;
+    const { data } = await this.$http.get<any[]>(api);
+
+    const item = this.$utils._GetConfigItemData([this.searchConfig.data!], 'banner_pid');
+
+    if (item) item.tag!.options = data.map((v) => ({ value: v.id, label: v.title }));
+  }
+
   onTableHandlerClick({ row, type }: { row: obj; type: string }) {
     if (type === 'pass') {
-      this.handlePass(row.id);
+      this.handlePass(row.id, row.type);
     } else {
-      this.handleReject(row.id);
+      this.handleReject(row.id, row.type);
     }
   }
 
-  handlePass(id: string) {
-    this.$http.get('', { id }).then((res) => {
-      console.log('res: ', res);
-      if (res.status) {
-        this.$message.success('审核通过');
-        this.$refs.table.setDataTable({});
-      }
-    });
+  // TODO: 全选通过
+  onSlotClick() {
+    const list = this.table.selectTableData;
+    const ids = list.map((v) => ({ id: v.id, type: v.type }));
+
+    console.log('ids', ids);
+    // handlePass(ids)
   }
 
-  handleReject(id: string) {
-    this.$http.get('', { id }).then((res) => {
-      console.log('res: ', res);
+  async handlePass(id: string, type: string) {
+    try {
+      const flag = await this.$utils._MessageConfirm('是否通过审核?', '提示');
+
+      if (!flag) return;
+
+      const api = this.$api.admin.activity.audit.pass;
+
+      const res = await this.$http.get(api, { id, type });
+
       if (res.status) {
-        this.$message.success('申请已驳回');
-        this.$refs.table.setDataTable({});
+        this.$message.success('审核通过');
+        this.table.setDataTable({});
       }
-    });
+    } catch (error) {
+      console.log('error', error);
+    }
+  }
+
+  async handleReject(id: string, type: string) {
+    this.rejectForm.id = id;
+    this.rejectForm.type = type;
+    this.rejectForm.visible = true;
+  }
+
+  onRejectSuccess() {
+    this.table.emitRefresh();
   }
 }
 </script>

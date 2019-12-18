@@ -14,7 +14,7 @@
                      prop="reply_text"
                      :id="{id:replyForm.id}"
                      :visible.sync="replyForm.visible"
-                     @onConfirm="onConfirm" />
+                     @onSuccess="onSuccess" />
 
   </div>
 </template>
@@ -65,7 +65,7 @@ export default class ComplaintsList extends Vue {
     return this.$api.common.complaints.reply;
   }
 
-  onConfirm() {
+  onSuccess() {
     this.$refs.table.emitRefresh();
   }
 

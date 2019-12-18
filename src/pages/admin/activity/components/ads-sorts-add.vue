@@ -22,7 +22,7 @@
       </el-form-item> -->
       <el-form-item label="介绍：">
         <el-input placeholder="请输入介绍"
-                  v-model="form[i].desc"
+                  v-model="form[i].introduction"
                   type="textarea"
                   rows="4"></el-input>
       </el-form-item>
@@ -40,7 +40,7 @@ interface SortItem {
   title: string;
   price: string;
   // validity: string;
-  desc: string;
+  introduction: string;
 }
 
 @Component
@@ -56,14 +56,13 @@ export default class ActvSortsAdd extends Vue {
     title: '',
     price: '',
     // validity: '',
-    desc: '',
+    introduction: '',
   };
 
   form = [this.temp];
 
   @Watch('value')
   onValueChange(val: any) {
-    console.log('value: ', val);
     if (val) {
       this.form = typeof val === 'string' ? JSON.parse(val) : val;
     }
@@ -71,7 +70,6 @@ export default class ActvSortsAdd extends Vue {
 
   @Watch('form')
   onFormChange(val: any) {
-    console.log('form: ', val);
     this.$emit('upadte:value', val);
   }
 

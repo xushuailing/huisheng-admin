@@ -27,20 +27,20 @@ export const ADS_TYPE: obj = {
 
 @Component
 export default class ActvAdsSorts extends Vue {
-  // TODO: 缺少有效期广告类型
   columns: ScTable.Columns = [
     {
       label: '广告类型',
-      prop: 'none',
+      prop: 'type',
+      width: 200,
       formater: (row, col) => ADS_TYPE[row[col.prop]] || '',
     },
     { label: '名称', prop: 'title' },
     {
       label: '价位',
-      prop: 'price',
-      formater: (row, col) => (row[col.prop] ? `￥ ${row[col.prop]}` : ''),
+      prop: 'min_price_max_price',
+      formater: (row, col) => `￥${row.min_price} - ￥${row.max_price}`,
     },
-    { label: '有效期', prop: 'none2' },
+    // { label: '有效期', prop: 'none2' },
     { label: '创建时间', prop: 'createtime' },
   ];
 
@@ -51,7 +51,6 @@ export default class ActvAdsSorts extends Vue {
     breadcrumbButtons: ['add'],
   };
 
-  // TODO: 查询需加字段：广告类型
   searchConfig: ScTable.Search = {
     data: [
       {
