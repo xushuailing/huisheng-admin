@@ -30,7 +30,7 @@ export default class ActvEffectDate extends Vue {
   @Prop([String, Array])
   readonly value!: string | IForm | undefined;
 
-  form: IForm = { isforever: 0, date: 0 };
+  form: IForm = { isforever: 0, date: 1 };
 
   @Watch('value')
   onValueChange(val: any) {

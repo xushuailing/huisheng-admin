@@ -17,11 +17,12 @@ import { obj } from '@/lib/@types/sc-param.d';
 export default class ActvAdsSortsDetail extends Vue {
   id: string = '';
 
+  sortAddValidate!: () => boolean;
+
   get api() {
     return this.$api.admin.activity.adsSorts.create;
   }
 
-  // TODO: 缺少广告位名称、广告位介绍字段，一个广告位应对应多组分类
   addConfig: ScForm.Add = {
     'label-width': '140px',
     header: { title: '新增分类' },
@@ -45,7 +46,14 @@ export default class ActvAdsSortsDetail extends Vue {
           label: '',
           prop: 'banner_list',
           inline: false,
-          tag: { tagType: 'component', components: SortAdd },
+          default: '',
+          tag: {
+            tagType: 'component',
+            components: SortAdd,
+            listeners: {
+              emitValidate: this.getSortAddThis,
+            },
+          },
         },
       ],
     ],
@@ -58,16 +66,21 @@ export default class ActvAdsSortsDetail extends Vue {
   }
 
   onSubmit(data: any) {
-    if (this.id) return { ...data, id: this.id };
-    return data;
+    if (this.sortAddValidate()) {
+      if (this.id) return { ...data, id: this.id };
+      return data;
+    }
+    return false;
+  }
+
+  getSortAddThis(validate: () => boolean) {
+    this.sortAddValidate = validate;
   }
 
   getDetails(id: string) {
     this.id = id;
 
     this.$http.get(this.$api.admin.activity.adsSorts.show, { id }).then(({ data }: obj) => {
-      console.log('res: ', data);
-
       for (let i = 0; i < this.addConfig.data.length; i++) {
         const item = this.addConfig.data[i];
         for (let index = 0; index < item.length; index++) {

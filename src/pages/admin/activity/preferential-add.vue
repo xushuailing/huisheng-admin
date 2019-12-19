@@ -15,8 +15,10 @@ import { ScForm } from '@/lib/@types/sc-form.d';
 export default class ActvPreferentialAdd extends Vue {
   api = this.$api.admin.activity.coupon.create;
 
+  // TODO: 缺少字段
   addConfig: ScForm.Add = {
     'label-width': '150px',
+    width: '80%',
     params: { shopid: 0, coupon_type: 0 },
     buttons: [{ mode: 'cancel', isHide: false, sort: 7 }, { mode: 'submit', text: '保存' }],
     rules: [
@@ -65,22 +67,23 @@ export default class ActvPreferentialAdd extends Vue {
         },
         {
           label: '发放日期：',
-          prop: 'strtime',
+          prop: 'none',
           tag: {
             tagType: 'date-picker',
             attr: { type: 'date', placeholder: '请选择发放日期' },
           },
         },
-        // {
-        //   label: '有效日期：',
-        //   prop: 'endtime',
-        //   tag: {
-        //     tagType: 'component',
-        //     components: EffectDate,
-        //   },
-        // },
+        {
+          label: '有效日期：',
+          prop: 'strtime_endtime',
+          tag: {
+            tagType: 'component',
+            components: EffectDate,
+          },
+        },
       ],
     ],
+    handleSubmit: (data) => data,
   };
 }
 </script>
