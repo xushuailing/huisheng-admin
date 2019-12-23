@@ -168,6 +168,15 @@ export default {
       imageClass: {
         index: `${url}/admin/crm_img_calss`,
       },
+      /** 外卖学院 */
+      takeOut: {
+        index: `${url}/admin/crm_takeaway_college`,
+        show: `${url}/admin/crm_img_list_find`,
+        delete: `${url}/admin/crm_takeaway_college_del`,
+        create: `${url}/admin/crm_takeaway_college_add`,
+        update: `${url}/admin/crm_takeaway_college_updete`,
+      },
+
     },
   },
 
