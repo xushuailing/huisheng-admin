@@ -20,7 +20,6 @@ export default {
     this.$emit('emitAddThis', this);
   },
   computed: {
-
     getTemporarilyKey() {
       return this.$utils._TemporarilyKey(this.$route, this.isTemporarily, 'add');
     },
@@ -162,14 +161,7 @@ export default {
       });
 
       const allData = { ...formData, ...params };
-      let submitData = handleSubmit ? await handleSubmit(allData, this) : allData;
-
-      if (
-        requestMethod === 'post' &&
-        (this.config.bodyType === 'formData' || !this.config.bodyType)
-      ) {
-        submitData = this.jsonToFromData(submitData);
-      }
+      const submitData = handleSubmit ? await handleSubmit(allData, this) : allData;
 
       if (!this.$utils._DataIsEmpty(submitData)) {
         this.emitAddCompleteFun(allData, false, 'prevent', null);
@@ -181,7 +173,15 @@ export default {
 
       const Loading = this.$utils._Loading.show({ text: '新增中...' });
 
-      this.$http[requestMethod](this.api, submitData, {
+      let submitForm = submitData;
+      if (
+        requestMethod === 'post' &&
+        (this.config.bodyType === 'formData' || !this.config.bodyType)
+      ) {
+        submitForm = this.jsonToFromData(submitData);
+      }
+
+      this.$http[requestMethod](this.api, submitForm, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },

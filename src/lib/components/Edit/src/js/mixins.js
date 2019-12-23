@@ -168,11 +168,8 @@ export default {
       });
 
       const allData = { ...data, ...params };
-      let submitData = handleSubmit ? await handleSubmit(allData, this) : allData;
+      const submitData = handleSubmit ? await handleSubmit(allData, this) : allData;
 
-      if (requestMethod === 'post' && (this.config.bodyType === 'formData' || !this.config.bodyType)) {
-        submitData = this.jsonToFromData(submitData);
-      }
 
       if (!this.$utils._DataIsEmpty(submitData)) {
         this.emitEditCompleteFun(allData, false, 'prevent', null);
@@ -184,7 +181,15 @@ export default {
 
       const Loading = this.$utils._Loading.show({ text: '修改中...' });
 
-      this.$http[requestMethod](this.api, submitData)
+      let submitForm = submitData;
+      if (
+        requestMethod === 'post' &&
+        (this.config.bodyType === 'formData' || !this.config.bodyType)
+      ) {
+        submitForm = this.jsonToFromData(submitData);
+      }
+
+      this.$http[requestMethod](this.api, submitForm)
         .then((res) => {
           const errmsg = (res.data && res.data.errmsg) || '修改成功';
 
