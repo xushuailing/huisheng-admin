@@ -141,9 +141,25 @@ export default {
 
     /** 代运营管理 */
     thirdpartnar: {
-      /** 代运营管理 > 奶爸代运营列表 */
+      /** 奶爸代运营列表 */
       index: {
         index: `${url}/admin/operation_package`,
+      },
+      /** 代运营设置 */
+      setting: {
+        index: `${url}/admin/crm_operational_setup_find`,
+        update: `${url}/admin/crm_operational_setup_find`,
+      },
+
+      /** 成本信息 */
+      cost: {
+        index: `${url}/admin/CostList`,
+        delete: `${url}/admin/Costdel`,
+        update: `${url}/admin/CostOneUpdate`,
+      },
+      /** 店铺诊断 */
+      shops: {
+        show: `${url}/admin/crm_img_list_find`,
       },
     },
 
@@ -176,7 +192,6 @@ export default {
         create: `${url}/admin/crm_takeaway_college_add`,
         update: `${url}/admin/crm_takeaway_college_updete`,
       },
-
     },
   },
 

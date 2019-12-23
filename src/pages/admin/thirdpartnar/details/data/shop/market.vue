@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white p-20 border-radius-4">
+  <div class="border-radius-4">
     <sc-edit ref="scEdit"
              mode="page"
              :api="api"
@@ -17,8 +17,8 @@ import { obj } from '@/lib/@types/sc-param.d';
 
 @Component
 export default class TpShopMarket extends Vue {
-  @Prop({ type: [String, Number], required: true })
-  id!: string;
+  // @Prop({ type: [String, Number], required: true })
+  // id!: string;
 
   // TODO: 缺少接口
   api = this.$api.test.create;

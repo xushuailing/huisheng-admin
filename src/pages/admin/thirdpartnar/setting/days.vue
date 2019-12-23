@@ -2,7 +2,6 @@
   <sc-min-table stripe
                 ref="table"
                 :columns-handler="columnsHandler"
-                :columns-props="{align:'center'}"
                 :columns="columns"
                 :editConfig="editConfig"
                 :table-config="tableConfig">
@@ -13,7 +12,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { ScForm } from '@/lib/@types/sc-form.d';
 
-const columns: ScTable.SetColumns = [['运营名称', 'name'], ['限时时间', 'day']];
+const columns: ScTable.SetColumns = [['运营名称', 'title'], ['限时时间', 'day']];
 
 @Component
 export default class TpDays extends Vue {
@@ -21,10 +20,10 @@ export default class TpDays extends Vue {
 
   columnsHandler = ['edit'];
 
-  // TODO: 缺少接口
+  // TODO: 缺少show接口
   tableConfig: ScTable.TableConfig = {
-    api: this.$api.test,
-    breadcrumbButtons: [],
+    api: this.$api.admin.thirdpartnar.setting,
+    isPagination: false,
   };
 
   editConfig: ScTable.Eidt = {
@@ -36,7 +35,7 @@ export default class TpDays extends Vue {
       [
         {
           label: '代运营名称：',
-          prop: 'name',
+          prop: 'title',
           tag: {
             tagType: 'component',
             components: Vue.extend({

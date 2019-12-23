@@ -6,9 +6,9 @@
                size="small"
                type="primary">发送感谢信</el-button>
     <el-tabs v-model="activeName"
-             type="card"
-             :lazy="true">
-      <el-tab-pane v-for="tab in tabs"
+             type="card">
+      <el-tab-pane lazy
+                   v-for="tab in tabs"
                    :key="tab.name"
                    :label="tab.label"
                    :name="tab.name">
@@ -37,7 +37,7 @@ export default class TpDetail extends Vue {
     { label: '数据上传', name: 'data', component: data },
   ];
 
-  activeName = this.tabs[0] && this.tabs[0].name;
+  activeName = this.tabs[0].name;
 }
 </script>
 <style lang="scss" scoped>

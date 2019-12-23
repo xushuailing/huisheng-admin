@@ -1,6 +1,6 @@
 
 <template>
-  <div class="tp-shop">
+  <div class="tp-shop bg-white p-20">
     <div class="tp-shop__header">
       <el-button size="small"
                  type="primary">一键导入</el-button>
@@ -8,14 +8,13 @@
                  type="primary">上传数据</el-button>
     </div>
     <el-tabs v-model="activeName"
-             type="card"
-             :lazy="true">
+             type="card">
       <el-tab-pane v-for="tab in tabs"
                    :key="tab.name"
                    :label="tab.label"
+                   lazy
                    :name="tab.name">
         <component :is="tab.component"
-                   :id="id"
                    class="mt-10"></component>
       </el-tab-pane>
     </el-tabs>
@@ -23,12 +22,12 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import market from './market.vue';
-import peer from './peer.vue';
-import setting from './setting.vue';
-import data from './data.vue';
-import plan from './plan.vue';
-import solution from './solution.vue';
+import UseMarket from './market.vue';
+import UsePeer from './peer.vue';
+import UseSetting from './setting.vue';
+import UseData from './data.vue';
+import UsePlan from './plan.vue';
+import UseSolution from './solution.vue';
 
 @Component
 export default class TpShop extends Vue {
@@ -37,24 +36,35 @@ export default class TpShop extends Vue {
   }
 
   tabs = [
-    { label: '市场分析', name: 'market', component: market },
-    { label: '优秀同行', name: 'peer', component: peer },
-    { label: '基础设置', name: 'setting', component: setting },
-    { label: '数据分析', name: 'data', component: data },
-    { label: '营销策划', name: 'plan', component: plan },
-    { label: '解决方案', name: 'solution', component: solution },
+    { label: '市场分析', name: 'market', component: UseMarket },
+    { label: '优秀同行', name: 'peer', component: UsePeer },
+    { label: '基础设置', name: 'setting', component: UseSetting },
+    { label: '数据分析', name: 'data', component: UseData },
+    { label: '营销策划', name: 'plan', component: UsePlan },
+    { label: '解决方案', name: 'solution', component: UseSolution },
   ];
 
   activeName = this.tabs[0] && this.tabs[0].name;
+
+  mounted() {
+    this.getData();
+  }
+
+  // TODO: 接口报错
+  async getData() {
+    const api = this.$api.admin.thirdpartnar.shops.show;
+    const { data } = await this.$http.get(api, { id: 1 });
+    console.log('data :', data);
+  }
 }
 </script>
 <style lang="scss" scoped>
-  .tp-shop {
-    position: relative;
-    &__header {
-      position: absolute;
-      top: 0;
-      right: 0;
-    }
+.tp-shop {
+  position: relative;
+  &__header {
+    position: absolute;
+    top: 0;
+    right: 0;
   }
+}
 </style>
