@@ -19,14 +19,14 @@ import { obj } from '@/lib/@types/sc-param.d';
 @Component
 export default class TpIndex extends Vue {
   columns: ScTable.Columns = [
-    { label: '套餐类型', prop: 'none1' },
-    { label: '店铺名称', prop: 'none2' },
-    { label: '平台选择', prop: 'none3' },
-    { label: '有效期', prop: 'none4' },
-    { label: '入驻时间', prop: 'none5' },
+    { label: '套餐类型', prop: 'package_name' },
+    { label: '店铺名称', prop: 'shop_name' },
+    { label: '平台选择', prop: 'platform' },
+    { label: '有效期', prop: 'start_time|end_time' },
+    { label: '入驻时间', prop: 'time' },
     {
       label: '状态',
-      prop: 'none6',
+      prop: 'status',
       formater: (row, col) => {
         const value = row[col.prop];
         return [{ class: value === '正在运营' ? 'sc-font-danger' : 'sc-font-primary' }, value];
@@ -41,7 +41,7 @@ export default class TpIndex extends Vue {
   ];
 
   tableConfig: ScTable.TableConfig = {
-    api: this.$api.admin.activity.ads,
+    api: this.$api.admin.thirdpartnar.index,
   };
 
   searchConfig: ScTable.Search = {

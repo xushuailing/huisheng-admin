@@ -138,6 +138,37 @@ export default {
         delete: `${url}/admin/delCoupon`,
       },
     },
+
+    /** 代运营管理 */
+    thirdpartnar: {
+      /** 代运营管理 > 奶爸代运营列表 */
+      index: {
+        index: `${url}/admin/operation_package`,
+      },
+    },
+
+    /** 运营小知识 */
+    operate: {
+      /** 好差评模板列表 */
+      template: {
+        index: `${url}/admin/crm_template_content`,
+        create: `${url}/admin/crm_template_content_add`,
+        delete: `${url}/admin/crm_template_content_del`,
+      },
+      /** 好差评模板分类列表 */
+      class: {
+        index: `${url}/admin/crm_template_class`,
+      },
+      /** 图片精选，海报专场 */
+      image: {
+        index: `${url}/admin/crm_img_list`,
+        create: `${url}/admin/crm_img_list_add`,
+        delete: `${url}/admin/crm_img_list_del`,
+      },
+      imageClass: {
+        index: `${url}/admin/crm_img_calss`,
+      },
+    },
   },
 
   /** 商家的接口 */

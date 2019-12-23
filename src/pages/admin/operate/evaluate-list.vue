@@ -8,7 +8,7 @@
                    lazy
                    name="1">
         <sc-min-table stripe
-                      ref="table"
+                      ref="table1"
                       :columns-handler="good.columnsHandler"
                       :columns="good.columns"
                       :table-config="good.tableConfig">
@@ -18,7 +18,7 @@
                    lazy
                    name="2">
         <sc-min-table stripe
-                      ref="table"
+                      ref="table2"
                       :columns-handler="poor.columnsHandler"
                       :columns="poor.columns"
                       :table-config="poor.tableConfig">
@@ -27,32 +27,36 @@
     </el-tabs>
 
     <sc-add-form :visible.sync="visible"
-                 :api="api"
-                 :config="addConfig">
+                 :api="addApi"
+                 :config="addConfig"
+                 @emitAddComplete="onAddComplete">
     </sc-add-form>
   </div>
 </template>
 <script lang='ts'>
-import { Component, Vue, Prop } from 'vue-property-decorator';
+import { Component, Vue, Prop, Ref } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { ScForm } from '../../../lib/@types/sc-form';
 
 const columns: ScTable.SetColumns = [
-  ['用户头像', 'none1', 100, null, 'img'],
-  ['名称', 'none2'],
-  ['内容', 'none3'],
-  ['模板分类', 'none4'],
-  ['创建时间', 'none5'],
+  ['用户头像', 'head_portrait', 100, null, 'img'],
+  ['名称', 'user_name'],
+  ['内容', 'content'],
+  ['模板分类', 'class_name'],
+  ['创建时间', 'time'],
 ];
 @Component
 export default class OperateEvaluate extends Vue {
-  // 缺少好评,差评模板列表，添加，删除，评价分类接口
+  @Ref('table1') table1!: ScTable;
+
+  @Ref('table2') table2!: ScTable;
+
   good = {
     columns: this.$utils._SetTableColumns(columns),
     columnsHandler: ['del'],
     tableConfig: {
-      api: this.$api.admin.merchant.shop.goods,
-      // breadcrumbButtons: ['add'],
+      api: this.$api.admin.operate.template,
+      index: { type: 1 },
     },
   };
 
@@ -60,13 +64,16 @@ export default class OperateEvaluate extends Vue {
     columns: this.$utils._SetTableColumns(columns),
     columnsHandler: ['del'],
     tableConfig: {
-      api: this.$api.admin.merchant.shop.goods,
+      api: this.$api.admin.operate.template,
+      index: { type: 2 },
     },
   };
 
   visible = false;
 
   activeName = '1';
+
+  templateClass: any[] = [];
 
   addConfig: ScForm.Add = {
     buttons: [
@@ -86,7 +93,7 @@ export default class OperateEvaluate extends Vue {
       [
         {
           label: '评价类型：',
-          prop: 'none6',
+          prop: 'type',
           default: 1,
           tag: {
             tagType: 'radio',
@@ -96,25 +103,51 @@ export default class OperateEvaluate extends Vue {
         },
         {
           label: '评价分类：',
-          prop: 'none7',
-          tag: { tagType: 'select', attr: { placeholder: '请选择评价分类' }, options: [] },
+          prop: 'class_id',
+          tag: {
+            tagType: 'select',
+            attr: { placeholder: '请选择评价分类' },
+            options: this.getTemplateClass,
+          },
         },
         {
           label: '评价内容：',
-          prop: 'none8',
+          prop: 'content',
           tag: { attr: { type: 'textarea', rows: 6, placeholder: '请输入评价内容' } },
         },
       ],
     ],
   };
 
-  // TODO: 接口没有
   get addApi() {
-    return this.$api.admin.setting.platform.create;
+    return this.$api.admin.operate.template.create;
   }
 
   onAddTemplate() {
     this.visible = true;
+  }
+
+  onAddComplete({ status }: ScForm.EventComplete) {
+    if (status) {
+      if (this.table1) this.table1.emitRefresh();
+      if (this.table2) this.table2.emitRefresh();
+    }
+  }
+
+  async getTemplateClass() {
+    try {
+      if (this.templateClass.length) {
+        return this.templateClass;
+      }
+      const api = this.$api.admin.operate.class.index;
+      const { data } = await this.$http.get<any[]>(api, { limit: 9e5 });
+
+      const list = data.map((v) => ({ value: v.id, label: v.name }));
+      this.templateClass = list;
+      return list;
+    } catch (error) {
+      return [];
+    }
   }
 }
 </script>

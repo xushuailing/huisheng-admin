@@ -15,12 +15,13 @@ import { ScForm } from '@/lib/@types/sc-form.d';
 import { obj } from '@/lib/@types/sc-param.d';
 
 const columns: ScTable.SetColumns = [
-  ['海报分类', 'none1'],
-  ['图片', 'none2', 200, null, 'img'],
-  ['创建时间', 'createtime'],
+  ['海报分类', 'class_name'],
+  ['图片', 'img', 200, null, 'img'],
+  ['创建时间', 'time'],
 ];
 
-// TODO: 列表，删除，添加，海报分类接口
+const type = 2; // 图片
+
 @Component
 export default class OperatePoster extends Vue {
   columns: ScTable.Columns = this.$utils._SetTableColumns(columns);
@@ -34,7 +35,8 @@ export default class OperatePoster extends Vue {
   };
 
   tableConfig: ScTable.TableConfig = {
-    api: this.$api.admin.activity.ads,
+    api: this.$api.admin.operate.image,
+    index: { type },
     breadcrumbButtons: ['add'],
     handleWidth: 100,
   };
@@ -48,10 +50,10 @@ export default class OperatePoster extends Vue {
     ],
     rules: [
       {
-        none1: {
+        class_id: {
           value: [{ required: true, message: '请输入海报分类', trigger: 'change' }],
         },
-        none2: {
+        img: {
           value: [{ required: true, message: '请添加图片', trigger: 'change' }],
         },
       },
@@ -60,7 +62,7 @@ export default class OperatePoster extends Vue {
       [
         {
           label: '海报图片：',
-          prop: 'none2',
+          prop: 'img',
           tag: {
             tagType: 'upload-img',
             attr: { limit: 1 },
@@ -68,11 +70,34 @@ export default class OperatePoster extends Vue {
         },
         {
           label: '海报分类：',
-          prop: 'none1',
-          tag: { options: [], tagType: 'select', attr: { placeholder: '请输入海报分类' } },
+          prop: 'class_id',
+          tag: {
+            options: this.getImageClass,
+            tagType: 'select',
+            attr: { placeholder: '请输入海报分类' },
+          },
         },
       ],
     ],
+    handleSubmit: (data) => ({ ...data, type }),
   };
+
+  imageClass: any[] = [];
+
+  async getImageClass() {
+    try {
+      if (this.imageClass.length) {
+        return this.imageClass;
+      }
+      const api = this.$api.admin.operate.imageClass.index;
+      const { data } = await this.$http.get<any[]>(api, { limit: 9e5, type });
+      console.log('data', data);
+      const list = data.map((v) => ({ value: v.id, label: v.name }));
+      this.imageClass = list;
+      return list;
+    } catch (error) {
+      return [];
+    }
+  }
 }
 </script>
