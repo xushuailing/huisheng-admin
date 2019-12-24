@@ -2,9 +2,9 @@
 <template>
   <div class="TpSetting">
     <el-tabs v-model="activeName"
-             type="card"
-             :lazy="true">
-      <el-tab-pane v-for="tab in tabs"
+             type="card">
+      <el-tab-pane lazy
+                   v-for="tab in tabs"
                    :key="tab.name"
                    :label="tab.label"
                    :name="tab.name">
@@ -28,6 +28,6 @@ export default class TpSetting extends Vue {
     { label: '代运营', name: 'days', component: days },
   ];
 
-  activeName = this.tabs[0].name;
+  activeName = this.tabs[1].name;
 }
 </script>

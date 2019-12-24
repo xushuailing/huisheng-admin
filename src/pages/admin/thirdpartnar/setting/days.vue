@@ -20,7 +20,6 @@ export default class TpDays extends Vue {
 
   columnsHandler = ['edit'];
 
-  // TODO: 缺少show接口
   tableConfig: ScTable.TableConfig = {
     api: this.$api.admin.thirdpartnar.setting,
     isPagination: false,
@@ -28,8 +27,8 @@ export default class TpDays extends Vue {
 
   editConfig: ScTable.Eidt = {
     type: 'plain',
-    width: '70%',
-    // header: { title: '' },
+    requestMethod: 'get',
+    header: { title: '修改代运营' },
     rules: [],
     data: [
       [

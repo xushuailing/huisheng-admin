@@ -17,8 +17,8 @@ import { obj } from '@/lib/@types/sc-param.d';
 
 @Component
 export default class TpMarketPostion extends Vue {
-  @Prop({ type: [String, Number], required: true })
-  id!: string;
+  // @Prop({ type: [String, Number], required: true })
+  // id!: string;
 
   // TODO: 缺少接口
   api = this.$api.test.create;

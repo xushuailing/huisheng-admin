@@ -29,12 +29,14 @@ export default class TpCost extends Vue {
     价格: { formater: (row, col) => `￥${row[col.prop]}` },
   };
 
-  // TODO: 删除字段不符合，没有show接口
+  // TODO: 删除字段不符合
   tableConfig: ScTable.TableConfig = {
     api: this.$api.admin.thirdpartnar.cost,
+
   };
 
   editConfig: ScTable.Eidt = {
+    requestMethod: 'get',
     type: 'plain',
     width: '70%',
     header: { title: '修改成本信息' },

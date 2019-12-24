@@ -148,7 +148,7 @@ export default {
       /** 代运营设置 */
       setting: {
         index: `${url}/admin/crm_operational_setup_find`,
-        update: `${url}/admin/crm_operational_setup_find`,
+        update: `${url}/admin/crm_operational_setup_update`,
       },
 
       /** 成本信息 */
@@ -160,6 +160,12 @@ export default {
       /** 店铺诊断 */
       shops: {
         show: `${url}/admin/crm_img_list_find`,
+      },
+
+      /** 营销策划 */
+      market: {
+        show: `${url}/admin/marketingPlanning_find`,
+        update: `${url}/admin/marketingPlanning_update`,
       },
     },
 

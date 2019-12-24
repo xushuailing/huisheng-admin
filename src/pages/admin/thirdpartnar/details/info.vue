@@ -20,8 +20,8 @@ import { obj } from '@/lib/@types/sc-param.d';
 // TODO: 95、详情接口
 @Component
 export default class TpShopInfo extends Vue {
-  @Prop({ type: String, required: true })
-  id!: string;
+  // @Prop({ type: String, required: true })
+  // id!: string;
 
   data = {
     name: { label: '店铺名称：', value: '名称名称名称' },

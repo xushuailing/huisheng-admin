@@ -16,6 +16,7 @@
                    :name="tab.name">
         <component v-if="tab.component"
                    :is="tab.component"
+                   :name="tab.name"
                    :id="id"
                    class="mt-10"></component>
       </el-tab-pane>
@@ -34,24 +35,34 @@ export default class TpShop extends Vue {
   }
 
   tabs = [
-    { label: '产品定位', name: 'position', component: position },
-    { label: '爆款引流', name: 'hot' },
-    { label: '满减活动', name: 'reduction' },
-    { label: '配送设计', name: 'delivery' },
-    { label: '其他活动', name: 'others' },
+    { label: '产品定位', name: 'product_pricing', component: position },
+    { label: '爆款引流', name: 'explosive_drainage' },
+    { label: '满减活动', name: 'full_scale_activities' },
+    { label: '配送设计', name: 'distribution_design' },
+    { label: '其他活动', name: 'other_activities' },
     { label: '营销策划表', name: 'plan', component: plan },
   ];
 
-  activeName = this.tabs[0] && this.tabs[0].name;
+  activeName = this.tabs[0].name;
+
+  mounted() {
+    this.getData();
+  }
+
+  async getData() {
+    const api = this.$api.admin.thirdpartnar.market.show;
+    const { data } = await this.$http.get(api, { id: 16 });
+    console.log('data', data);
+  }
 }
 </script>
 <style lang="scss" scoped>
-  .tp-shop {
-    position: relative;
-    &__header {
-      position: absolute;
-      top: 0;
-      right: 0;
-    }
+.tp-shop {
+  position: relative;
+  &__header {
+    position: absolute;
+    top: 0;
+    right: 0;
   }
+}
 </style>
