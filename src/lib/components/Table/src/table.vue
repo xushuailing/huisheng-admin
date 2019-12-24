@@ -397,7 +397,7 @@ export default {
 
     // 操作事件
     onHandlerClick(scope, type) {
-      if (this.api.show && type === 'edit') {
+      if (type === 'edit') {
         this.getEditData(scope, type);
         return;
       }
@@ -482,21 +482,32 @@ export default {
       const loading = this.$utils._Loading.show();
       const { id } = scope.row;
       const api = this.api.show;
-      this.$http
-        .get(api, { id })
-        .then((res) => {
-          const { data } = res;
-          // 抛出修改数据
-          this.$emit('emitGetEditData', data);
-          this.$emit('emitTableHandlerClick', {
-            row: scope.row,
-            index: scope.$index,
-            type,
+      if (api) {
+        this.$http
+          .get(api, { id })
+          .then((res) => {
+            const { data } = res;
+            // 抛出修改数据
+            this.$emit('emitGetEditData', data);
+            this.$emit('emitTableHandlerClick', {
+              row: scope.row,
+              index: scope.$index,
+              type,
+            });
+          })
+          .finally(() => {
+            loading.close();
           });
-        })
-        .finally(() => {
-          loading.close();
+      } else {
+        this.$emit('emitGetEditData', scope.row);
+        this.$emit('emitTableHandlerClick', {
+          row: scope.row,
+          index: scope.$index,
+          type,
         });
+
+        loading.close();
+      }
     },
   },
   mounted() {

@@ -414,8 +414,8 @@ export default {
       this.$http
         .get(api, param)
         .then((data) => {
-          const limit = Number(data.limit);
-          const page = Number(data.page);
+          const limit = Number(data.limit) || undefined;
+          const page = Number(data.page) || undefined;
           const count = Number(data.count);
 
           /** 全部删除最后一页数据时,再次调用接口并且 page-1 */
