@@ -44,7 +44,7 @@
                     prop="effectTime">
         <effect-time :value.sync="form.effectTime"></effect-time>
       </el-form-item>
-      <el-form-item label="满减规则说明："
+      <el-form-item label="折扣规则说明："
                     prop="desc"
                     label-width="110px">
         <el-input v-model="form.desc"
@@ -226,9 +226,11 @@ export default class MarketAdd extends Vue {
   }
 
   getDetail() {
-    this.$http.post(this.$api.merchant.product.show, { gid: this.id, shopid: _Shopid }).then((res) => {
-      console.log('res: ', res);
-    });
+    this.$http
+      .post(this.$api.merchant.product.show, { gid: this.id, shopid: _Shopid })
+      .then((res) => {
+        console.log('res: ', res);
+      });
   }
 
   mounted() {

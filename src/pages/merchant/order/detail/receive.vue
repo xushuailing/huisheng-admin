@@ -1,7 +1,8 @@
 <template>
   <div class="order-receive-detail bg-white border-radius-4 p-30 mb-20">
-    <status :status="data.order && data.order.status"
-            :time="data.time"></status>
+    <status :status="order.status"
+            :time="order.time"
+            :id="id"></status>
 
     <el-radio-group v-model="currentTab"
                     size="medium"
@@ -26,9 +27,20 @@
                          :data="address"
                          style="margin-top:0"></order-address>
           <!-- TODO: 只有实物有 -->
-          <div class="mt-10">运送方式：快递</div>
-          <div class="h100"
-               ref="logistics"></div>
+          <div class="mt-10">运送方式：{{logistics.expresstitle}}</div>
+          <div v-if="logistics.data"
+               ref="logistics"
+               class="mt-30">
+            <div v-for="(item,i) in logistics.data"
+                 :key="i"
+                 :class="['logistics-item flex',i?'font-info':'font-primary']">
+              <span :class="['font-16',i?'':'font-bold']">
+                {{i==logistics.data.length-1?'已发货':'运输中'}}
+              </span>
+              <span class="ml-30">{{item.time}}</span>
+              <span class="flex-1 ml-30">{{item.context}}</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -129,6 +141,58 @@ export default class OrderReceiveDetail extends Mixins(Mixin) {
     Loading.close();
   }
 
+  logistics = {
+    data: [
+      {
+        time: '2019-06-15 12:02:05',
+        ftime: '2019-06-15 12:02:05',
+        context: '快件由【华东绍兴枢纽】发往【SN杭州城站】',
+      },
+      {
+        time: '2019-06-15 09:33:55',
+        ftime: '2019-06-15 09:33:55',
+        context:
+          '客官，您的快件已签收，签收人【门卫】，如有任何疑问，请联系【18969974306】/【SN杭州上城复兴路快递站18314895580】或致电总部服务热线4001888888。风里来雨里去，快递小哥不容易！【天天小哥诚邀您点亮五颗星哦】',
+      },
+      {
+        time: '2019-06-15 08:29:40',
+        ftime: '2019-06-15 08:29:40',
+        context: '【SN杭州上城复兴路快递站18314895580】的赵志永18969974306正在派件',
+      },
+      {
+        time: '2019-06-15 07:51:08',
+        ftime: '2019-06-15 07:51:08',
+        context: '快件到达【SN杭州上城复兴路快递站18314895580】',
+      },
+      {
+        time: '2019-06-14 11:54:32',
+        ftime: '2019-06-14 11:54:32',
+        context: '快件到达【华东绍兴枢纽】',
+      },
+      {
+        time: '2019-06-13 10:15:30',
+        ftime: '2019-06-13 10:15:30',
+        context: '快件由【华北廊坊枢纽】发往【华东绍兴枢纽】',
+      },
+      {
+        time: '2019-06-13 10:08:14',
+        ftime: '2019-06-13 10:08:14',
+        context: '快件到达【华北廊坊枢纽】',
+      },
+      {
+        time: '2019-06-13 09:16:16',
+        ftime: '2019-06-13 09:16:16',
+        context: '快件由【SN北京市场部4001888888】发往【华北廊坊枢纽】',
+      },
+      {
+        time: '2019-06-13 08:57:09',
+        ftime: '2019-06-13 08:57:09',
+        context: '【SN北京市场部4001888888】的恒信纸业巴枪二已收件',
+      },
+    ],
+    expresstitle: '天天快递',
+  };
+
   getLogistics() {
     const loading = this.$utils._Loading.show({ target: this.$refs.logistics.$el });
     const api = this.$api.merchant.order.logistics;
@@ -136,7 +200,11 @@ export default class OrderReceiveDetail extends Mixins(Mixin) {
     this.$http
       .get(api, param)
       .then((res) => {
-        this.data = res.data || {};
+        const logistics = res.data || {};
+        if (logistics.data) {
+          logistics.data = logistics.data.receive();
+        }
+        this.logistics = logistics;
       })
       .catch((err) => {
         this.$utils._ResponseError(err);
@@ -165,7 +233,7 @@ export default class OrderReceiveDetail extends Mixins(Mixin) {
 
   mounted() {
     this.getDetail();
-    this.getLogistics();
+    // this.getLogistics();
   }
 }
 </script>
@@ -175,6 +243,20 @@ export default class OrderReceiveDetail extends Mixins(Mixin) {
     min-height: 550px;
     .border-primary {
       border: 1px solid rgba(86, 119, 252, 0.59);
+    }
+    .logistics-item {
+      padding-bottom: 40px;
+      position: relative;
+    }
+    .logistics-item:not(:last-child)::before {
+      position: absolute;
+      top: 28px;
+      left: 24px;
+      display: block;
+      content: '';
+      width: 1px;
+      height: calc(100% - 34px);
+      background-color: #bbbbbb;
     }
   }
 </style>

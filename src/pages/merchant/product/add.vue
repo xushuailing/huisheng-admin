@@ -2,15 +2,15 @@
   <div class="bg-white border-radius-4 p-30">
     <el-form ref="form"
              :model="form"
-             :rules="rules"
+             :rules="isDetail?{}:rules"
              size="small">
       <el-form-item label="产品分类："
-                    prop="sort">
-        <el-select v-model="form.sort"
+                    prop="pid">
+        <el-select v-model="form.pid"
                    :disabled="isDetail">
           <el-option v-for="item in sorts"
                      :key="item.id"
-                     :label="item.name"
+                     :label="item.title"
                      :value="item.id">
           </el-option>
         </el-select>
@@ -53,17 +53,22 @@
         </div>
       </el-form-item>
       <el-form-item label="商品详情："
-                    prop="detail">
+                    prop="content">
         <div class="font-info">仅支持尺寸1:1、jpg格式</div>
-        <sc-editor v-model="form.detail"
-                   :disabled="isDetail"
+        <el-input v-if="isDetail"
+                  :value="form.content"
+                  type="textarea"
+                  disabled
+                  autosize></el-input>
+        <sc-editor v-else
+                   v-model="form.content"
                    ref="scEditor"
                    class="mt-10">
         </sc-editor>
       </el-form-item>
       <el-form-item label="发货时间："
-                    prop="deliveryTime">
-        <el-checkbox v-model="form.deliveryTime"
+                    prop="delivery_time">
+        <el-checkbox v-model="form.delivery_time"
                      :disabled="isDetail">三天内发货</el-checkbox>
       </el-form-item>
       <el-form-item>
@@ -75,19 +80,20 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator';
+import { Component, Vue, Watch, Mixins } from 'vue-property-decorator';
 import EditTable from '@/components/editTable.vue';
-import { ScEditTable } from '@/components/@types/sc-edit-table.d';
-import { _GetTableSpan, _ObjectSpanMethod, TableColumns, MergeKey } from '@/utils/handleTableSpan';
-import { obj } from '@/lib/@types/sc-param.d';
 import { _Shopid } from '../config';
+import AddMixin from './add-mixin';
+import { _GetTableSpan, _ObjectSpanMethod, TableColumns, MergeKey } from '@/utils/handleTableSpan';
+import { ScEditTable } from '@/components/@types/sc-edit-table.d';
+import { obj } from '@/lib/@types/sc-param.d';
 
 interface Form {
-  sort: string;
+  pid: string;
   name: string[];
   size: string[];
-  detail: string;
-  deliveryTime: boolean;
+  content: string;
+  delivery_time: boolean;
 }
 
 interface Option {
@@ -96,11 +102,11 @@ interface Option {
 }
 
 const _MergeKeys: MergeKey = {
-  index: ['sort'],
+  index: ['pid'],
 };
 
 @Component({ components: { EditTable } })
-export default class ProductAdd extends Vue {
+export default class ProductAdd extends Mixins(AddMixin) {
   $refs!: {
     table: any;
     form: any;
@@ -111,18 +117,15 @@ export default class ProductAdd extends Vue {
   }
 
   get isDetail() {
-    // TODO: params 拿不到
-    console.log('!!this.$route: ', this.$route);
-    return !!this.$route.query.detail;
+    return !!this.$route.query.id;
   }
 
   form: Form = {
-    sort: '',
-    // TODO: 怎么区分当前是虚拟还是实物，虚拟 1 行，实物 2 行
+    pid: '',
     name: [''],
     size: [],
-    detail: '',
-    deliveryTime: true,
+    content: '',
+    delivery_time: true,
   };
 
   rules = {
@@ -130,8 +133,8 @@ export default class ProductAdd extends Vue {
       { required: true, message: '请输入商品规格', trigger: ['blur', 'change'] },
       { validator: this.checkSize, trigger: ['blur', 'change'] },
     ],
-    detail: [{ required: true, message: '请输入商品详情', trigger: ['blur', 'change'] }],
-    deliveryTime: [{ required: true, message: '请选择发货时间', trigger: ['blur', 'change'] }],
+    content: [{ required: true, message: '请输入商品详情', trigger: ['blur', 'change'] }],
+    delivery_time: [{ required: true, message: '请选择发货时间', trigger: ['blur', 'change'] }],
   };
 
   sorts: Option[] = [];
@@ -263,18 +266,26 @@ export default class ProductAdd extends Vue {
     // });
   }
 
-  getDetail() {
+  async getDetail() {
     const api = this.$api.merchant.product.show;
-    const param = { gid: this.id, shopid: _Shopid };
-    this.$http.post(api, param).then((res) => {
-      console.log('res: ', res);
+    const res = await this.$http.get(api, { gid: this.id, shopid: _Shopid });
+    const data = res.data || {};
+    Object.keys(this.form).forEach((key) => {
+      if (key in data) {
+        (this.form as obj)[key] = data[key];
+      }
     });
   }
 
+  async getGoodsType() {
+    const api = this.$api.merchant.product.goodsType;
+    const res = await this.$http.get(api, { shopid: _Shopid });
+    this.sorts = res.data || [];
+  }
+
   mounted() {
-    if (this.isDetail) {
-      this.getDetail();
-    }
+    this.getGoodsType();
+    this.getDetail();
   }
 }
 </script>

@@ -23,11 +23,11 @@ export default class OrderStatus extends Vue {
         address_provinces = '',
         address_city = '',
         address_areas = '',
-        address = '',
         address_title = '',
+        address = '',
       } = this.data;
-      return `${username}，${phone}，${address_provinces}${address_city}${address_areas}${address ||
-        address_title}`;
+      const addressTitle = address || address_title || '';
+      return `${username}，${phone}，${address_provinces}${address_city}${address_areas}${addressTitle}`;
     }
     return '';
   }

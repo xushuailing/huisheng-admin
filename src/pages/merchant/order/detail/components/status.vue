@@ -8,7 +8,7 @@
     </div>
     <div v-if="remainTime"
          class="font-black">
-      若用户在 <span class="font-danger">{{remainTime}}</span> 内{{tips}}
+      若用户在 <span class="font-danger">{{timeString}}</span> 内{{tips}}
     </div>
   </el-tag>
 </template>
@@ -19,22 +19,32 @@ import { obj } from '@/lib/@types/sc-param.d';
 
 @Component
 export default class OrderStatus extends Mixins(Mixin) {
+  @Prop([Number, String]) id!: number | string;
+
   @Prop([Number, String]) status!: number | string;
 
-  get tips() {
-    return this.status == 1 ? '未付款，系统将自动取消订单' : '未收货，系统将自动确认收货';
+  get isPay() {
+    return this.status == 1;
   }
 
-  @Prop(String) time!: string;
+  get tips() {
+    return this.isPay ? '未付款，系统将自动取消订单' : '未收货，系统将自动确认收货';
+  }
+
+  @Prop([Number, String]) time!: number;
 
   remainTime = this.time;
 
+  get timeString() {
+    return this.$utils._Dayjs(this.remainTime * 1000).format('HH:mm:ss');
+  }
+
   @Watch('time', { immediate: true })
-  onTimeChange(time: string) {
-    this.remainTime = time;
+  onTimeChange(time: number) {
+    this.remainTime = this.time;
+    this.handleTimeout();
 
     if (time) {
-      console.log('time: ', time);
       this.timeDown();
     }
   }
@@ -42,27 +52,42 @@ export default class OrderStatus extends Mixins(Mixin) {
   timer: any = null;
 
   get flag() {
-    return this.remainTime === '00:00:00';
+    return this.remainTime === 0;
   }
 
   timeDown() {
     this.timer = setInterval(() => {
       if (this.flag) {
         clearInterval(this.timer);
+        this.handleTimeout();
+      } else {
+        this.remainTime--;
       }
-      this.remainTime = this.getTime();
     }, 1000);
   }
 
-  getTime() {
-    const [hour, minute, second] = this.remainTime.split(':').map(Number);
-    const time = (hour * 60 + minute) * 60 + second;
-    const now = time - 1;
-    const curHour = Math.floor(Math.floor(now / 60) / 60);
-    const curMinute = Math.floor(now / 60) % 60;
-    const curSecond = now - curHour * 3600 - curMinute * 60;
-    const res = `${curHour}:${curMinute}:${curSecond}`;
-    return res;
+  handleTimeout() {
+    if (!this.time) return;
+
+    const apis = this.$api.merchant.order;
+    const api = this.status == 1 ? apis.close : apis.confirm;
+    const message = this.isPay ?
+      '该订单超过24小时未支付，已自动关闭！' :
+      '该订单超过7天未确认收货，系统已自动收货！';
+
+    this.$http
+      .get(api, { id: this.id })
+      .then((res) => {
+        if (res.status) {
+          this.$message.error(message);
+          this.$router.push('order');
+        } else {
+          this.$message.error('自动关闭订单失败');
+        }
+      })
+      .catch((err) => {
+        this.$utils._ResponseError(err);
+      });
   }
 
   destroyed() {

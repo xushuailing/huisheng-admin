@@ -16,7 +16,7 @@
              @select-all="onSelectAll"
              @emitGetTableDataComplete="getTableData"
              class="mt-20">
-      <template slot-scope="{ row, width }">
+      <template slot-scope="{ row }">
         <o-table-row>
           <div slot="top_th">
             <span>订单编号：{{row.ordernumber}}</span>
@@ -26,11 +26,11 @@
           <div v-for="item in row.ordergoods"
                :key="item.id"
                class="flex-jc-ac text-c">
-            <el-checkbox-group v-show="currentTab===2"
+            <!-- <el-checkbox-group v-show="currentTab===2"
                                v-model="selection"
                                :style="getWidth(width[0])">
               <el-checkbox :label="item.id">{{''}}</el-checkbox>
-            </el-checkbox-group>
+            </el-checkbox-group> -->
             <div class="flex-ac flex-1">
               <img :width="40"
                    :height="40"
@@ -196,8 +196,7 @@ export default class Order extends Mixins(Mixin) {
       3: 'receive',
       4: 'comment',
     };
-    console.log(': ', type[status]);
-
+    // console.log(': ', type[status]);
     this.$router.push({ path: `${type[status] || 'invalid'}-detail`, query: { id } });
   }
 
