@@ -13,21 +13,26 @@ import { ScForm } from '@/lib/@types/sc-form.d';
 @Component
 export default class SettingRoleList extends Vue {
   get api() {
-    return ''; //  this.$api.admin.activity.adsSorts.create;
+    return this.$api.merchant.ads.addGoods;
   }
 
   addConfig: ScForm.Add = {
     buttons: [{ mode: 'submit', text: ' 上传' }],
-    rules: [],
+    params: { gid: '' },
+    rules: [{ id: { value: [{ required: true, message: '请输入商品ID', trigger: 'blur' }] } }],
     data: [
       [
         {
           label: '添加商品：',
-          prop: 'none2',
+          prop: 'id',
           tag: { attr: { type: 'url', placeholder: '请输入商品ID' } },
         },
       ],
     ],
   };
+
+  mounted() {
+    this.addConfig.params!.gid = this.$route.query.id;
+  }
 }
 </script>

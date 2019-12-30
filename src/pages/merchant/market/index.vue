@@ -33,6 +33,7 @@ export default class Market extends Vue {
   }
 
   getList() {
+    const loading = this.$utils._Loading.show();
     this.$http
       .get(this.$api.merchant.market.index)
       .then((res) => {
@@ -41,6 +42,9 @@ export default class Market extends Vue {
       })
       .catch((err) => {
         this.$utils._ResponseError(err);
+      })
+      .finally(() => {
+        loading.close();
       });
   }
 

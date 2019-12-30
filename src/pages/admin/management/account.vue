@@ -23,7 +23,7 @@
 import { Component, Vue, Prop, Ref } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
-import { _Shopid } from '../config';
+// import { _Shopid } from '../config';
 
 const columns: ScTable.SetColumns = [
   ['日期', 'date'],
@@ -64,7 +64,7 @@ export default class ManagementAccount extends Vue {
 
   tableConfig = {
     api: this.$api.merchant.manage.account,
-    index: { shopid: _Shopid, classify: 1, typetime: 1 },
+    index: { classify: 1, typetime: 1 },
   };
 
   columnsHandler: ScTable.ColumnsHandler = [{ name: 'export', title: '导出' }];
@@ -82,13 +82,17 @@ export default class ManagementAccount extends Vue {
     attr: { 'label-width': 'auto', 'label-position': 'right' },
     data: [
       {
-        label: '日期',
+        label: '',
+        prop: 'id',
+        tag: { attr: { placeholder: '请输入订单号' } },
+      },
+      {
+        label: '',
         prop: 'createtime',
         tag: {
           tagType: 'date-picker',
           attr: {
             type: 'datetimerange',
-            'range-separator': '至',
             'start-placeholder': '开始时间',
             'end-placeholder': '结束时间',
           },

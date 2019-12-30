@@ -1,5 +1,10 @@
 <template>
-  <div class='test-min'>
+  <div class='products'>
+    <sc-breadcrumb class="w100 flex-je pr-30 mb-10">
+      <el-button type="primary"
+                 class="mr-10"
+                 @click="handleAdd">发布宝贝</el-button>
+    </sc-breadcrumb>
     <el-radio-group v-model="currentTab"
                     size="medium"
                     @change="onTabChange">
@@ -7,17 +12,13 @@
                        :key="i"
                        :label="item.value">{{item.label}}</el-radio-button>
     </el-radio-group>
-
-    <sc-breadcrumb class="w100 flex-je pr-30 mb-10">
-      <el-button type="primary"
-                 @click="handleAdd">发布宝贝</el-button>
-    </sc-breadcrumb>
     <sc-min-table class="mt-20"
                   stripe
                   ref="table"
+                  :columns="columns"
                   :columns-type="['selection']"
                   :columns-handler="columnsHandler"
-                  :columns="columns"
+                  :columns-schema="columnsSchema"
                   :table-config="tableConfig"
                   :search-config="searchConfig"
                   :paginationConfig="paginationConfig"
@@ -37,8 +38,7 @@ const columns: ScTable.SetColumns = [
   ['商品名称', 'title'],
   ['价格', 'price'],
   ['商品类型', 'type'],
-  ['商品类别', 'tags'],
-  ['销量', 'pnum'],
+  ['商品类别', 'typetitle'],
   ['发货公司', 'nickname'],
 ];
 
@@ -48,7 +48,7 @@ export default class MerchantInject extends Vue {
 
   userInfo = this.$utils._Storage.get('user_info');
 
-  tabs = [{ label: '已上架', value: 1 }, { label: '已下架', value: 0 }];
+  tabs = [{ label: '已上架', value: 0 }, { label: '已下架', value: 1 }];
 
   currentTab = this.tabs[0].value;
 
@@ -61,9 +61,15 @@ export default class MerchantInject extends Vue {
 
   columnsHandler: ScTable.ColumnsHandler = [
     'detail',
-    { name: 'shelves', title: '下架', type: 'danger' },
-    { name: 'shelves', title: '上架', type: 'danger' },
+    { name: 'shelves', title: '下架', type: 'danger', handler: ({ row }) => !row.status },
+    { name: 'shelves', title: '上架', type: 'danger', handler: ({ row }) => !!row.status },
   ];
+
+  columnsSchema: ScTable.ColumnsSchema = {
+    商品类型: {
+      formater: () => '普通商品',
+    },
+  };
 
   paginationConfig = {
     slotAttr: {
@@ -74,7 +80,7 @@ export default class MerchantInject extends Vue {
 
   tableConfig: ScTable.TableConfig = {
     api: this.$api.merchant.product,
-    index: { shopid: _Shopid, status: 1 },
+    index: { shopid: _Shopid, status: this.tabs[0].value },
   };
 
   searchConfig: ScTable.Search = {
@@ -90,16 +96,16 @@ export default class MerchantInject extends Vue {
         tag: {
           tagType: 'select',
           options: [],
-          attr: { placeholder: '开始时间' },
+          attr: { placeholder: '请选择商品类型' },
         },
       },
       {
         label: '商品类别：',
-        prop: 'tags',
+        prop: 'pid',
         tag: {
           tagType: 'select',
           options: [],
-          attr: { placeholder: '请选择商品类别' },
+          attr: { filterable: true, placeholder: '请选择商品类别' },
         },
       },
       {
@@ -128,6 +134,20 @@ export default class MerchantInject extends Vue {
 
   onSlotClick() {
     console.log('1', 1);
+  }
+
+  async getGoodsType() {
+    const api = this.$api.merchant.product.types;
+    const res = await this.$http.get(api, { limit: 10e5 });
+    const options = res.data || [];
+    this.searchConfig.data![2].tag!.options = options.map((o: obj) => ({
+      label: o.title,
+      value: o.id,
+    }));
+  }
+
+  mounted() {
+    this.getGoodsType();
   }
 }
 </script>

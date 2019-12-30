@@ -1,7 +1,8 @@
 <template>
   <div class="order-pay-detail bg-white border-radius-4 p-30 mb-20">
     <status :status="order.status"
-            :time="data.time"></status>
+            :time="order.time"
+            :id="id"></status>
 
     <div class="mt-30">
       <h3>确认交易详情</h3>

@@ -1,29 +1,36 @@
 <template>
-  <div class="pb-15 pl-15 pr-15 border-radius-8">
+  <div class="add-coupon-condition pb-15 pl-15 pr-15 border-radius-8">
     <el-checkbox v-model="form.checked">限制条件</el-checkbox>
     <div class="bg-border-color-extra-light p-15 border-radius-8">
-      <el-form :disabled="!form.checked"
-               v-for="(item,i) in form.data"
-               :key="i"
-               class="mb-30">
-        <span>条件{{i+1}}：</span>
-        <el-form-item class="mb-10"
-                      label="满">
-          <el-input type="number"
-                    placeholder="请输入广告位价位"
-                    v-model.number="form.data[i].none11">
-          </el-input>
-          <span class="ml-10">元</span>
-        </el-form-item>
-        <el-form-item class="mb-10"
-                      label="减">
-          <el-input type="number"
-                    placeholder="请输入广告位价位"
-                    v-model.number="form.data[i].none22">
-          </el-input>
-          <span class="ml-10">元</span>
-        </el-form-item>
-      </el-form>
+      <template v-for="(item,i) in form.data">
+        <el-form ref="elForm"
+                 :key="i"
+                 :model="item"
+                 :disabled="!form.checked"
+                 label-position="left"
+                 label-width="40px"
+                 class="mb-30">
+          <span>条件{{i+1}}：</span>
+          <el-form-item label="满"
+                        prop="num"
+                        :rules="{required: true, message: '请输入金额', trigger: 'blur'}">
+            <el-input v-model.number="form.data[i].num"
+                      type="number"
+                      placeholder="请输入金额">
+            </el-input>
+            <span class="ml-10">元</span>
+          </el-form-item>
+          <el-form-item label="减"
+                        prop="coupon_price"
+                        :rules="{required: true, message: '请输入金额', trigger: 'blur'}">
+            <el-input v-model.number="form.data[i].coupon_price"
+                      type="number"
+                      placeholder="请输入金额">
+            </el-input>
+            <span class="ml-10">元</span>
+          </el-form-item>
+        </el-form>
+      </template>
 
       <el-button type="primary"
                  size="small"
@@ -35,18 +42,21 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
+import { Component, Vue, Ref, Prop, Watch } from 'vue-property-decorator';
+import { ElForm } from 'element-ui/types/form';
 import { obj } from '@/lib/@types/sc-param.d';
 
 export interface SortItem {
   checked: boolean;
-  data: { none11: string; none22: string }[];
+  data: { num: string; coupon_price: string }[];
 }
 
 @Component
 export default class ActvSortsAdd extends Vue {
   @Prop([Object])
   readonly value!: SortItem | undefined;
+
+  @Ref('elForm') elForm!: ElForm[];
 
   checked = false;
 
@@ -74,11 +84,41 @@ export default class ActvSortsAdd extends Vue {
   }
 
   temp(): SortItem['data'][0] {
-    return { none11: '', none22: '' };
+    return { num: '', coupon_price: '' };
+  }
+
+  validate() {
+    let flag = false;
+    const validate = (el: ElForm) => {
+      el.validate((valid) => {
+        console.log('valid: ', valid);
+
+        flag = valid;
+      });
+    };
+
+    for (let i = 0; i < this.elForm.length; i++) {
+      const form = this.elForm[i];
+
+      validate(form);
+      console.log('form: ', form);
+      if (!flag) break;
+    }
+
+    return flag;
   }
 
   handleAdd() {
-    this.form.data.push(this.temp());
+    console.log('this.validate(): ', this.validate());
+
+    if (this.validate()) {
+      this.form.data.push(this.temp());
+    }
   }
 }
 </script>
+<style lang="scss">
+  .add-coupon-condition .el-form-item {
+    margin-bottom: 20px;
+  }
+</style>
