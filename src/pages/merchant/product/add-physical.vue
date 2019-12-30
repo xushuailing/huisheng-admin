@@ -3,14 +3,15 @@
     <el-form ref="form"
              :model="form"
              :rules="rules"
+             label-width="110px"
              size="small">
       <el-form-item label="商品分类："
-                    prop="sort">
-        <el-select v-model="form.sort"
+                    prop="pid">
+        <el-select v-model="form.pid"
                    :disabled="isDetail">
           <el-option v-for="item in sorts"
                      :key="item.id"
-                     :label="item.name"
+                     :label="item.title"
                      :value="item.id">
           </el-option>
         </el-select>
@@ -42,11 +43,11 @@
         </div>
       </el-form-item>
       <el-form-item label="主图视频比例："
-                    prop="rate">
-        <el-radio-group v-model="form.rate"
+                    prop="video_ratio">
+        <el-radio-group v-model="form.video_ratio"
                         :disabled="isDetail">
           <el-radio label="1">1:1或16:9</el-radio>
-          <el-radio label="0">3:4</el-radio>
+          <el-radio label="2">3:4</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="主图视频："
@@ -54,7 +55,8 @@
                     label-width="110px">
         <div class="flex">
           <sc-upload v-model="form.video"
-                     :limit="5"
+                     :limit="1"
+                     :fileSize=".78"
                      :disabled="isDetail">
           </sc-upload>
           <ol class="flex-1 m-0 ml-10 font-info"
@@ -66,21 +68,21 @@
         </div>
       </el-form-item>
       <el-form-item label="商品规格："
-                    prop="hasSize"
+                    prop="is_specifications"
                     label-position="top">
-        <el-radio-group v-model="form.hasSize"
+        <el-radio-group v-model="form.is_specifications"
                         :disabled="isDetail">
           <el-radio :label="true">需要规格</el-radio>
           <el-radio :label="false">不需要规格</el-radio>
         </el-radio-group>
-        <div v-show="form.hasSize"
+        <div v-show="form.is_specifications"
              class="mt-10 pt-20 pl-30 pr-30 pb-30 bg-background-color-base border-radius-4">
           <div v-if="!isDetail">
             <div class="mb-10">添加规格：</div>
             <el-form-item v-for="(name, index) in form.name"
                           :key="index"
                           :prop="`name.${index}`"
-                          :rules="{required: true, message: '请输入规格名称', trigger: 'blur'}"
+                          :rules="sizeRules"
                           label-width="auto">
               <el-input v-model="form.name[index]"
                         :placeholder="`请输入规格${index+1}名称`"></el-input>
@@ -110,23 +112,30 @@
         </div>
       </el-form-item>
       <el-form-item label="商品详情："
-                    prop="detail">
-        <div class="font-info">{{!isDetail?'仅支持尺寸1:1、jpg格式':'&nbsp;'}}</div>
-        <sc-editor v-if="!isDetail"
-                   v-model="form.detail"
+                    prop="content">
+        <div v-if="!isDetail"
+             class="font-info">仅支持尺寸1:1、jpg格式</div>
+        <el-input v-if="isDetail"
+                  :value="form.content"
+                  type="textarea"
+                  disabled
+                  autosize></el-input>
+        <sc-editor v-else
+                   v-model="form.content"
                    ref="scEditor"
                    class="mt-10">
         </sc-editor>
-        <pre v-else
-             v-html="form.detail"
-             class="border-solid border-radius-4 p-15"></pre>
+        <!-- <pre v-else
+             v-html="form.content"
+             class="border-solid border-radius-4 p-15"></pre> -->
       </el-form-item>
       <el-form-item label="售后信息设置："
-                    prop="afterSales"
+                    prop="after_sale"
                     label-position="top">
         <div>&nbsp;</div>
-        <span class="ml-30 mr-20">售后服务</span>
-        <el-checkbox v-model="form.afterSales"
+        <span class="mr-20"
+              style="margin-left:-80px">售后服务</span>
+        <el-checkbox v-model="form.after_sale"
                      :label="true"
                      :disabled="isDetail">7天无理由退货</el-checkbox>
       </el-form-item>
@@ -155,32 +164,27 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator';
+import { Component, Vue, Watch, Mixins } from 'vue-property-decorator';
 import EditTable from '@/components/editTable.vue';
 import { ScEditTable } from '@/components/@types/sc-edit-table.d';
 import { _GetTableSpan, _ObjectSpanMethod, TableColumns, MergeKey } from '@/utils/handleTableSpan';
 import { obj } from '@/lib/@types/sc-param.d';
+import AddMixin from './add-mixin';
 import { _Shopid } from '../config';
-
-const _toPairs = require('lodash/toPairs');
+import { ScForm } from '../../../lib/@types/sc-form';
 
 interface Form extends obj {
-  sort: string;
+  pid: string;
   name: string[];
   size: string[][];
 }
 
-interface Option {
-  name: string;
-  id: string;
-}
-
 const _MergeKeys: MergeKey = {
-  index: ['sort', 'handler'],
+  index: ['pid', 'handler'],
 };
 
 @Component({ components: { EditTable } })
-export default class ProductAdd extends Vue {
+export default class ProductAdd extends Mixins(AddMixin) {
   $refs!: {
     table: any;
     form: any;
@@ -188,55 +192,51 @@ export default class ProductAdd extends Vue {
 
   userInfo = this.$utils._Storage.get('user_info');
 
-  get id() {
-    return this.$route.query.id;
-  }
-
-  get isDetail() {
-    // TODO: params 拿不到
-    console.log('!!this.$route: ', this.$route);
-    return !!this.$route.query.detail;
-  }
-
   form: Form = {
-    sort: '',
+    pid: '',
     title: '',
     image: ['', '', '', '', ''],
-    rate: '',
+    video_ratio: '1',
     video: '',
-    hasSize: true,
-    // TODO: 怎么区分当前是虚拟还是实物，虚拟 1 行，实物 2 行
+    is_specifications: true,
     name: ['', ''],
     size: [[], []],
-    detail: '',
+    content: '',
     isThreeDays: false,
     deliveryTime: '',
   };
 
   rules = {
-    sort: [{ required: true, message: '请选择商品分类', trigger: ['blur', 'change'] }],
+    pid: [{ required: true, message: '请选择商品分类', trigger: ['blur', 'change'] }],
     title: [{ required: true, message: '请输入商品名称', trigger: 'blur' }],
-    image: [{ required: true, message: '请上传商品图片', trigger: ['blur', 'change'] }],
-    hasSize: [
+    image: [
+      { required: true, message: '请上传商品图片', trigger: ['blur', 'change'] },
+      {
+        validator: (rules: obj, value: string[], cb: Function) => {
+          if (value[0]) cb();
+          cb(new Error('上传商品主图'));
+        },
+        trigger: ['blur', 'change'],
+      },
+    ],
+    is_specifications: [
       { required: true, message: '请输入商品规格', trigger: ['blur', 'change'] },
       { validator: this.checkSize, trigger: ['blur', 'change'] },
     ],
-    detail: [{ required: true, message: '请输入商品详情', trigger: ['blur', 'change'] }],
+    content: [{ required: true, message: '请输入商品详情', trigger: ['blur', 'change'] }],
     isThreeDays: [{ required: true, message: '请选择发货时间', trigger: ['blur', 'change'] }],
   };
-
-  sorts: Option[] = [];
 
   @Watch('form.size')
   onSizeChange(size: string[][]) {
     const [rows, cols] = size;
-    const data = rows.map((sort, row) =>
+    const data = rows.map((pid, row) =>
       // eslint-disable-next-line implicit-arrow-linebreak
       cols.map((name, col) => {
         const item = this.table[row + col];
         return {
           index: row,
-          sort,
+          pid,
           name,
           price: (item && item.price) || '',
           image: (item && item.price) || '',
@@ -245,16 +245,37 @@ export default class ProductAdd extends Vue {
     this.$refs.table.setValue(data.flat());
   }
 
-  checkSize(rule: obj, value: string[][], callback: Function) {
-    console.log('value: ', value);
+  sizeRules = this.getSizeRules();
 
+  getSizeRules() {
+    return [
+      {
+        validator: (rules: obj, value: string[], cb: Function) => {
+          if (value[0]) cb();
+          cb(new Error('请输入规格名称'));
+        },
+        trigger: ['blur', 'change'],
+      },
+    ];
+  }
+
+  checkSize(rule: obj, hasSize: string[][], callback: Function) {
+    if (hasSize) {
+      if (this.table.length) {
+        this.$refs.table.validate().then((res: boolean) => {
+          if (res) return callback();
+          return callback(new Error('请将规格信息补充完整'));
+        });
+      } else {
+        return callback(new Error('请录入商品规格'));
+      }
+    }
     return callback();
   }
 
   handleAdd(index: number) {
     this.$refs.form.validateField(`name.${index}`, (errmsg: string) => {
       if (!errmsg) {
-        console.log('%cadd', 'color:#fff;background:#40b883;border-radius:5px;padding:2px 5px;');
         this.form.size[index].push(this.form.name[index]);
         this.form.name[index] = '';
       }
@@ -284,7 +305,7 @@ export default class ProductAdd extends Vue {
   columns: ScEditTable.Columns = [
     {
       label: '规格名称',
-      prop: 'sort',
+      prop: 'pid',
       editable: false,
       'show-overflow-tooltip': false,
     },
@@ -327,15 +348,16 @@ export default class ProductAdd extends Vue {
     return _ObjectSpanMethod(tableObj, this.mergeKeys, this.rowspanObj);
   }
 
-  handleSubmit() {
-    this.$refs.form.validate((valid: boolean) => {
+  async handleSubmit() {
+    console.log('submit: ');
+    this.sizeRules = [];
+    await this.$nextTick();
+    this.$refs.form.validate((valid: boolean, object: any) => {
+      console.log('valid: ', valid, object);
       if (valid) {
-        this.$refs.table.validate().then((res: boolean) => {
-          if (res) {
-            this.submit();
-          }
-        });
+        this.submit();
       } else {
+        this.sizeRules = this.getSizeRules();
         this.validateError();
       }
     });
@@ -346,40 +368,24 @@ export default class ProductAdd extends Vue {
   }
 
   submit() {
-    console.log('%c提交', 'color:#fff;background:#40b883;border-radius:5px;padding:2px 5px;');
+    const data = this.$utils._Clone(this.form);
+    data.img1 = data.image[1];
+    data.img2 = data.image[2];
+    data.img3 = data.image[3];
+    data.img4 = data.image[4];
+    data.image = data.image[0];
+
     const api = this.$api.merchant.product.update;
-    const param = { gid: this.id, shopid: _Shopid };
+    const param = { shopid: _Shopid, ...data };
+    console.log(
+      '%c提交',
+      'color:#fff;background:#40b883;border-radius:5px;padding:2px 5px;',
+      param,
+    );
+
     // this.$http.post(api, param).then((res) => {
     //   console.log('res: ', res);
     // });
-  }
-
-  async getDetail() {
-    const loading = this.$utils._Loading.show();
-    const api = this.$api.merchant.product.show;
-    const param = { gid: this.id, shopid: _Shopid };
-
-    try {
-      const res = await this.$http.post(api, param);
-      console.log('res: ', res);
-      if (res.status) {
-        const data = res.data;
-        _toPairs(this.form).forEach(([k, v]: any[]) => {
-          v = data[k];
-        });
-      } else {
-        this.$message.error('获取数据失败');
-      }
-    } catch (error) {
-      this.$utils._ResponseError(error);
-    }
-    loading.close();
-  }
-
-  mounted() {
-    if (this.isDetail) {
-      this.getDetail();
-    }
   }
 }
 </script>

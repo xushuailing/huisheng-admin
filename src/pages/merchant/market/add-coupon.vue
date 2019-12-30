@@ -101,9 +101,9 @@ export default class SettingRoleList extends Vue {
           tag: { tagType: 'component', components: Time },
         },
         {
-          label: '会员规则说明：',
+          label: '满减规则说明：',
           prop: 'none5',
-          tag: { attr: { type: 'textarea', rows: 6, placeholder: '请输入会员规则说明' } },
+          tag: { attr: { type: 'textarea', rows: 6, placeholder: '请输入满减规则说明' } },
         },
       ],
     ],

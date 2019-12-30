@@ -1,51 +1,80 @@
 <template>
   <div class='border-radius-8 bg-white p-30'>
-    <sc-add-form mode="page"
-                 :api="api"
-                 :config="addConfig">
-    </sc-add-form>
+    <sc-edit v-if="isInit"
+             mode="page"
+             :api="api"
+             :config="config">
+    </sc-edit>
   </div>
 </template>
 <script lang='ts'>
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import { ScForm } from '@/lib/@types/sc-form.d';
+import { obj } from '@/lib/@types/sc-param.d';
 
 @Component
 export default class SettingRoleList extends Vue {
-  get api() {
-    return ''; //  this.$api.admin.activity.adsSorts.create;
-  }
+  api = this.$api.merchant.ads.create;
 
-  addConfig: ScForm.Add = {
-    buttons: [{ mode: 'cancel', isHide: true }, { mode: 'submit', text: ' 上传' }],
+  data: obj = {};
+
+  config: ScForm.Edit = {
+    'label-width': '120px',
+    params: { id: '' },
+    buttons: [{ mode: 'cancel', isHide: true }, { mode: 'submit', isHide: false, text: ' 上传' }],
     rules: [
       {
-        none1: {
+        image: {
           value: [{ required: true, trigger: ['blur', 'change'], message: '请上传 banner 图' }],
         },
-        none2: { value: [{ required: true, trigger: 'blur', message: '请输入跳转链接' }] },
+        url: { value: [{ required: true, trigger: 'blur', message: '请输入跳转链接' }] },
       },
     ],
     data: [
       [
         {
           label: '上传banner：',
-          prop: 'none1',
+          prop: 'image',
           tag: {
             tagType: 'upload-img',
-            attr: { limit: 1, fileSize: 10000 },
+            attr: { disabled: false, limit: 1, fileSize: 10000 },
           },
         },
         {
           label: '跳转链接：',
-          prop: 'none2',
-          tag: { attr: { type: 'url', placeholder: '请输入跳转链接' } },
+          prop: 'url',
+          tag: {
+            attr: { disabled: false, type: 'url', placeholder: '请输入跳转链接' },
+          },
         },
       ],
     ],
     handleSubmit: (data) => {
       console.log('data :', data);
+      return data.id ? data : {};
     },
   };
+
+  isInit = false;
+
+  async getData() {
+    const api = this.$api.merchant.ads.bannerDetail;
+    const res = await this.$http.get(api, { id: this.$route.query.id });
+    const data = res.data || {};
+    this.config.data[0].forEach((item) => {
+      item.default = data[item.prop];
+      item.tag!.attr!.disabled = !!data.image;
+    });
+    if (data.image) {
+      const submitButton = this.config.buttons!.find((btn) => btn.mode === 'submit');
+      submitButton && (submitButton.isHide = true);
+    }
+    this.isInit = true;
+  }
+
+  mounted() {
+    this.config.params!.id = this.$route.query.id;
+    this.getData();
+  }
 }
 </script>

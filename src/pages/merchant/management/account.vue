@@ -34,7 +34,7 @@ const columns: ScTable.SetColumns = [
 
 @Component
 export default class ManagementAccount extends Vue {
-  @Ref('table') $table!:ScTable;
+  @Ref('table') $table!: ScTable;
 
   userInfo = this.$utils._Storage.get('user_info');
 
@@ -82,17 +82,13 @@ export default class ManagementAccount extends Vue {
     attr: { 'label-width': 'auto', 'label-position': 'right' },
     data: [
       {
-        label: '',
-        prop: 'id',
-        tag: { attr: { placeholder: '请输入订单号' } },
-      },
-      {
-        label: '',
+        label: '日期',
         prop: 'createtime',
         tag: {
           tagType: 'date-picker',
           attr: {
             type: 'datetimerange',
+            'range-separator': '至',
             'start-placeholder': '开始时间',
             'end-placeholder': '结束时间',
           },

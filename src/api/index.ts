@@ -236,11 +236,14 @@ export default {
       create: `${url}/admin/doAddGoods`,
       update: `${url}/admin/doAddGoods`,
       delete: `${url}/admin/delGoods`,
+      types: `${url}/admin/getType`,
+      goodsType: `${url}/admin/getGoodsType`,
     },
 
     /** 营销管理 */
     market: {
       index: `${url}/admin/getCouponList`,
+      addGoods: `${url}/admin/addGoodsCoupon`,
       show: `${url}/admin/getGoodsdetail`,
       update: `${url}/admin/doAddCoupon`,
       delete: `${url}/admin/delCoupon`,
@@ -250,6 +253,8 @@ export default {
     order: {
       index: `${url}/admin/getOrderList`,
       show: `${url}/admin/getOrderDetail`,
+      close: `${url}/api/setCloseOrder`,
+      confirm: `${url}/api/setConfirmOrderss`,
       delivery: `${url}/admin/setDeliverGoods`,
       expresses: `${url}/admin/getExpressList`,
       return: {
@@ -274,6 +279,18 @@ export default {
         area: `${url}api/getAreas`,
         update: `${url}/admin/setUserAddress`,
       },
+    },
+
+    /** 广告管理 */
+    ads: {
+      index: `${url}/admin/AdvertisingPromotion`,
+      user: `${url}/admin/userPromotion`,
+      create: `${url}/admin/userAddBanner`,
+      detail: `${url}/admin/AdvertisingPromotion`,
+      buyPromotion: `${url}/admin/buyPromotion`,
+      buyActivity: `${url}/admin/buyActivity`,
+      bannerDetail: `${url}/admin/getUserBannerLook`,
+      addGoods: `${url}/admin/userBindingGoods`,
     },
   },
 

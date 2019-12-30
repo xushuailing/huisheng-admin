@@ -1,37 +1,76 @@
 <template>
   <div class="adv-detail">
     <el-row :gutter="20">
-      <el-col  v-for="item in 12" :key="item" :span="24">
-        <div class="adv-detail__item bg-white border-radius-8 p-15 mt-20">
-          <el-button type="primary" size="small" class="adv-detail__buy">购买</el-button>
-          <div class="font-bold font-28">标题标题标题标题</div>
-          <div class="font-bold font-22 mt-10">&yen;120.00 - &yen;200.00</div>
-          <div class="mt-10 mb-10">
-            有效期：2019.08.29 - 2019.09.29
-          </div>
-          <div class="mt-10 mb-10">
-            介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍介绍
-          </div>
+      <el-col v-for="(item,i) in data"
+              :key="item.id"
+              :span="24">
+        <div class="adv-detail__item bg-white border-radius-8 p-30 mt-20">
+          <el-button v-if="i"
+                     type="primary"
+                     size="small"
+                     class="adv-detail__buy"
+                     @click="handleBuy(item)">购买</el-button>
+          <div :class="['font-bold',i?'font-28':'font-20']">{{item.title}}</div>
+          <div v-if="i"
+               class="font-bold font-20 mt-10">&yen;{{item.price}}/个月</div>
+          <div class="mt-10 mb-10 font-info font-18">{{item.introduction}}</div>
         </div>
       </el-col>
     </el-row>
+    <buy :visible.sync="dialogVisible"
+         :type="buy.type"
+         :id="buy.id"
+         :price="buy.price"></buy>
   </div>
 </template>
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
+import { obj } from '@/lib/@types/sc-param.d';
+import Buy from './buy.vue';
 
-@Component
-export default class Advertisement extends Vue {}
-</script>
-<style lang="scss" scoped>
-.adv-detail{
-  &__item{
-    position: relative;
+@Component({ components: { Buy } })
+export default class Advertisement extends Vue {
+  data: obj[] = [];
+
+  buy: obj = {
+    type: this.$route.path.includes('banner') ? 'banner' : 'activity',
+    id: '',
+    price: '',
+  };
+
+  dialogVisible = false;
+
+  handleBuy(item: obj) {
+    this.buy = item;
+    this.dialogVisible = true;
   }
-  &__buy{
-    position: absolute;
-    top: 20px;
-    right: 20px;
+
+  async getList() {
+    const api = this.$api.merchant.ads.detail;
+    const res = await this.$http.get(api, { id: this.$route.query.id });
+    const data = res.data || {};
+    this.data = data;
+    // this.data = [
+    //   { id: data.id, title: data.title, introduction: data.introduction },
+    //   ...(data.banner_list || []),
+    // ];
+    console.log('data: ', data);
+  }
+
+  mounted() {
+    this.getList();
   }
 }
+</script>
+<style lang="scss" scoped>
+  .adv-detail {
+    &__item {
+      position: relative;
+    }
+    &__buy {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+  }
 </style>

@@ -51,12 +51,6 @@ const router: RouteConfig[] = [
         meta: { breadcrumb: [{ title: '商品管理' }, { title: '全部商品' }] },
       },
       {
-        path: 'shelves',
-        name: '已下架',
-        component: () => import('../pages/merchant/product/shelves.vue'),
-        meta: { breadcrumb: [{ title: '商品管理' }, { title: '已下架' }] },
-      },
-      {
         path: 'add',
         name: '发布宝贝',
         component: () => import('../pages/merchant/product/add.vue'),
@@ -84,7 +78,7 @@ const router: RouteConfig[] = [
       },
       {
         path: 'index',
-        name: '新增优惠券',
+        name: '优惠券列表',
         component: () => import('../pages/merchant/market/index.vue'),
         meta: { breadcrumb: [{ title: '营销管理' }, { title: '新增优惠券' }] },
       },
@@ -97,7 +91,7 @@ const router: RouteConfig[] = [
       // 虚拟
       {
         path: 'add',
-        name: '新增优惠券',
+        name: '新增优惠券-虚拟',
         component: () => import('../pages/merchant/market/add.vue'),
         meta: {
           breadcrumb: [{ title: '活动管理' }, { title: '优惠券' }, { title: '新增优惠券' }],
@@ -106,7 +100,7 @@ const router: RouteConfig[] = [
       // 实体
       {
         path: 'manjian',
-        name: '新增优惠券',
+        name: '新增优惠券-实体',
         component: () => import('../pages/merchant/market/add-coupon.vue'),
         meta: {
           breadcrumb: [{ title: '营销管理' }, { title: '优惠券' }, { title: '新增优惠券' }],
@@ -281,6 +275,24 @@ const router: RouteConfig[] = [
         component: () => import('../pages/merchant/advertisement/list.vue'),
         meta: { breadcrumb: [{ title: '广告管理' }, { title: '广告推广' }] },
       },
+      // {
+      //   path: 'banner-active',
+      //   name: '活动banner',
+      //   component: () => import('../pages/merchant/advertisement/banner-active.vue'),
+      //   meta: { breadcrumb: [{ title: '广告管理' }, { title: '活动banner' }] },
+      // },
+      {
+        path: 'banner-buy',
+        name: 'banner购买',
+        component: () => import('../pages/merchant/advertisement/banner-detail.vue'),
+        meta: { breadcrumb: [{ title: '广告管理' }, { title: '广告推广' }, { title: '详情' }] },
+      },
+      {
+        path: 'today-buy',
+        name: '今日上新购买',
+        component: () => import('../pages/merchant/advertisement/banner-detail.vue'),
+        meta: { breadcrumb: [{ title: '广告管理' }, { title: '广告推广' }, { title: '详情' }] },
+      },
       {
         path: 'mine-banner',
         name: '我的推广',
@@ -288,34 +300,22 @@ const router: RouteConfig[] = [
         meta: { breadcrumb: [{ title: '广告管理' }, { title: '我的推广' }] },
       },
       {
-        path: 'banner-active',
-        name: '活动banner',
-        component: () => import('../pages/merchant/advertisement/banner-active.vue'),
-        meta: { breadcrumb: [{ title: '广告管理' }, { title: '活动banner' }] },
-      },
-      {
-        path: 'banner-detail',
-        name: 'banner介绍',
-        component: () => import('../pages/merchant/advertisement/banner-detail.vue'),
-        meta: { breadcrumb: [{ title: '广告管理' }, { title: 'banner介绍' }] },
-      },
-      {
         path: 'upload',
-        name: '广告推广',
+        name: '上传banner图',
         component: () => import('../pages/merchant/advertisement/upload.vue'),
         meta: { breadcrumb: [{ title: '广告管理' }, { title: '广告推广' }, { title: '购买' }] },
       },
       {
         path: 'add-goods',
-        name: '广告推广',
+        name: '添加商品id',
         component: () => import('../pages/merchant/advertisement/add-goods.vue'),
         meta: { breadcrumb: [{ title: '广告管理' }, { title: '广告推广' }, { title: '详情' }] },
       },
       {
         path: 'today-detail',
-        name: '今日上新',
+        name: '今日上新详情',
         component: () => import('../pages/merchant/advertisement/today-detail.vue'),
-        meta: { breadcrumb: [{ title: '广告管理' }, { title: '今日上新' }] },
+        meta: { breadcrumb: [{ title: '广告管理' }, { title: '广告推广' }, { title: '详情' }] },
       },
     ],
   },

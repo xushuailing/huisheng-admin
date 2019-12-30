@@ -17,8 +17,9 @@ export default class Detail extends Vue {
       createtime = '',
       deliveryTime = '',
       finishTime = '',
+      time = '',
     } = order;
-    return { status, ordernumber, createtime, deliveryTime, finishTime };
+    return { status, ordernumber, createtime, deliveryTime, finishTime, time };
   }
 
   get list() {
