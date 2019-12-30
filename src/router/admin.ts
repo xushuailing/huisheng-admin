@@ -307,4 +307,30 @@ export default [
       },
     ],
   },
+  {
+    path: '/management',
+    name: '经营管理',
+    redirect: '/management/data',
+    component: layoutView,
+    children: [
+      {
+        path: 'data',
+        name: '实时数据',
+        component: () => import('../pages/merchant/management/data.vue'),
+        meta: { breadcrumb: [{ title: '经营管理' }, { title: '实时数据' }] },
+      },
+      {
+        path: 'account',
+        name: '账房',
+        component: () => import('../pages/merchant/management/account.vue'),
+        meta: { breadcrumb: [{ title: '经营管理' }, { title: '账房' }] },
+      },
+      {
+        path: 'recode',
+        name: '提现审核',
+        component: () => import('../pages/merchant/management/recode.vue'),
+        meta: { breadcrumb: [{ title: '经营管理' }, { title: '提现审核' }] },
+      },
+    ],
+  },
 ];
