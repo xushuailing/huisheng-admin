@@ -1,6 +1,7 @@
 import layoutView from '../layout/index.vue';
 
 export default [
+  // 系统管理
   {
     path: '/setting',
     name: '系统管理',
@@ -41,6 +42,7 @@ export default [
       },
     ],
   },
+  // 商家管理
   {
     path: '/merchant',
     name: '商家管理',
@@ -77,6 +79,7 @@ export default [
       },
     ],
   },
+  // 会员管理
   {
     path: '/vip',
     name: '会员管理',
@@ -115,6 +118,7 @@ export default [
       },
     ],
   },
+  // 活动管理
   {
     path: '/activity',
     name: '活动管理',
@@ -193,6 +197,7 @@ export default [
       },
     ],
   },
+  // 代运营管理
   {
     path: '/thirdpartnar',
     name: '代运营管理',
@@ -263,6 +268,7 @@ export default [
       },
     ],
   },
+  // 运营小知识
   {
     path: '/operate',
     name: '运营小知识',
@@ -307,6 +313,7 @@ export default [
       },
     ],
   },
+  // 经营管理
   {
     path: '/management',
     name: '经营管理',
