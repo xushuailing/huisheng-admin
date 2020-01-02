@@ -12,6 +12,8 @@ import api from './api';
 import axios from './axios';
 import utils from './utils';
 import '@/styles/index.scss';
+import 'v-charts/lib/style.css';
+
 
 Vue.use(UI);
 Vue.use(ElementUI);

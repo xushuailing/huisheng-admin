@@ -1,5 +1,5 @@
 <template>
-  <div class='manage-account'>
+  <div class='admin-manage-record'>
     <el-radio-group v-model="currentTab"
                     size="medium"
                     @change="onTabChange">
@@ -13,9 +13,7 @@
                   class="mt-20"
                   :columns="columns"
                   :search-config="searchConfig"
-                  :table-config="tableConfig"
-                  :columns-handler="columnsHandler"
-                  @table-emitTableHandlerClick="onTableHandlerClick">
+                  :table-config="tableConfig">
     </sc-min-table>
   </div>
 </template>
@@ -23,20 +21,10 @@
 import { Component, Vue, Prop, Ref } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
-// import { _Shopid } from '../config';
-
-const columns: ScTable.SetColumns = [
-  ['日期', 'date'],
-  ['支出项目', 'name'],
-  ['本月交易额', 'price'],
-  ['项目类别', 'type'],
-];
 
 @Component
 export default class ManagementAccount extends Vue {
   @Ref('table') $table!: ScTable;
-
-  userInfo = this.$utils._Storage.get('user_info');
 
   tabs = [
     { label: '账户日汇总', value: 1 },
@@ -57,35 +45,35 @@ export default class ManagementAccount extends Vue {
     {
       label: '本月交易额',
       prop: 'money',
-      formater: (row, col) => (row[col.prop] ? `￥ ${row[col.prop]}` : ''),
+      formater: (row, col) => {
+        const isNegative = row[col.prop].includes('-');
+        const style = isNegative ? 'font-danger' : 'font-primary';
+        const value = row[col.prop].replace('-', '');
+        const operate = isNegative ? '-' : '+';
+        return [{ class: style }, `${operate}￥${value}`];
+      },
     },
-    { label: '项目类别', prop: 'type' },
   ];
 
   tableConfig = {
-    api: this.$api.merchant.manage.account,
+    api: this.$api.admin.management.record,
     index: { classify: 1, typetime: 1 },
   };
-
-  columnsHandler: ScTable.ColumnsHandler = [{ name: 'export', title: '导出' }];
 
   searchConfig: ScTable.Search = {
     handleSubmit: (data: any) => {
       data.classify = 2;
+      if (data.typetime) delete data.typetime;
       if (data.createtime) {
         const [start, end] = data.createtime.split(',');
         data.firsttime = start;
         data.lasttime = end;
       }
+      delete data.createtime;
       return data;
     },
     attr: { 'label-width': 'auto', 'label-position': 'right' },
     data: [
-      {
-        label: '',
-        prop: 'id',
-        tag: { attr: { placeholder: '请输入订单号' } },
-      },
       {
         label: '',
         prop: 'createtime',
@@ -98,34 +86,20 @@ export default class ManagementAccount extends Vue {
           },
         },
       },
-      // {
-      //   label: '项目类别：',
-      //   prop: 'type',
-      //   tag: {
-      //     tagType: 'select',
-      //     options: [],
-      //     attr: { 'label-width': '100px', placeholder: '请选择订单类型' },
-      //   },
-      // },
     ],
   };
-
-  onTableHandlerClick({ row, type }: any) {
-    if (type === 'export') {
-      //
-    }
-  }
-
-  setSearchStyle() {
-    const content = document.querySelectorAll('.el-form-item__content');
-    const lastItem = content[content.length - 1];
-    lastItem && ((lastItem as any).style['margin-left'] = '83px');
-  }
-
-  mounted() {
-    setTimeout(() => {
-      this.setSearchStyle();
-    }, 100);
-  }
 }
 </script>
+<style lang="scss">
+.admin-manage-record {
+  .el-row {
+    display: flex;
+    .el-form-item {
+      margin: 0 !important;
+    }
+    .text-e.pt-10.pl-20.pr-15 {
+      padding-top: 0 !important;
+    }
+  }
+}
+</style>

@@ -313,30 +313,30 @@ export default [
       },
     ],
   },
-  // 经营管理
+  // 资金管理
   {
     path: '/management',
-    name: '经营管理',
+    name: '资金管理',
     redirect: '/management/data',
     component: layoutView,
     children: [
       {
         path: 'data',
-        name: '实时数据',
-        component: () => import('../pages/merchant/management/data.vue'),
-        meta: { breadcrumb: [{ title: '经营管理' }, { title: '实时数据' }] },
+        name: '平台成交额',
+        component: () => import('../pages/admin/management/data.vue'),
+        meta: { breadcrumb: [{ title: '资金管理' }, { title: '平台成交额' }] },
       },
       {
-        path: 'account',
+        path: 'record',
         name: '账房',
-        component: () => import('../pages/merchant/management/account.vue'),
-        meta: { breadcrumb: [{ title: '经营管理' }, { title: '账房' }] },
+        component: () => import('../pages/admin/management/record.vue'),
+        meta: { breadcrumb: [{ title: '资金管理' }, { title: '账房' }] },
       },
       {
-        path: 'recode',
+        path: 'check',
         name: '提现审核',
-        component: () => import('../pages/merchant/management/recode.vue'),
-        meta: { breadcrumb: [{ title: '经营管理' }, { title: '提现审核' }] },
+        component: () => import('../pages/admin/management/check.vue'),
+        meta: { breadcrumb: [{ title: '资金管理' }, { title: '提现审核' }] },
       },
     ],
   },

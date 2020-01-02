@@ -199,6 +199,16 @@ export default {
         update: `${url}/admin/crm_takeaway_college_updete`,
       },
     },
+
+    /** 资金管理 */
+    management: {
+      /** 平台成交额 */
+      show: `${url}/admin/NowTimeDataList`,
+      /** 账房 */
+      record: {
+        index: `${url}/admin/AccountingOfficeShowData`,
+      },
+    },
   },
 
   /** 商家的接口 */

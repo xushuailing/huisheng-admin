@@ -1,51 +1,33 @@
 <template>
   <div class="management">
-    <el-row :gutter="20">
-      <el-col :span="8">
-        <div class="bg-white border-radius-8 mt-20">
+    <el-row>
+      <el-col :span="12">
+        <div class="bg-white border-radius-8">
           <div class="flex-jsb p-15">
             <div class="flex-column">
-              <div>总资产（元）</div>
-              <div class="mt-15 font-primary font-20 font-bold">&yen; 120.00</div>
+              <div>账户余额</div>
+              <div class="mt-15 font-primary font-20 font-bold">&yen; {{money.total_money}}</div>
             </div>
-            <div class="flex-column">
+            <div class="flex-column flex-jsb">
+              <el-link type="primary"
+                       @click="toCheck">提现审核</el-link>
               <el-link type="primary"
                        @click="toRecord">提现记录</el-link>
             </div>
           </div>
           <div class="p-15 border-top">
-            <div class="mb-10">本年销售额： &yen;7899898 </div>
-            <div class="mb-10">本月销售额： &yen;7899898</div>
+            <div class="mb-10">总成交量： &yen;{{money.total_number}}</div>
+            <div class="mb-10">本月成交量： &yen;{{money.month_number}}</div>
+            <div class="mb-10">本周成交量： &yen;{{money.week_number}}</div>
           </div>
-        </div>
-      </el-col>
-      <el-col :span="8">
-        <div class="bg-white border-radius-8 mt-20">
-          <div class="p-15">
-            <div class="">成交量（月）</div>
-            <div class="mt-15 font-primary font-20 font-bold">&yen;120.00</div>
-          </div>
-          <div class="p-15 border-top">
-            <div class="mb-10">本年成交量：391230898</div>
-            <div class="mb-10">本月成交量：391230898</div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="8">
-        <div class="bg-white border-radius-8 p-15 mt-20">
-          <div class="mb-15">收入支出</div>
-          <div class="mb-10">昨日收入：&yen; 0.00</div>
-          <div class="mb-10">昨日支出：&yen; 0.00</div>
-          <div class="mb-10">昨日收入笔数：0</div>
-          <div class="mb-10">昨日支出笔数：0</div>
         </div>
       </el-col>
     </el-row>
     <div style="height:400px"
          class="bg-white border-radius-8 p-15 mt-20">
-      <h2>近七日变化趋势（元）</h2>
       <el-radio-group v-model="trendType"
-                      size="medium">
+                      size="medium"
+                      @change="onToggleData">
         <el-radio-button v-for="(item,i) in trendOptions"
                          :key="i"
                          :label="item.value">{{item.label}}</el-radio-button>
@@ -53,12 +35,16 @@
       <ve-histogram height="100%"
                     :extend="histogram.extend"
                     :legend-visible="false"
+                    :dataEmpty="histogram.dataEmpty"
+                    :loading="histogram.loading"
                     :data="histogram.chartData"></ve-histogram>
     </div>
   </div>
 </template>
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
+
+const columns = ['日期', '交易量'];
 
 @Component
 export default class ManagementData extends Vue {
@@ -69,28 +55,72 @@ export default class ManagementData extends Vue {
       },
     },
     chartData: {
-      columns: ['日期', '访问用户'],
-      rows: [
-        { 日期: '1/1', 访问用户: 1393 },
-        { 日期: '1/2', 访问用户: 3530 },
-        { 日期: '1/3', 访问用户: 2923 },
-        { 日期: '1/4', 访问用户: 1723 },
-        { 日期: '1/5', 访问用户: 3792 },
-        { 日期: '1/6', 访问用户: 4593 },
-      ],
+      columns,
+      rows: [],
     },
+    loading: true,
+    dataEmpty: true,
+  };
+
+  money = {
+    total_number: 0,
+    month_number: 0,
+    week_number: 0,
+    year_number: 0,
+    total_money: 0,
+    list: null,
   };
 
   trendOptions = [
-    { label: '总资产', value: '0' },
-    { label: '店铺收入', value: '1' },
-    { label: '店铺支出', value: '2' },
+    { label: '日成交量', value: 'day' },
+    { label: '月成交量', value: 'month' },
+    { label: '年成交量', value: 'year' },
   ];
 
-  trendType = '0';
+  trendType = this.trendOptions[0].value;
+
+  mounted() {
+    this.getData();
+  }
 
   toRecord() {
-    this.$router.push('recode');
+    this.$router.push('record');
+  }
+
+  toCheck() {
+    this.$router.push('check');
+  }
+
+  onToggleData(data: any) {
+    if (this.money.list) {
+      this.setHistogram(this.money.list![data]);
+    }
+  }
+
+  async getData() {
+    const api = this.$api.admin.management.show;
+    const { data } = await this.$http.get(api);
+
+    this.money = data;
+
+    this.setHistogram(data.list.day);
+  }
+
+  setHistogram(data: any) {
+    const label = data[7] as string[];
+    const val = data;
+    const num = 6;
+    const rows = [];
+
+    for (let i = 0; i < num; i++) {
+      rows.push({ [columns[0]]: label[i], [columns[1]]: val[i] });
+    }
+
+    this.$set(this.histogram.chartData, 'rows', rows);
+
+    this.histogram.loading = false;
+
+    this.histogram.dataEmpty = !rows.length;
   }
 }
 </script>
