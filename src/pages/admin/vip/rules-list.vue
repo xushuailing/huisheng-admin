@@ -1,9 +1,10 @@
 <template>
   <div class='merchant-shop-detail pb-30'>
-    <el-tabs v-model="activeName">
+    <el-tabs class="sc-tabs"
+             v-model="activeName">
       <el-tab-pane label="金牌经理"
                    lazy
-                   name="1">
+                   name="0">
         <el-table :data="manager.list"
                   stripe
                   class="border-radius-8">
@@ -15,7 +16,13 @@
                            :label="item.label"
                            :width="item.width">
             <template slot-scope="scope">
-              <div style="height:80px;line-height: 80px">{{ scope.row[item.prop] }}</div>
+              <div style="height:80px;line-height: 80px">
+                <span v-if="item.prop==='money'">￥{{ scope.row[item.prop] }}</span>
+                <span v-else-if="item.prop==='divide_comparisons'">
+                  {{ scope.row[item.prop]*100 }}%
+                </span>
+                <span v-else>{{ scope.row[item.prop] }}</span>
+              </div>
             </template>
           </el-table-column>
           <el-table-column fixed="right"
@@ -31,7 +38,7 @@
       </el-tab-pane>
       <el-tab-pane label="代理"
                    lazy
-                   name="2">
+                   name="1">
         <el-table :data="agent.list"
                   stripe
                   class="border-radius-8">
@@ -45,11 +52,15 @@
             <template slot-scope="scope">
               <div style="height:80px;"
                    class="flex-jc-ac">
-                <div v-if="item.prop!=='quota'">{{ scope.row[item.prop] }}</div>
-                <div v-else>
+                <span v-if="item.prop==='money'">￥{{ scope.row[item.prop] }}</span>
+                <span v-else-if="item.prop==='commission'">
+                  {{ scope.row[item.prop]*100 }}%
+                </span>
+                <div v-else-if="item.prop==='quota'">
                   <div v-for="t in scope.row[item.prop]"
                        :key="t.id">{{t.name}}：{{t.num}}</div>
                 </div>
+                <div v-else>{{ scope.row[item.prop] }}</div>
               </div>
             </template>
           </el-table-column>
@@ -68,12 +79,12 @@
 
     <sc-add-form :visible.sync="managerForm.visible"
                  :api="managerForm.addFormApi"
-                 @emitAddComplete="managerForm.onAddComplete"
+                 @emitAddComplete="onAddComplete"
                  :config="managerForm.config">
     </sc-add-form>
     <sc-add-form :visible.sync="agentForm.visible"
                  :api="agentForm.addFormApi"
-                 @emitAddComplete="agentForm.onAddComplete"
+                 @emitAddComplete="onAddComplete"
                  :config="agentForm.config">
     </sc-add-form>
   </div>
@@ -82,6 +93,12 @@
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { ScForm } from '../../../lib/@types/sc-form';
+
+const quota = [
+  { id: 4, name: '黄金会员', num: null },
+  { id: 5, name: '铂金会员', num: null },
+  { id: 6, name: '钻石会员', num: null },
+];
 
 const columnsManager: ScTable.SetColumns = [
   ['会员等级', 'member_name'],
@@ -99,34 +116,29 @@ export default class MerchantShopDetail extends Vue {
   manager = {
     list: [],
     columns: this.$utils._SetTableColumns(columnsManager),
+    id: null,
   };
 
   agent = {
     list: [],
     columns: this.$utils._SetTableColumns(columnsAgent),
+    id: null,
   };
 
-  activeName = '2';
+  activeName = '1';
 
   managerForm = {
     visible: false,
     addFormApi: this.$api.admin.vip.rules.update,
-    onAddComplete: ({ status }: any) => {
-      if (status) {
-        console.log('提交成功 :');
-      }
-    },
     config: this.formConfig(1),
   };
 
   agentForm = {
     visible: false,
     addFormApi: this.$api.admin.vip.rules.update,
-    onAddComplete: () => {},
     config: this.formConfig(2),
   };
 
-  // TODO: 修改字段缺少
   formConfig(type: number): ScForm.Add {
     return {
       params: { type },
@@ -138,15 +150,26 @@ export default class MerchantShopDetail extends Vue {
         },
       ],
       handleSubmit: (data) => {
-        console.log('data :', data);
         if (type == 1) {
+          data.name = data.member_name;
+          data.id = this.manager.id;
+          data.divide_comparisons /= 100;
           return data;
         }
-        // const quota = [
-        //   { id: 4, name: '黄金会员', num: 20 },
-        //   { id: 5, name: '铂金会员', num: 20 },
-        //   { id: 6, name: '钻石会员', num: 20 },
-        // ];
+        data.id = this.agent.id;
+
+        const _quota = this.$utils._Clone(quota);
+
+        _quota.forEach((v) => {
+          if (v.name in data) {
+            v.num = data[v.name];
+          }
+        });
+
+        data.divide_comparisons = data.commission;
+
+        data.quota = _quota;
+
         return data;
       },
       header: { title: '修改信息' },
@@ -167,7 +190,7 @@ export default class MerchantShopDetail extends Vue {
           ] :
           [
             {
-              none1: {
+              name: {
                 value: [{ required: true, message: '请输入代理等级', trigger: 'blur' }],
               },
               money: {
@@ -182,7 +205,7 @@ export default class MerchantShopDetail extends Vue {
               钻石会员: {
                 value: [{ required: true, message: '请输入钻石会员名额', trigger: 'blur' }],
               },
-              none12: {
+              commission: {
                 value: [
                   {
                     required: true,
@@ -233,7 +256,7 @@ export default class MerchantShopDetail extends Vue {
             [
               {
                 label: '代理等级：',
-                prop: 'none1',
+                prop: 'name',
                 tag: {
                   attr: { placeholder: '请输入代理等级' },
                 },
@@ -260,7 +283,7 @@ export default class MerchantShopDetail extends Vue {
               },
               {
                 label: '返点比例：',
-                prop: 'none12',
+                prop: 'commission',
                 tag: {
                   attr: {
                     placeholder: '请输入返点比例(1-100)',
@@ -284,11 +307,47 @@ export default class MerchantShopDetail extends Vue {
     this.getList();
   }
 
+  onAddComplete({ status }: ScForm.EventComplete) {
+    if (status) {
+      this.getList();
+    }
+  }
+
   handleClick(row: any, type: number) {
     if (type == 1) {
       this.managerForm.visible = true;
+      this.managerForm.config.data.forEach((data) => {
+        data.forEach((item) => {
+          if (row[item.prop] || row[item.prop] === 0) {
+            if (item.prop === 'divide_comparisons') {
+              item.default = row[item.prop] * 100;
+              return;
+            }
+            item.default = row[item.prop];
+          }
+        });
+      });
+
+      this.manager.id = row.level_id;
     } else {
       this.agentForm.visible = true;
+
+      this.agentForm.config.data.forEach((data) => {
+        data.forEach((item) => {
+          if (item.prop === 'commission') {
+            item.default = row[item.prop] * 100;
+            return;
+          }
+          const vip = (row.quota as any[]).find((v) => v.name === item.prop);
+          if (vip) {
+            item.default = vip.num;
+            return;
+          }
+          item.default = row[item.prop];
+        });
+      });
+
+      this.agent.id = row.id;
     }
   }
 
@@ -299,7 +358,6 @@ export default class MerchantShopDetail extends Vue {
 
       this.manager.list = data.level_list;
       this.agent.list = data.agent_member;
-      console.log('data :', data);
     } catch (error) {
       console.log('error :', error);
     }

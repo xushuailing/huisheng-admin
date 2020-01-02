@@ -1,6 +1,7 @@
 <template>
   <div class='merchant-shop-detail pb-30'>
-    <el-tabs v-model="activeName">
+    <el-tabs class="sc-tabs"
+             v-model="activeName">
       <el-tab-pane label="店铺基本信息"
                    lazy
                    name="1">

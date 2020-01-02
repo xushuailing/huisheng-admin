@@ -1,8 +1,8 @@
 
 <template>
   <div class="TpSetting">
-    <el-tabs v-model="activeName"
-             type="card">
+    <el-tabs class="sc-tabs"
+             v-model="activeName">
       <el-tab-pane lazy
                    v-for="tab in tabs"
                    :key="tab.name"

@@ -1,7 +1,7 @@
 <template>
   <div class='admin-setting'>
 
-    <div class=" p-15 bg-white mt-20 border-radius-4">
+    <div class=" p-15 bg-white border-radius-4">
       <div class="flex flex-ac flex-jsb font-18">
         <span>用户指南</span>
         <el-button @click="onEditText('user_guide','用户指南')"

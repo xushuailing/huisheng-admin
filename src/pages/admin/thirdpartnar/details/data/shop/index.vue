@@ -7,8 +7,8 @@
       <el-button size="small"
                  type="primary">上传数据</el-button>
     </div>
-    <el-tabs v-model="activeName"
-             type="card">
+    <el-tabs class="sc-tabs"
+             v-model="activeName">
       <el-tab-pane v-for="tab in tabs"
                    :key="tab.name"
                    :label="tab.label"

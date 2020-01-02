@@ -4,9 +4,8 @@
     <sc-breadcrumb>
       <el-button @click="onAdd">添加</el-button>
     </sc-breadcrumb>
-    <el-tabs v-model="activeName"
-             type="card"
-             :lazy="true">
+    <el-tabs class="sc-tabs"
+             v-model="activeName">
       <el-tab-pane v-for="tab in tabs"
                    :key="tab.name"
                    lazy
@@ -15,8 +14,7 @@
         <component :is="tab.component"
                    ref="tables"
                    :type="tab.type"
-                   :name="tab.name"
-                   class="mt-20"></component>
+                   :name="tab.name"></component>
       </el-tab-pane>
     </el-tabs>
 

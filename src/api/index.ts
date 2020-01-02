@@ -82,6 +82,7 @@ export default {
       level: {
         index: `${url}/admin/levelList`,
         delete: `${url}/admin/delLevel`,
+        create: `${url}/admin/agentInsert`,
       },
       /** 会员规则 */
       rules: {
@@ -89,6 +90,10 @@ export default {
         textUpdate: `${url}/admin/RuleTextUpdate`,
         update: `${url}/admin/SetUpUpdate`,
         index: `${url}/admin/SetUpList`,
+      },
+      /** 会员审核列表 */
+      check: {
+        index: `${url}/admin/agentDate`,
       },
     },
 
