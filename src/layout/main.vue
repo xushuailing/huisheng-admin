@@ -1,5 +1,5 @@
 <template>
-  <div class="app-main"
+  <div class="app-main flex-1"
        id="appMain">
     <keep-alive>
       <router-view :key="key"
@@ -23,9 +23,3 @@ export default class appMain extends Vue {
   }
 }
 </script>
-
-<style lang='scss' scoped>
-.app-main {
-  height: 100%;
-}
-</style>

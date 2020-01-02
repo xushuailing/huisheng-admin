@@ -8,10 +8,7 @@
       <!-- <el-aside width="200px">
         <Aside></Aside>
       </el-aside> -->
-      <el-main class="flex-column"
-               :class="{
-          'el-main-p': breadcrumb,
-        }">
+      <el-main class="flex-column">
         <template v-if="breadcrumb">
           <sc-breadcrumb></sc-breadcrumb>
         </template>
@@ -46,14 +43,6 @@ export default class App extends Vue {
 }
 .el-main {
   background: $--background-color-base;
-}
-.el-main-p {
-  padding-top: 70px;
-  position: relative;
-}
-
-.el-main-p .sc-breadcrumb {
-  position: absolute;
-  top: 20px;
+  box-sizing: border-box;
 }
 </style>

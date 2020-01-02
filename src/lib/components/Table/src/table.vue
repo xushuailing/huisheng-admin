@@ -435,6 +435,11 @@ export default {
        * @param {Object}  col   单个列表数据
        * @returns bind  处理后的数据
        */
+
+      if (col.special) {
+        col['show-overflow-tooltip'] = false;
+      }
+
       const bind = Object.assign({}, col);
       delete bind.component;
       delete bind.listeners;
