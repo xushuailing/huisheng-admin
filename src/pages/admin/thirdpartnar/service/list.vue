@@ -4,7 +4,6 @@
                   ref="table"
                   :columns-handler="columnsHandler"
                   :columns="columns"
-                  :columns-props="{align:'center'}"
                   :table-config="tableConfig"
                   :search-config="searchConfig"
                   @table-emitTableHandlerClick="onTableHandlerClick">
@@ -18,9 +17,9 @@
                      :loading="loading"
                      class="w100">
             <el-option v-for="shop in shops"
-                       :key="shop.id"
-                       :label="shop.name"
-                       :value="shop.id"></el-option>
+                       :key="shop.list_id"
+                       :label="shop.shop_name"
+                       :value="shop.list_id"></el-option>
           </el-select>
         </el-form-item>
         <div class="flex mt-10 mb-10">
@@ -42,35 +41,38 @@
   </div>
 </template>
 <script lang='ts'>
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Ref } from 'vue-property-decorator';
 import Info from '@/components/img-name';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
 
 @Component
 export default class TpIndex extends Vue {
+  @Ref('table') table!: ScTable;
+
   columns: ScTable.Columns = [
     {
       label: '团队人员',
-      prop: 'none1',
-      propsHandler: ({ col, row }: obj) => ({ url: row.pic, text: row[col.prop], $vm: this }),
+      prop: 'name',
+      propsHandler: ({ col, row }: obj) => ({
+        url: row.default_img,
+        text: row[col.prop],
+      }),
       component: Info,
     },
     { label: '运营类型', prop: 'none2' },
-    { label: '店铺名称', prop: 'none3' },
+    { label: '店铺名称', prop: 'shop_name' },
     {
       label: '开始时间',
-      prop: 'none4',
-      formater: (row, col) => this.$utils._FormatDate(row[col.prop]),
+      prop: 'start_time',
     },
     {
       label: '结束时间',
-      prop: 'none5',
-      formater: (row, col) => this.$utils._FormatDate(row[col.prop]),
+      prop: 'end_time',
     },
     {
       label: '店铺状况',
-      prop: 'none6',
+      prop: 'service_status',
       formater: (row, col) => [{ class: 'sc-font-primary' }, row[col.prop]],
     },
   ];
@@ -80,9 +82,8 @@ export default class TpIndex extends Vue {
     { name: 'service', title: '去服务' },
   ];
 
-  // TODO: 缺少接口
   tableConfig: ScTable.TableConfig = {
-    api: this.$api.test,
+    api: this.$api.admin.thirdpartnar.service,
     breadcrumbButtons: [],
   };
 
@@ -100,21 +101,21 @@ export default class TpIndex extends Vue {
       },
       {
         label: '运营人员姓名：',
-        prop: 'none1',
+        prop: 'name',
         tag: {
           attr: { placeholder: '请输入运营人员姓名' },
         },
       },
       {
         label: '店铺名称：',
-        prop: 'none3',
+        prop: 'shop_name',
         tag: {
           attr: { placeholder: '请输入店铺名称' },
         },
       },
       {
         label: '创建时间：',
-        prop: 'none7',
+        prop: 'start_time',
         tag: {
           tagType: 'date-picker',
           attr: {
@@ -133,22 +134,26 @@ export default class TpIndex extends Vue {
 
   shops: obj[] = [];
 
+  listId = null;
+
   selectedShop = '';
 
   get currentShop() {
-    const item = this.shops.find((v: obj) => v.id === this.selectedShop);
-    return { url: item ? item.logo : '', name: item ? item.name : '' };
+    const item = this.shops.find((v: obj) => v.list_id === this.selectedShop);
+    return { url: item ? item.logo : '', name: item ? item.shop_name : '' };
   }
 
-  // 获取店铺列表
-  // TODO: 缺少接口
+  mounted() {
+    this.getShops();
+  }
+
   getShops() {
     this.loading = true;
     this.$http
-      .post('')
+      .get(this.$api.admin.thirdpartnar.service.shopIndex)
       .then((res) => {
         console.log('res: ', res);
-        this.shops = res.data.data;
+        this.shops = res.data;
       })
       .catch((err) => {
         this.$utils._ResponseError(err);
@@ -162,8 +167,10 @@ export default class TpIndex extends Vue {
     if (type === 'detail') {
       this.$router.push({ name: '运营客服详情', query: { id: row.id } });
     } else {
-      // this.getShops();
+      this.getShops();
       this.dislogVisible = true;
+
+      this.listId = row.id;
     }
   }
 
@@ -172,13 +179,15 @@ export default class TpIndex extends Vue {
       this.$message.warning('请选择店铺名称');
       return;
     }
-    const api = '';
-    const param = { id: this.selectedShop };
+    const api = this.$api.admin.thirdpartnar.service.update;
+    const param = { list_id: this.selectedShop, id: this.listId };
     this.$http
       .post(api, param)
       .then((res) => {
-        console.log('res: ', res);
+        this.$message.success('设置成功');
         this.dislogVisible = false;
+
+        this.table.emitRefresh();
       })
       .catch((err) => {
         this.$utils._ResponseError(err);

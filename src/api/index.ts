@@ -167,6 +167,20 @@ export default {
         show: `${url}/admin/marketingPlanning_find`,
         update: `${url}/admin/marketingPlanning_update`,
       },
+
+      /** 客服 */
+      service: {
+        index: `${url}/admin/CustomerList`,
+
+        shopIndex: `${url}/admin/stayOperateList`,
+
+        update: `${url}/admin/stayOperateUpdate`,
+      },
+
+      /** 客服列表查看 */
+      serviceLook: {
+        index: `${url}/admin/CustomerOperateList`,
+      },
     },
 
     /** 运营小知识 */

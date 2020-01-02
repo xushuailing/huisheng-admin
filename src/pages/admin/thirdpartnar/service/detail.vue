@@ -2,7 +2,6 @@
   <sc-min-table stripe
                 ref="table"
                 :columns-handler="columnsHandler"
-                :columns-props="{align:'center'}"
                 :columns="columns"
                 :table-config="tableConfig"
                 @table-emitTableHandlerClick="onTableHandlerClick">
@@ -16,35 +15,32 @@ import { obj } from '@/lib/@types/sc-param.d';
 @Component
 export default class TpServiceDetail extends Vue {
   columns: ScTable.Columns = [
-    { label: '店铺名称', prop: 'none1' },
-    { label: '代运营类型', prop: 'none2' },
+    { label: '店铺名称', prop: 'shop_name' },
+    { label: '代运营类型', prop: 'package_name' },
     {
       label: '开始时间',
-      prop: 'none4',
+      prop: 'start_time',
       formater: (row, col) => this.$utils._FormatDate(row[col.prop]),
     },
     {
       label: '结束时间',
-      prop: 'none5',
+      prop: 'end_time',
       formater: (row, col) => this.$utils._FormatDate(row[col.prop]),
     },
     {
       label: '状态',
-      prop: 'none6',
-      formater: (row, col) => {
-        const value = row[col.prop];
-        return [{ class: value === '运营中' ? 'sc-font-danger' : 'sc-font-primary' }, value];
-      },
+      prop: 'status',
+      // formater: (row, col) => {
+      //   const value = row[col.prop];
+      //   return [{ class: value === '运营中' ? 'sc-font-danger' : 'sc-font-primary' }, value];
+      // },
     },
   ];
 
   columnsHandler = ['detail'];
 
-
-  // TODO: 缺少接口
   tableConfig: ScTable.TableConfig = {
-    api: this.$api.test,
-    breadcrumbButtons: [],
+    api: this.$api.admin.thirdpartnar.serviceLook,
   };
 
   onTableHandlerClick({ row, type }: { row: obj; type: string }) {
@@ -54,7 +50,3 @@ export default class TpServiceDetail extends Vue {
   }
 }
 </script>
-<style lang='scss' scoped>
-  .TpServiceDetail {
-  }
-</style>
