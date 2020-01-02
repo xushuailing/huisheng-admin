@@ -2,15 +2,15 @@
   <div class="adv-detail">
     <el-row :gutter="20">
       <el-col v-for="(item,i) in data"
-              :key="item.id"
+              :key="i"
               :span="24">
         <div class="adv-detail__item bg-white border-radius-8 p-30 mt-20">
-          <el-button v-if="i"
+          <el-button v-if="item.price"
                      type="primary"
                      size="small"
                      class="adv-detail__buy"
                      @click="handleBuy(item)">购买</el-button>
-          <div :class="['font-bold',i?'font-28':'font-20']">{{item.title}}</div>
+          <div :class="['font-bold',i?'font-20':'font-28']">{{item.title}}</div>
           <div v-if="i"
                class="font-bold font-20 mt-10">&yen;{{item.price}}/个月</div>
           <div class="mt-10 mb-10 font-info font-18">{{item.introduction}}</div>
@@ -33,7 +33,8 @@ export default class Advertisement extends Vue {
   data: obj[] = [];
 
   buy: obj = {
-    type: this.$route.path.includes('banner') ? 'banner' : 'activity',
+    // type: this.$route.path.includes('banner') ? 'banner' : 'activity',
+    type: 'banner',
     id: '',
     price: '',
   };
@@ -49,12 +50,11 @@ export default class Advertisement extends Vue {
     const api = this.$api.merchant.ads.detail;
     const res = await this.$http.get(api, { id: this.$route.query.id });
     const data = res.data || {};
-    this.data = data;
-    // this.data = [
-    //   { id: data.id, title: data.title, introduction: data.introduction },
-    //   ...(data.banner_list || []),
-    // ];
-    console.log('data: ', data);
+    this.data = [
+      { id: data.id, title: data.title, introduction: data.introduction },
+      ...(data.banner_list || []),
+    ];
+    console.log('data: ', this.data);
   }
 
   mounted() {

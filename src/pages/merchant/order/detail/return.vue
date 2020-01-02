@@ -98,13 +98,19 @@ export default class OrderReturnDetail extends Mixins(Mixin) {
   getDetail() {
     const api = this.$api.merchant.order.return.show;
     const param = { id: this.id };
-    this.$http.get(api, param).then((res) => {
-      const data = res.data || {};
-      this.data = data;
-      Object.keys(this.form).forEach((k) => {
-        this.form[k] = data[k];
+    const loading = this.$utils._Loading.show();
+    this.$http
+      .get(api, param)
+      .then((res) => {
+        const data = res.data || {};
+        this.data = data;
+        Object.keys(this.form).forEach((k) => {
+          this.form[k] = data[k];
+        });
+      })
+      .finally(() => {
+        loading.close();
       });
-    });
   }
 
   async handleReturn() {

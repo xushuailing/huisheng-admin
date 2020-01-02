@@ -195,8 +195,8 @@ export default class Order extends Mixins(Mixin) {
       2: 'send',
       3: 'receive',
       4: 'comment',
+      5: 'finish',
     };
-    // console.log(': ', type[status]);
     this.$router.push({ path: `${type[status] || 'invalid'}-detail`, query: { id } });
   }
 

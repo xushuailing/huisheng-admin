@@ -115,7 +115,7 @@ export default class Vip extends Vue {
       { label: '会员类型', prop: 'member_name' },
       {
         label: '会员金额',
-        prop: 'money',
+        prop: 'member_money',
         formater: (row, col) => (row[col.prop] ? `￥${row[col.prop]}` : ''),
       },
       {

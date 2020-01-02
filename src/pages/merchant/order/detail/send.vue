@@ -90,8 +90,6 @@ export default class OrderSendDetail extends Mixins(Mixin) {
             label: '选择快递：',
             prop: 'name',
             handle: (data) => {
-              console.log('this.expresses, data: ', this.expresses, data);
-
               const item = this.expresses.find((e) => e.id == data);
               return (item && item.name) || '';
             },
@@ -125,19 +123,6 @@ export default class OrderSendDetail extends Mixins(Mixin) {
         .then((res) => {
           const options =
             res.data && res.data.map((e: obj) => ({ ...e, label: e.title, value: e.id }));
-          // const arrObj = _GroupBy(res.data, 'name');
-          // console.log(
-          //   '%c重复数据',
-          //   'color:#fff;background:#40b883;border-radius:5px;padding:2px 5px;',
-          // );
-          // const arr: any = [];
-          // Object.keys(arrObj).forEach((k) => {
-          //   if (arrObj[k].length > 1) {
-          //     arr.push(...arrObj[k]);
-          //   }
-          // });
-          // console.table(arr);
-
           this.expresses = options;
           resolve(options || []);
         })
@@ -149,9 +134,9 @@ export default class OrderSendDetail extends Mixins(Mixin) {
   }
 
   getDetail() {
-    const loading = this.$utils._Loading.show();
     const api = this.$api.merchant.order.show;
     const param = { uid: _Uid, oid: this.id };
+    const loading = this.$utils._Loading.show();
     this.$http
       .get(api, param)
       .then((res) => {

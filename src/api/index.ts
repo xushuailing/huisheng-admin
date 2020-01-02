@@ -235,27 +235,35 @@ export default {
       /** 客服 */
       service: {
         index: `${url}/admin/CustomerServiceList`,
+        create: `${url}/admin/addCustomerService`,
         delete: `${url}/admin/deleteCustomerService`,
       },
     },
 
     /** 会员管理 */
     member: {
-      index: `${url}/admin/OfflineMember`,
-      list: {
-        index: `${url}/admin/AccountingOfficeShow`,
+      index: `${url}/admin/Member_tail_List`,
+      member: {
+        statistics: `${url}/admin/MemberHead`,
+        list: {
+          index: `${url}/admin/membershipDetailsList`,
+        },
+      },
+      agent: {
+        statistics: `${url}/admin/agentHead`,
+        list: {
+          index: `${url}/admin/agentDetailsList`,
+        },
       },
     },
 
     /**  经营管理 */
     manage: {
       index: `${url}/admin/DiscountRecord`,
+      statistics: `${url}/admin/NowTimeData`,
       account: {
-        index: `${url}/admin/DiscountRecord`,
+        index: `${url}/admin/AccountingOfficeShow`,
         // export: `${url}/admin/DiscountRecord`,
-      },
-      record: {
-        index: `${url}/admin/DiscountRecord`,
       },
     },
 
@@ -267,12 +275,15 @@ export default {
       update: `${url}/admin/doAddGoods`,
       delete: `${url}/admin/delGoods`,
       types: `${url}/admin/getType`,
+      shelves: `${url}/admin/saveGoodsStatus`,
       goodsType: `${url}/admin/getGoodsType`,
     },
 
     /** 营销管理 */
     market: {
-      index: `${url}/admin/getCouponList`,
+      index: `${url}/admin/getMarketing`,
+      indexVirtual: `${url}/admin/getMarketingXu`,
+      analysis: `${url}/admin/getAnalysis`,
       addGoods: `${url}/admin/addGoodsCoupon`,
       show: `${url}/admin/getGoodsdetail`,
       update: `${url}/admin/doAddCoupon`,
@@ -316,7 +327,7 @@ export default {
       index: `${url}/admin/AdvertisingPromotion`,
       user: `${url}/admin/userPromotion`,
       create: `${url}/admin/userAddBanner`,
-      detail: `${url}/admin/AdvertisingPromotion`,
+      detail: `${url}/admin/getPromotionDetail`,
       buyPromotion: `${url}/admin/buyPromotion`,
       buyActivity: `${url}/admin/buyActivity`,
       bannerDetail: `${url}/admin/getUserBannerLook`,

@@ -19,10 +19,15 @@
   </div>
 </template>
 <script lang='ts'>
-import { Component, Vue, Prop } from 'vue-property-decorator';
+import { Component, Vue, Prop, Ref } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
 import { _Shopid } from '../config';
+
+interface Shelves {
+  gid: string;
+  status: string;
+}
 
 const columns: ScTable.SetColumns = [
   ['产品图片', 'image', 100, null, 'img'],
@@ -35,6 +40,8 @@ const columns: ScTable.SetColumns = [
 
 @Component
 export default class MerchantInject extends Vue {
+  @Ref('table') table!: ScTable;
+
   userInfo = this.$utils._Storage.get('user_info');
 
   columns = this.$utils._SetTableColumns(columns);
@@ -63,7 +70,7 @@ export default class MerchantInject extends Vue {
     index: { shopid: _Shopid },
   };
 
-  onTableHandlerClick({ row, type }: { row: obj; type: string }) {
+  onTableHandlerClick({ row, type }: { row: obj<string>; type: string }) {
     if (type === 'detail') {
       this.$router.push({
         path: 'add',
@@ -71,9 +78,19 @@ export default class MerchantInject extends Vue {
       });
     } else if (type === 'unshelve') {
       console.log('下架: ');
+      this.handleShelves([{ gid: row.id, status: row.status }]);
     } else if (type === 'shelves') {
       console.log('上架: ');
+      this.handleShelves([{ gid: row.id, status: row.status }]);
     }
+  }
+
+  handleShelves(list: Shelves[]) {
+    const api = this.$api.merchant.product.shelves;
+    const params = { shopid: _Shopid, list };
+    this.$http.post(api, params).then((res) => {
+      console.log('res.data: ', res.data);
+    });
   }
 
   handleAdd() {
@@ -81,7 +98,9 @@ export default class MerchantInject extends Vue {
   }
 
   onSlotClick() {
-    console.log('1', 1);
+    const data = this.table.selectTableData;
+    const list: Shelves[] = data.map((v) => ({ gid: v.id, status: v.status }));
+    this.handleShelves(list);
   }
 }
 </script>

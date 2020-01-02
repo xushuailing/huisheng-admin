@@ -66,6 +66,7 @@ export default class OrderStatus extends Mixins(Mixin) {
     }, 1000);
   }
 
+  /** 自动发货/收货 */
   handleTimeout() {
     if (!this.time) return;
 
@@ -76,17 +77,17 @@ export default class OrderStatus extends Mixins(Mixin) {
       '该订单超过7天未确认收货，系统已自动收货！';
 
     this.$http
-      .get(api, { id: this.id })
+      .spGet(api)
       .then((res) => {
         if (res.status) {
           this.$message.error(message);
-          this.$router.push('order');
-        } else {
-          this.$message.error('自动关闭订单失败');
+          const path = this.isPay ? 'send-detail' : 'finish-detail';
+          this.$router.push({ path, query: { id: String(this.id) } });
         }
       })
       .catch((err) => {
         this.$utils._ResponseError(err);
+        this.$router.push('order');
       });
   }
 

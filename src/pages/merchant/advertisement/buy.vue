@@ -5,7 +5,7 @@
     <div slot="title">选择时间</div>
     <div class="flex-jc">
       <el-form label-position="left"
-               style="width:60%">
+               style="width:60%;min-width:340px;">
         <el-form-item label="banner 价格：">{{price}}</el-form-item>
         <el-form-item label="选择购买时间：">
           <el-select v-model="value">
@@ -35,7 +35,7 @@ export default class BuyBanner extends Vue {
 
   @Prop({ type: [String, Number] }) id!: string | number;
 
-  @Prop({ type: String }) type!: string;
+  @Prop({ type: String, default: 'banner' }) type!: string;
 
   @Prop({ type: String, default: '' }) price!: string;
 
@@ -66,6 +66,7 @@ export default class BuyBanner extends Vue {
       await this.$http.get(api, { shopid: _Shopid, [idProp]: this.id, num: this.value });
       this.$message.success('已提交申请');
     } catch (error) {
+      this.$utils._ResponseError(error);
       this.$message.error('提交申请失败');
       console.log('error :', error);
     }

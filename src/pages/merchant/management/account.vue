@@ -53,7 +53,12 @@ export default class ManagementAccount extends Vue {
 
   columns: ScTable.Columns = [
     { label: '日期', prop: 'time' },
-    { label: '支出项目', prop: 'title' },
+    {
+      label: '支出项目',
+      prop: 'title',
+      // 2 提现 4 订单收入
+      formater: (row, col) => (row[col.prop] == 2 ? '提现' : '订单收入'),
+    },
     {
       label: '本月交易额',
       prop: 'money',
@@ -62,6 +67,7 @@ export default class ManagementAccount extends Vue {
     { label: '项目类别', prop: 'type' },
   ];
 
+  // TODO：没数据
   tableConfig = {
     api: this.$api.merchant.manage.account,
     index: { shopid: _Shopid, classify: 1, typetime: 1 },

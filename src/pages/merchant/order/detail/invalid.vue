@@ -71,9 +71,15 @@ export default class OrderInvalidDetail extends Mixins(Detail, GetValue) {
   getDetail() {
     const api = this.$api.merchant.order.show;
     const param = { uid: _Uid, oid: this.id };
-    this.$http.get(api, param).then((res) => {
-      this.data = res.data || {};
-    });
+    const loading = this.$utils._Loading.show();
+    this.$http
+      .get(api, param)
+      .then((res) => {
+        this.data = res.data || {};
+      })
+      .finally(() => {
+        loading.close();
+      });
   }
 
   mounted() {

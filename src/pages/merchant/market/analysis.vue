@@ -45,19 +45,71 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { obj } from '@/lib/@types/sc-param.d';
+import { _Shopid } from '../config';
+
+/**
+ * status1: 待付款
+ * status2: 待发货
+ * status3: 待收货
+ * status4: 全额退款
+ * status5: 退货退款
+ */
+type AnalysisKeys = 'status1' | 'status2' | 'status3' | 'status4' | 'status5';
+type Analysis = {
+  [K in AnalysisKeys]: {
+    label: string;
+    value: number;
+  };
+};
+
+type Turnover = {
+  date: string;
+  price: number;
+  week: string;
+};
+
+/**
+ * status1: 今日订购量
+ * status2: 待付款
+ * status3: 已付款
+ * status4: 已退货
+ */
+type TodayKeys = 'status1' | 'status2' | 'status3' | 'status4';
+type Today = { [K in AnalysisKeys]: number };
+
+interface AnalysisData {
+  analysis: Analysis;
+  turnover: Turnover[];
+  today: Today;
+}
+
+interface Chart<T = obj> {
+  extend: obj;
+  settings: obj;
+  data: {
+    columns: string[];
+    rows: T[];
+  };
+}
+
+type OrderData = {
+  type: string;
+  prop: TodayKeys;
+  num: number;
+};
 
 @Component
 export default class MarketAnalysis extends Vue {
-  analysis = {
-    none1: { label: '待付款订单', value: '123455' },
-    none2: { label: '待发货订单', value: '123455' },
-    none3: { label: '待收货订单', value: '123455' },
-    none4: { label: '全额退款订单', value: '123455' },
-    none5: { label: '退款退货订单', value: '123455' },
+  analysis: Analysis = {
+    status1: { label: '待付款订单', value: 0 },
+    status2: { label: '待发货订单', value: 0 },
+    status3: { label: '待收货订单', value: 0 },
+    status4: { label: '全额退款订单', value: 0 },
+    status5: { label: '退款退货订单', value: 0 },
   };
 
   // TODO：加竖线
-  growth = {
+  growth: Chart = {
     extend: {
       grid: {
         left: '20',
@@ -71,22 +123,23 @@ export default class MarketAnalysis extends Vue {
     },
     settings: {
       yAxisType: ['KMB'],
+      labelMap: { week: '周次', price: '营业额' },
     },
     data: {
-      columns: ['周次', '营业额'],
+      columns: ['week', 'price'],
       rows: [
-        { 周次: '周一', 营业额: 3000 },
-        { 周次: '周二', 营业额: 6000 },
-        { 周次: '周三', 营业额: 4000 },
-        { 周次: '周四', 营业额: 5000 },
-        { 周次: '周五', 营业额: 4500 },
-        { 周次: '周六', 营业额: 5803 },
-        { 周次: '周日', 营业额: 3892 },
+        // { 周次: '周一', 营业额: 3000 },
+        // { 周次: '周二', 营业额: 6000 },
+        // { 周次: '周三', 营业额: 4000 },
+        // { 周次: '周四', 营业额: 5000 },
+        // { 周次: '周五', 营业额: 4500 },
+        // { 周次: '周六', 营业额: 5803 },
+        // { 周次: '周日', 营业额: 3892 },
       ],
     },
   };
 
-  order = {
+  order: Chart<OrderData> = {
     extend: {
       grid: {
         left: '20',
@@ -96,14 +149,39 @@ export default class MarketAnalysis extends Vue {
         containLabel: true,
       },
     },
+    settings: {
+      labelMap: { week: '类别', num: '今日订购量' },
+    },
     data: {
-      columns: ['类别', '今日订购量'],
+      columns: ['type', 'num'],
       rows: [
-        { 类别: '待付款', 今日订购量: 55 },
-        { 类别: '已付款', 今日订购量: 100 },
-        { 类别: '已退货', 今日订购量: 100 },
+        { type: '待付款', num: 0, prop: 'status2' },
+        { type: '已付款', num: 0, prop: 'status3' },
+        { type: '已退货', num: 0, prop: 'status4' },
       ],
     },
   };
+
+  getData() {
+    const api = this.$api.merchant.market.analysis;
+    this.$http.get<AnalysisData>(api, { shopid: _Shopid }).then((res) => {
+      const { analysis = {}, turnover = [], today = {} } = res.data || {};
+      Object.keys(analysis).forEach((k) => {
+        if (k in this.analysis) {
+          // @ts-ignore TODO: 这里的类型推论无法判断 k 属于 analysis
+          this.analysis[k].value = analysis[k];
+        }
+      });
+      this.growth.data.rows = turnover;
+      this.order.data.rows.forEach((item) => {
+        // @ts-ignore TODO: today 为{}时没有 key
+        item.num = today[item.prop];
+      });
+    });
+  }
+
+  mounted() {
+    this.getData();
+  }
 }
 </script>

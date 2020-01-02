@@ -116,11 +116,26 @@ const post: Request = (url, param = {}, custom = {}) => {
   });
 };
 
+const spGet: Request = (url, param = {}, custom = {}) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(url, { params: param, ...custom })
+      .then((res: AxiosResponse) => {
+        resolve(res);
+      })
+      .catch((err: AxiosError) => {
+        reject(err);
+      });
+  });
+};
+
 export default {
   /** get请求 */
   get,
   /** post请求 */
   post,
+  /** spGet请求 */
+  spGet,
   /** axios请求 */
   axios<T = any>(custom: AxiosRequestConfig = {}): AxiosPromise<T> {
     return axios(custom);

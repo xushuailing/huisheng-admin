@@ -88,19 +88,19 @@ const router: RouteConfig[] = [
         component: () => import('../pages/merchant/market/analysis.vue'),
         meta: { breadcrumb: [{ title: '营销管理' }, { title: '分析概况' }] },
       },
-      // 虚拟
+      // 虚拟：满减/ 实体：折扣
       {
         path: 'add',
-        name: '新增优惠券-虚拟',
+        name: '新增优惠券-虚拟满减/实体折扣',
         component: () => import('../pages/merchant/market/add.vue'),
         meta: {
           breadcrumb: [{ title: '活动管理' }, { title: '优惠券' }, { title: '新增优惠券' }],
         },
       },
-      // 实体
+      // 实体:满减
       {
-        path: 'manjian',
-        name: '新增优惠券-实体',
+        path: 'add-discount',
+        name: '新增优惠券-实体满减',
         component: () => import('../pages/merchant/market/add-coupon.vue'),
         meta: {
           breadcrumb: [{ title: '营销管理' }, { title: '优惠券' }, { title: '新增优惠券' }],
@@ -203,14 +203,6 @@ const router: RouteConfig[] = [
         meta: { breadcrumb: [{ title: '订单管理' }, { title: '详情' }] },
       },
       {
-        path: 'delivery',
-        name: '待发货订单',
-        component: () => import('../pages/merchant/order/detail/delivery.vue'),
-        meta: {
-          breadcrumb: [{ title: '订单管理' }, { title: '待发货订单' }, { title: '发货' }],
-        },
-      },
-      {
         path: 'pay-detail',
         name: '待付款订单详情',
         component: () => import('../pages/merchant/order/detail/pay.vue'),
@@ -282,13 +274,13 @@ const router: RouteConfig[] = [
       //   meta: { breadcrumb: [{ title: '广告管理' }, { title: '活动banner' }] },
       // },
       {
-        path: 'banner-buy',
+        path: 'buy',
         name: 'banner购买',
         component: () => import('../pages/merchant/advertisement/banner-detail.vue'),
         meta: { breadcrumb: [{ title: '广告管理' }, { title: '广告推广' }, { title: '详情' }] },
       },
       {
-        path: 'today-buy',
+        path: 'buy',
         name: '今日上新购买',
         component: () => import('../pages/merchant/advertisement/banner-detail.vue'),
         meta: { breadcrumb: [{ title: '广告管理' }, { title: '广告推广' }, { title: '详情' }] },
