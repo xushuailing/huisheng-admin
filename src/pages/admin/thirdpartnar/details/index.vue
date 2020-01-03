@@ -37,7 +37,14 @@ export default class TpDetail extends Vue {
     { label: '数据上传', name: 'data', component: data },
   ];
 
-  activeName = this.tabs[1].name;
+  activeName = this.tabs[0].name;
+
+  created() {
+    const name = this.$route.query.name as string;
+    if (name) {
+      this.activeName = name;
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>

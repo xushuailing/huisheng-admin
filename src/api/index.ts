@@ -148,6 +148,7 @@ export default {
 
     /** 代运营管理 */
     thirdpartnar: {
+      show: `${url}/admin/operation_package_find`,
       /** 奶爸代运营列表 */
       index: {
         index: `${url}/admin/operation_package`,
@@ -166,7 +167,8 @@ export default {
       },
       /** 店铺诊断 */
       shops: {
-        show: `${url}/admin/crm_img_list_find`,
+        show: `${url}/admin/shopDiagnosis_find`,
+        update: `${url}/admin/shopDiagnosis_update`,
       },
 
       /** 营销策划 */
@@ -178,7 +180,7 @@ export default {
       /** 客服 */
       service: {
         index: `${url}/admin/CustomerList`,
-
+        /** 去运营列表 */
         shopIndex: `${url}/admin/stayOperateList`,
 
         update: `${url}/admin/stayOperateUpdate`,

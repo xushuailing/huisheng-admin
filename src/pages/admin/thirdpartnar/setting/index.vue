@@ -28,6 +28,6 @@ export default class TpSetting extends Vue {
     { label: '代运营', name: 'days', component: days },
   ];
 
-  activeName = this.tabs[1].name;
+  activeName = this.tabs[0].name;
 }
 </script>

@@ -12,11 +12,12 @@ import { Component, Vue } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { ScForm } from '@/lib/@types/sc-form.d';
 
-const columns: ScTable.SetColumns = [['运营名称', 'title'], ['限时时间', 'day']];
-
 @Component
 export default class TpDays extends Vue {
-  columns = this.$utils._SetTableColumns(columns);
+  columns: ScTable.Columns = [
+    { label: '运营名称', prop: 'title' },
+    { label: '限时时间', prop: 'day', formater: (row, col) => `${row[col.prop]}天` },
+  ];
 
   columnsHandler = ['edit'];
 

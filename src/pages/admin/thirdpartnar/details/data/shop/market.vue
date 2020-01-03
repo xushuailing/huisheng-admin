@@ -27,27 +27,31 @@ export default class TpShopMarket extends Vue {
     width: '100%',
     'label-width': '85px',
     formAttr: { 'label-position': 'left' },
+    handleSubmit: (data) => {
+      console.log('data', data);
+      return data;
+    },
     data: [
       [
         {
           label: '目标人群：',
           prop: 'none1',
-          tag: { attr: { type: 'textarea', rows: 4 } },
+          tag: { tagType: 'editor', attr: { rows: 4 } },
         },
         {
           label: '位置状况：',
           prop: 'none2',
-          tag: { attr: { type: 'textarea', rows: 4 } },
+          tag: { tagType: 'editor' },
         },
         {
           label: '竞争分析：',
           prop: 'none3',
-          tag: { attr: { type: 'textarea', rows: 4 } },
+          tag: { tagType: 'editor' },
         },
         {
           label: '痛点分析：',
           prop: 'none4',
-          tag: { attr: { type: 'textarea', rows: 4 } },
+          tag: { tagType: 'editor' },
         },
       ],
     ],
