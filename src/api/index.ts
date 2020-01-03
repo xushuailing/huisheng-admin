@@ -94,6 +94,8 @@ export default {
       /** 会员审核列表 */
       check: {
         index: `${url}/admin/agentDate`,
+        update: `${url}/admin/agentDateUpdate`,
+        agentList: `${url}/admin/agentList`,
       },
     },
 
