@@ -106,12 +106,6 @@ const router: RouteConfig[] = [
           breadcrumb: [{ title: '营销管理' }, { title: '优惠券' }, { title: '新增优惠券' }],
         },
       },
-      {
-        path: 'coupon',
-        name: '优惠券',
-        component: () => import('../pages/merchant/market/coupon.vue'),
-        meta: { breadcrumb: [{ title: '营销管理' }, { title: '优惠券' }] },
-      },
     ],
   },
   {

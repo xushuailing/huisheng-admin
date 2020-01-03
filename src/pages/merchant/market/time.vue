@@ -26,7 +26,7 @@ import { obj } from '@/lib/@types/sc-param.d';
 
 @Component
 export default class ActvSortsAdd extends Vue {
-  @Prop([Object])
+  @Prop(Object)
   readonly value!: Object | undefined;
 
   form = {

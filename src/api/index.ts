@@ -281,13 +281,31 @@ export default {
 
     /** 营销管理 */
     market: {
-      index: `${url}/admin/getMarketing`,
-      indexVirtual: `${url}/admin/getMarketingXu`,
+      index: {
+        entity: `${url}/admin/getMarketing`,
+        virtual: `${url}/admin/getMarketingXu`,
+      },
+      show: {
+        discount: `${url}/admin/getDiscount`,
+        coupon: {
+          entity: `${url}/admin/getAnalysis`,
+          virtual: `${url}/admin/getCouponXu`,
+        },
+      },
+      update: {
+        discount: `${url}/admin/doDiscount`,
+        coupon: {
+          entity: `${url}/admin/doCoupon`,
+          virtual: `${url}/admin/doCouponXu`,
+        },
+      },
+      mine: {
+        entity: `${url}/admin/getYouhuiquna`,
+      },
       analysis: `${url}/admin/getAnalysis`,
       addGoods: `${url}/admin/addGoodsCoupon`,
-      show: `${url}/admin/getGoodsdetail`,
-      update: `${url}/admin/doAddCoupon`,
-      delete: `${url}/admin/delCoupon`,
+      discountGoods: `${url}/admin/getDiscountgoods`,
+      delete: `${url}/admin/delYouhuiquna`,
     },
 
     /** 订单管理 */
