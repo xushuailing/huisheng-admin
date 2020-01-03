@@ -20,12 +20,10 @@ export default class TpServiceDetail extends Vue {
     {
       label: '开始时间',
       prop: 'start_time',
-      formater: (row, col) => this.$utils._FormatDate(row[col.prop]),
     },
     {
       label: '结束时间',
       prop: 'end_time',
-      formater: (row, col) => this.$utils._FormatDate(row[col.prop]),
     },
     {
       label: '状态',
@@ -37,15 +35,22 @@ export default class TpServiceDetail extends Vue {
     },
   ];
 
-  columnsHandler = ['detail'];
+  columnsHandler = ['look'];
 
-  tableConfig: ScTable.TableConfig = {
-    api: this.$api.admin.thirdpartnar.serviceLook,
-  };
+  get tableConfig(): ScTable.TableConfig {
+    return {
+      api: this.$api.admin.thirdpartnar.serviceLook,
+      index: { id: this.$route.query.id },
+    };
+  }
+
+  // created() {
+  //   this.tableConfig.index!.id = this.$route.query.id;
+  // }
 
   onTableHandlerClick({ row, type }: { row: obj; type: string }) {
-    if (type === 'detail') {
-      console.log('%c查看', 'color:#fff;background:#40b883;border-radius:5px;padding:2px 5px;');
+    if (type === 'look') {
+      this.$router.push('/thirdpartnar/shops');
     }
   }
 }
