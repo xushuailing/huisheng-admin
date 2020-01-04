@@ -33,6 +33,7 @@ export default class AddCoupon extends Vue {
       width: '70%',
       'label-width': '130px',
       formAttr: { 'label-position': 'right' },
+      bodyType: 'json',
       params: { id: this.$route.query.id, shopid: _Shopid },
       buttons: [{ mode: 'cancel', isHide: false, sort: 7 }, { mode: 'submit', text: '保存' }],
       rules: [

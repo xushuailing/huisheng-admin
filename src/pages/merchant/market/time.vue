@@ -26,7 +26,7 @@ import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
 import { obj } from '@/lib/@types/sc-param.d';
 
 @Component
-export default class ActvSortsAdd extends Vue {
+export default class EffectiveTime extends Vue {
   @Prop(Object)
   readonly value!: Object | undefined;
 
@@ -35,7 +35,7 @@ export default class ActvSortsAdd extends Vue {
     date: '',
   };
 
-  @Watch('value')
+  @Watch('value', { immediate: true, deep: true })
   onValueChange(val: any) {
     if (val) this.form = val;
   }

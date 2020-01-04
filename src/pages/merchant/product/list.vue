@@ -1,8 +1,7 @@
 <template>
   <div class='test-min'>
-    <sc-breadcrumb class="w100 flex-je pr-30 mb-10">
+    <sc-breadcrumb class="w100 flex-je">
       <el-button type="primary"
-                 class="mr-10"
                  @click="handleAdd">发布宝贝</el-button>
     </sc-breadcrumb>
     <sc-min-table stripe
