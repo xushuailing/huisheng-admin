@@ -34,7 +34,6 @@ export default class SettingRoleList extends Vue {
 
   columnsHandler = ['del'];
 
-  // TODO: 缺少删除接口
   tableConfig = {
     api: this.$api.admin.vip.level,
     // breadcrumbButtons: ['add'],

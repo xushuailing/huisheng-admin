@@ -81,7 +81,7 @@ export default {
       /** 会员列表 */
       level: {
         index: `${url}/admin/levelList`,
-        delete: `${url}/admin/delLevel`,
+        delete: `${url}/admin/memberDel`,
         create: `${url}/admin/agentInsert`,
       },
       /** 会员规则 */
