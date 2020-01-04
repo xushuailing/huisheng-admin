@@ -235,6 +235,22 @@ export default [
         },
       },
       {
+        path: 'finish',
+        name: '店铺装修',
+        component: () => import('../pages/admin/thirdpartnar/details/data/finish/index.vue'),
+        meta: {
+          breadcrumb: [{ title: '代运营管理' }, { title: '奶爸代运营列表' }, { title: '店铺装修' }],
+        },
+      },
+      {
+        path: 'maintain',
+        name: '数据维护',
+        component: () => import('../pages/admin/thirdpartnar/details/data/maintain/index.vue'),
+        meta: {
+          breadcrumb: [{ title: '代运营管理' }, { title: '奶爸代运营列表' }, { title: '数据维护' }],
+        },
+      },
+      {
         path: 'promotion',
         name: '推广计划表',
         component: () => import('../pages/admin/thirdpartnar/details/data/promotion/index.vue'),

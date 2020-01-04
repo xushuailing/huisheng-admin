@@ -1,13 +1,12 @@
 
 <template>
   <div class="tp-shop">
-    <div class="tp-shop__header">
+    <!-- <div class="tp-shop__header">
       <el-button size="small"
                  type="primary">一键导入</el-button>
       <el-button size="small"
                  type="primary">上传数据</el-button>
-    </div>
-
+    </div> -->
     <el-tabs class="sc-tabs"
              v-model="activeName">
       <el-tab-pane v-for="tab in tabs"
@@ -20,17 +19,11 @@
                    class="bg-white p-20"></component>
       </el-tab-pane>
     </el-tabs>
-
   </div>
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import UseMarket from './market.vue';
-import UsePeer from './peer.vue';
-import UseSetting from './setting.vue';
-import UseData from './data.vue';
-import UsePlan from './plan.vue';
-import UseSolution from './solution.vue';
+import editor from './editor.vue';
 
 @Component
 export default class TpShop extends Vue {
@@ -39,24 +32,28 @@ export default class TpShop extends Vue {
   }
 
   tabs = [
-    { label: '市场分析', name: 'market_analysis', component: UseMarket },
-    { label: '优秀同行', name: 'excellent_peers', component: UsePeer },
-    { label: '基础设置', name: 'foundation_setup', component: UseSetting },
-    { label: '数据分析', name: 'data_analysis', component: UseData },
-    { label: '营销策划', name: 'marketing_planning', component: UsePlan },
-    { label: '解决方案', name: 'Solution', component: UseSolution },
+    { label: '曝光率', name: 'exposure_rate', component: editor },
+    { label: '转化率', name: 'shop_conversion_rate', component: editor },
+    { label: '下单转化率', name: 'order_conversion_rate', component: editor },
+    { label: '复购率', name: 'repeat_purchase_rate', component: editor },
+    { label: '客单价', name: 'customer_unit_price', component: editor },
+    { label: '店铺诊断', name: 'shop_diagnosis', component: editor },
+    { label: '店铺装修', name: 'shop_decoration', component: editor },
+    { label: '营销策划', name: 'marketing_planning', component: editor },
+    { label: '推广设计', name: 'extension_design', component: editor },
+    { label: '感谢信', name: 'thank_you_letter', component: editor },
   ];
 
   activeName = this.tabs[0].name;
-
-  detail = '';
 
   mounted() {
     this.getData();
   }
 
+  detail = '';
+
   async getData() {
-    const api = this.$api.admin.thirdpartnar.shops.show;
+    const api = this.$api.admin.thirdpartnar.maintain.show;
     const { data } = await this.$http.get(api, { id: this.id });
     console.log('data :', data);
 

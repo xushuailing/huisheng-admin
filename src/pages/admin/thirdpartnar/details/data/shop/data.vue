@@ -11,60 +11,74 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
+import { Component, Mixins } from 'vue-property-decorator';
 import { ScForm } from '@/lib/@types/sc-form.d';
-import { obj } from '@/lib/@types/sc-param.d';
+import mixins from './mixins';
 
 @Component
-export default class TpShopData extends Vue {
-  @Prop({ type: [String, Number], required: true })
-  id!: string;
-
-  // TODO: 缺少接口
-  api = this.$api.test.create;
-
+export default class TpShopData extends Mixins(mixins) {
   config: ScForm.Edit = {
-    type: 'specialty',
     width: '100%',
-    formAttr: { 'label-position': 'left', 'label-width': '100px' },
+    'label-width': '85px',
+    type: 'specialty',
+    formAttr: { 'label-position': 'left' },
+    requestMethod: 'get',
+    handleSubmit: this.handleSubmit,
     data: [
       [
         {
           label: '曝光量：',
           prop: 'none1',
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
         },
         {
           label: '入店转化率：',
           prop: 'none2',
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
         },
         {
           label: '下单转化率：',
           prop: 'none3',
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
         },
         {
           label: '复购率：',
           prop: 'none4',
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
         },
         {
           label: '客单价：',
           prop: 'none5',
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
         },
         {
           label: '顾客类型：',
           prop: 'none6',
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
         },
         {
           label: '新顾客占比：',
           prop: 'none7',
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
         },
         {
           label: '老顾客占比： ：',
           prop: 'none8',
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
         },
         {
           label: '下单时间：',
           prop: 'none9',
-          tag: { tagType: 'date-picker', attr: { type: 'datetime', placeholder: '请选择' } },
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
         },
       ],
     ],

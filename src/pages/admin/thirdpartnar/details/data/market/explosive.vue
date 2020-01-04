@@ -1,5 +1,5 @@
 <template>
-  <div class="border-radius-4">
+  <div class="bg-white p-20 border-radius-4">
     <sc-edit ref="scEdit"
              mode="page"
              :api="api"
@@ -16,7 +16,7 @@ import { ScForm } from '@/lib/@types/sc-form.d';
 import mixins from './mixins';
 
 @Component
-export default class TpShopMarket extends Mixins(mixins) {
+export default class TpMarketExplosive extends Mixins(mixins) {
   config: ScForm.Edit = {
     width: '100%',
     'label-width': '85px',
@@ -26,29 +26,8 @@ export default class TpShopMarket extends Mixins(mixins) {
     data: [
       [
         {
-          label: '目标人群：',
+          label: '',
           prop: 'none1',
-          default: '',
-          handle: (data) => `${data}#${this.name}#`,
-          tag: { tagType: 'editor' },
-        },
-        {
-          label: '位置状况：',
-          prop: 'none2',
-          default: '',
-          handle: (data) => `${data}#${this.name}#`,
-          tag: { tagType: 'editor' },
-        },
-        {
-          label: '竞争分析：',
-          prop: 'none3',
-          default: '',
-          handle: (data) => `${data}#${this.name}#`,
-          tag: { tagType: 'editor' },
-        },
-        {
-          label: '痛点分析：',
-          prop: 'none4',
           default: '',
           handle: (data) => `${data}#${this.name}#`,
           tag: { tagType: 'editor' },

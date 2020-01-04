@@ -11,90 +11,105 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
+import { Component, Mixins } from 'vue-property-decorator';
 import { ScForm } from '@/lib/@types/sc-form.d';
-import { obj } from '@/lib/@types/sc-param.d';
+import mixins from './mixins';
 
 @Component
-export default class TpShopSetting extends Vue {
-  @Prop({ type: [String, Number], required: true })
-  id!: string;
-
-  // TODO: 缺少接口
-  api = this.$api.test.create;
-
+export default class TpShopSetting extends Mixins(mixins) {
   config: ScForm.Edit = {
-    type: 'specialty',
     width: '100%',
-    formAttr: { 'label-position': 'left', 'label-width': '85px' },
+    'label-width': '85px',
+    formAttr: { 'label-position': 'left' },
+    requestMethod: 'get',
+    handleSubmit: this.handleSubmit,
+    type: 'specialty',
     data: [
       [
         {
           label: '店铺评分：',
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
           prop: 'none1',
         },
         {
           label: '营业时间：',
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
           prop: 'none2',
-          tag: { tagType: 'date-picker', attr: { type: 'datetime', placeholder: '请选择' } },
         },
         {
           label: '配送方式：',
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
           prop: 'none3',
         },
         {
           label: '到店自取：',
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
           prop: 'none4',
-          tag: { tagType: 'select', options: [] },
         },
         {
           label: '急速退货：',
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
           prop: 'none5',
-          tag: { tagType: 'select', options: [] },
         },
         {
           label: '店铺名称：',
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
           prop: 'none6',
         },
         {
           label: '经营品类：',
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
           prop: 'none7',
-          tag: { tagType: 'select', options: [] },
         },
         {
           label: '接单方式：',
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
           prop: 'none8',
-          tag: { tagType: 'select', options: [] },
         },
         {
           label: '专场海报：',
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
           prop: 'none9',
-          tag: { tagType: 'select', options: [] },
         },
         {
           label: '产品图片：',
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
           prop: 'none10',
-          tag: { tagType: 'select', options: [] },
         },
         {
           label: '规格属性：',
+
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
           prop: 'none11',
-          tag: { tagType: 'select', options: [] },
         },
         {
           label: '店铺公告：',
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
           prop: 'none12',
-          tag: { tagType: 'select', options: [] },
         },
         {
           label: '套餐设计：',
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
           prop: 'none13',
-          tag: { tagType: 'select', options: [] },
         },
         {
           label: '引流爆款：',
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
           prop: 'none14',
-          tag: { tagType: 'select', options: [] },
         },
       ],
     ],

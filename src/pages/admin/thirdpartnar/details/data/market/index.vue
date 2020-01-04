@@ -13,11 +13,10 @@
                    :key="tab.name"
                    :label="tab.label"
                    :name="tab.name">
-        <component v-if="tab.component"
-                   :is="tab.component"
+        <component :is="tab.component"
+                   :detail="detail"
                    :name="tab.name"
-                   :id="id"
-                   class="mt-10"></component>
+                   class="bg-white p-20"></component>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -25,6 +24,10 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import position from './position.vue';
+import explosive from './explosive.vue';
+import fullScale from './full_scale.vue';
+import distribution from './distribution.vue';
+import other from './other.vue';
 import plan from './plan.vue';
 
 @Component
@@ -35,11 +38,11 @@ export default class TpShop extends Vue {
 
   tabs = [
     { label: '产品定位', name: 'product_pricing', component: position },
-    { label: '爆款引流', name: 'explosive_drainage' },
-    { label: '满减活动', name: 'full_scale_activities' },
-    { label: '配送设计', name: 'distribution_design' },
-    { label: '其他活动', name: 'other_activities' },
-    { label: '营销策划表', name: 'plan', component: plan },
+    { label: '爆款引流', name: 'explosive_drainage', component: explosive },
+    { label: '满减活动', name: 'full_scale_activities', component: fullScale },
+    { label: '配送设计', name: 'distribution_design', component: distribution },
+    { label: '其他活动', name: 'other_activities', component: other },
+    { label: '营销策划表', name: 'table', component: plan },
   ];
 
   activeName = this.tabs[0].name;
@@ -48,10 +51,14 @@ export default class TpShop extends Vue {
     this.getData();
   }
 
+  detail = '';
+
   async getData() {
     const api = this.$api.admin.thirdpartnar.market.show;
-    const { data } = await this.$http.get(api, { id: 16 });
-    console.log('data', data);
+    const { data } = await this.$http.get(api, { id: this.id });
+    console.log('data :', data);
+
+    this.detail = JSON.stringify(data);
   }
 }
 </script>
