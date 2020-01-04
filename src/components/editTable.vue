@@ -550,7 +550,7 @@ export default class EditTable extends Vue {
    * @returns Promise 异步的验证结果(true/false)
    */
   validate() {
-    return new Promise((resolve, reject) => {
+    return new Promise<Boolean>((resolve, reject) => {
       this.$refs.editForm
         .validate()
         .then((valid) => {

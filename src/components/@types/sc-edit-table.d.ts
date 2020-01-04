@@ -190,4 +190,59 @@ export namespace ScEditTable {
 
   type Columns = EditTableColumn[];
   type Form = EditForm;
+
+  interface Methods {
+    /** 新增一行 */
+    addRow(): void;
+
+    /**
+     * 删除指定行
+     * @param {Number} index 要删除的行号
+     */
+    handleDelete(index: number): void;
+
+    /** 开启编辑状态 */
+    handleEdit(): void;
+
+    /**
+     * 验证表单
+     * @returns Promise 异步的验证结果(true/false)
+     */
+    validate(): Promise<Boolean>;
+
+    /**
+     * 验证指定行表单项
+     * @param {Number} index 行号
+     */
+    validateFormItem(index: number): void;
+
+    /**
+     * 清除指定行验证信息
+     * @param {Number} index 行号
+     */
+    clearFormItemValidate(index: number): void;
+
+    /**
+     * 移除空行
+     * @param {String} formKey 当前表单的 key
+     * @returns {Object} 表单key 和 表单数据
+     */
+    removeEmpty<T = obj>(formKey: string): { key: string; data: T[] };
+
+    /** 重置表单 */
+    reset(): void;
+
+    /**
+     * 设置表格的值
+     * 1. 无 row 无 col：表格的重新赋值
+     * 2. 有 row 无 col：设置指定行数据
+     * 3. 有 row 有 col：设置指定单元格数据
+     *
+     * @param {*} value 需设置的值
+     * @param {number} [row] 行号
+     * @param {string} [col] 列字段名
+     * @memberof Methods
+     */
+    setValue(value: any, row?: number, col?: string): void;
+  }
 }
