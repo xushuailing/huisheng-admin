@@ -306,6 +306,7 @@ export default {
       },
       show: {
         discount: `${url}/admin/getDiscount`,
+        discountGoods: `${url}/admin/getDiscountgoods`,
         coupon: {
           entity: `${url}/admin/getCoupon`,
           virtual: `${url}/admin/getCouponXu`,

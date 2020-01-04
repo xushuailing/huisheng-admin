@@ -11,10 +11,10 @@
 <script lang='ts'>
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import { ScForm } from '@/lib/@types/sc-form.d';
+import { obj } from '@/lib/@types/sc-param.d';
+import { _IsVirtual, _Shopid } from '../config';
 import Condition, { SortItem } from './condition.vue';
 import Time from './time.vue';
-import { _IsVirtual, _Shopid } from '../config';
-import { obj } from '@/lib/@types/sc-param.d';
 
 const propNums = ['one', 'two', 'three'];
 
@@ -141,10 +141,9 @@ export default class AddCoupon extends Vue {
         console.log('res.data: ', res.data);
         const data: obj = res.data || {};
         data.condition = propNums.map((prop) => {
-          const item: obj = {};
-          item.num = data[`num_${prop}`];
-          item.coupon_price = data[`coupon_price_${prop}`];
-          return item;
+          const num = data[`num_${prop}`];
+          const coupon_price = data[`coupon_price_${prop}`];
+          return { num, coupon_price };
         });
 
         this.config.data[0].forEach((item) => {
