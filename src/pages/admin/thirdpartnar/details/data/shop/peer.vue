@@ -11,38 +11,40 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
+import { Component, Mixins } from 'vue-property-decorator';
 import { ScForm } from '@/lib/@types/sc-form.d';
-import { obj } from '@/lib/@types/sc-param.d';
+import mixins from './mixins';
 
 @Component
-export default class TpShopPeer extends Vue {
-  @Prop({ type: [String, Number], required: true })
-  id!: string;
-
-  // TODO: 缺少接口
-  api = this.$api.test.create;
-
+export default class TpShopPeer extends Mixins(mixins) {
   config: ScForm.Edit = {
     width: '100%',
     'label-width': '85px',
     formAttr: { 'label-position': 'left' },
+    requestMethod: 'get',
+    handleSubmit: this.handleSubmit,
     data: [
       [
         {
           label: '同行优点：',
           prop: 'none1',
-          tag: { attr: { type: 'textarea', rows: 4 } },
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
+          tag: { tagType: 'editor' },
         },
         {
           label: '营销方式：',
           prop: 'none2',
-          tag: { attr: { type: 'textarea', rows: 4 } },
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
+          tag: { tagType: 'editor' },
         },
         {
           label: '本店差异：',
           prop: 'none3',
-          tag: { attr: { type: 'textarea', rows: 4 } },
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
+          tag: { tagType: 'editor' },
         },
       ],
     ],

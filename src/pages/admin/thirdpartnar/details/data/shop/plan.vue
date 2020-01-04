@@ -11,51 +11,62 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
+import { Component, Mixins } from 'vue-property-decorator';
 import { ScForm } from '@/lib/@types/sc-form.d';
-import { obj } from '@/lib/@types/sc-param.d';
+import mixins from './mixins';
 
 @Component
-export default class TpShopPlan extends Vue {
-  @Prop({ type: [String, Number], required: true })
-  id!: string;
-
-  // TODO: 缺少接口
-  api = this.$api.test.create;
-
+export default class TpShopPlan extends Mixins(mixins) {
   config: ScForm.Edit = {
-    type: 'specialty',
     width: '100%',
-    formAttr: { 'label-position': 'left', 'label-width': '85px' },
+    'label-width': '85px',
+    type: 'specialty',
+    formAttr: { 'label-position': 'left' },
+    requestMethod: 'get',
+    handleSubmit: this.handleSubmit,
     data: [
       [
         {
           label: '产品定价：',
           prop: 'none1',
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
         },
         {
           label: '店铺拉新：',
           prop: 'none2',
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
         },
         {
           label: '老客维护：',
           prop: 'none3',
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
         },
         {
           label: '精准营销：',
           prop: 'none4',
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
         },
         {
           label: '平台活动：',
           prop: 'none5',
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
         },
         {
           label: '引流爆款：',
           prop: 'none6',
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
         },
         {
           label: '活动方式：',
           prop: 'none7',
+          default: '',
+          handle: (data) => `${data}#${this.name}#`,
           isFull: true,
           tag: { attr: { type: 'textarea', rows: 4 } },
         },

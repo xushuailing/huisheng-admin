@@ -13,7 +13,6 @@
       <el-tab-pane v-for="tab in tabs"
                    :key="tab.name"
                    :label="tab.label"
-                   lazy
                    :name="tab.name">
         <component :is="tab.component"
                    :detail="detail"
@@ -40,15 +39,15 @@ export default class TpShop extends Vue {
   }
 
   tabs = [
-    { label: '市场分析', name: 'marketing_planning', component: UseMarket },
-    { label: '优秀同行', name: 'peer', component: UsePeer },
-    { label: '基础设置', name: 'setting', component: UseSetting },
-    { label: '数据分析', name: 'data', component: UseData },
-    { label: '营销策划', name: 'plan', component: UsePlan },
-    { label: '解决方案', name: 'solution', component: UseSolution },
+    { label: '市场分析', name: 'market_analysis', component: UseMarket },
+    { label: '优秀同行', name: 'excellent_peers', component: UsePeer },
+    { label: '基础设置', name: 'foundation_setup', component: UseSetting },
+    { label: '数据分析', name: 'data_analysis', component: UseData },
+    { label: '营销策划', name: 'marketing_planning', component: UsePlan },
+    { label: '解决方案', name: 'Solution', component: UseSolution },
   ];
 
-  activeName = this.tabs[0] && this.tabs[0].name;
+  activeName = this.tabs[0].name;
 
   detail = '';
 
