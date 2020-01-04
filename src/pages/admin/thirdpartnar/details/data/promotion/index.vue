@@ -12,12 +12,11 @@
       <el-tab-pane v-for="tab in tabs"
                    :key="tab.name"
                    :label="tab.label"
-                   lazy
                    :name="tab.name">
-        <component v-if="tab.component"
-                   :is="tab.component"
-                   :id="id"
-                   class="mt-10"></component>
+        <component :is="tab.component"
+                   :detail="detail"
+                   :name="tab.name"
+                   class="bg-white p-20"></component>
       </el-tab-pane>
     </el-tabs>
   </div>

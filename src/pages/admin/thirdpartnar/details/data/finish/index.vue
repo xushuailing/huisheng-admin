@@ -1,12 +1,12 @@
 
 <template>
   <div class="tp-shop">
-    <div class="tp-shop__header">
+    <!-- <div class="tp-shop__header">
       <el-button size="small"
                  type="primary">一键导入</el-button>
       <el-button size="small"
                  type="primary">上传数据</el-button>
-    </div>
+    </div> -->
     <el-tabs class="sc-tabs"
              v-model="activeName">
       <el-tab-pane v-for="tab in tabs"
@@ -23,12 +23,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import position from './position.vue';
-import explosive from './explosive.vue';
-import fullScale from './full_scale.vue';
-import distribution from './distribution.vue';
-import other from './other.vue';
-import plan from './plan.vue';
+import editor from './editor.vue';
 
 @Component
 export default class TpShop extends Vue {
@@ -37,12 +32,18 @@ export default class TpShop extends Vue {
   }
 
   tabs = [
-    { label: '产品定位', name: 'product_pricing', component: position },
-    { label: '爆款引流', name: 'explosive_drainage', component: explosive },
-    { label: '满减活动', name: 'full_scale_activities', component: fullScale },
-    { label: '配送设计', name: 'distribution_design', component: distribution },
-    { label: '其他活动', name: 'other_activities', component: other },
-    { label: '营销策划表', name: 'table', component: plan },
+    { label: '招牌设计', name: 'signage_design', component: editor },
+    { label: '专场海报', name: 'special_poster', component: editor },
+    { label: '产品图片', name: 'product_pictures', component: editor },
+    { label: '店铺公告', name: 'shop_notices', component: editor },
+    { label: '产品描述', name: 'product_description', component: editor },
+    { label: '产品展示', name: 'product_display', component: editor },
+    { label: '产品名称', name: 'product_name', component: editor },
+    { label: '分类排版', name: 'typesetting', component: editor },
+    { label: '规格属性', name: 'specification_attribute', component: editor },
+    { label: '店铺logo', name: 'shop_log', component: editor },
+    { label: '商品标签', name: 'commodity_label', component: editor },
+    { label: '套餐设计', name: 'package_design', component: editor },
   ];
 
   activeName = this.tabs[0].name;
@@ -54,7 +55,7 @@ export default class TpShop extends Vue {
   detail = '';
 
   async getData() {
-    const api = this.$api.admin.thirdpartnar.market.show;
+    const api = this.$api.admin.thirdpartnar.finish.show;
     const { data } = await this.$http.get(api, { id: this.id });
     console.log('data :', data);
 

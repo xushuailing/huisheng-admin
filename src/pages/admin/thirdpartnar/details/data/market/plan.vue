@@ -1,13 +1,13 @@
 <template>
   <div>
-    <sc-min-table stripe
+    <!-- <sc-min-table stripe
                   ref="table"
                   :columns-handler="columnsHandler"
                   :columns-props="{align:'center'}"
                   :columns="columns"
                   :editConfig="editConfig"
                   :table-config="tableConfig">
-    </sc-min-table>
+    </sc-min-table> -->
     <sc-edit mode="page"
              :api="tableConfig.api.create"
              :config="editConfig"></sc-edit>

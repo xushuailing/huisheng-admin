@@ -16,7 +16,7 @@ import { ScForm } from '@/lib/@types/sc-form.d';
 import mixins from './mixins';
 
 @Component
-export default class TpMarketPostion extends Mixins(mixins) {
+export default class TpMarketOther extends Mixins(mixins) {
   config: ScForm.Edit = {
     width: '100%',
     'label-width': '85px',
@@ -26,22 +26,8 @@ export default class TpMarketPostion extends Mixins(mixins) {
     data: [
       [
         {
-          label: '同行优点：',
+          label: '',
           prop: 'none1',
-          default: '',
-          handle: (data) => `${data}#${this.name}#`,
-          tag: { tagType: 'editor' },
-        },
-        {
-          label: '营销方式：',
-          prop: 'none2',
-          default: '',
-          handle: (data) => `${data}#${this.name}#`,
-          tag: { tagType: 'editor' },
-        },
-        {
-          label: '本店差异：',
-          prop: 'none3',
           default: '',
           handle: (data) => `${data}#${this.name}#`,
           tag: { tagType: 'editor' },

@@ -170,6 +170,16 @@ export default {
         show: `${url}/admin/shopDiagnosis_find`,
         update: `${url}/admin/shopDiagnosis_update`,
       },
+      /** 店铺装修 */
+      finish: {
+        show: `${url}/admin/shopDecoration_find`,
+        update: `${url}/admin/shopDecoration_update`,
+      },
+      /** 数据维护 */
+      maintain: {
+        show: `${url}/admin/dataMaintenance_find`,
+        update: `${url}/admin/dataMaintenance_update`,
+      },
 
       /** 营销策划 */
       market: {

@@ -11,6 +11,12 @@
       <span v-else
             class="pl-10">{{item.value}}</span>
     </div>
+
+    <el-dialog title="查看合同"
+               width="70%"
+               :visible.sync="visible">
+      <div>查看合同</div>
+    </el-dialog>
   </div>
 </template>
 <script lang="ts">
@@ -21,7 +27,7 @@ const platform = ['', '美团', '饿了么', '美团,饿了么'];
 
 @Component
 export default class TpShopInfo extends Vue {
-  @Prop({ type: String, required: true })
+  @Prop({ type: [String, Number], required: true })
   id!: string;
 
   data = {
@@ -31,6 +37,8 @@ export default class TpShopInfo extends Vue {
     effectiveDate: { label: '有效期：', value: '' },
     contract: { label: '合同：', value: '' },
   };
+
+  visible = false;
 
   mounted() {
     this.getDetail();
@@ -43,14 +51,11 @@ export default class TpShopInfo extends Vue {
       this.data.package.value = data.package_name;
       this.data.platform.value = platform[data.platform];
       this.data.effectiveDate.value = `${data.start_time} - ${data.end_time}`;
-
-      console.log('data', data);
     });
   }
 
   handleDetail(url: string) {
-    // 查看合同
-    this.$message.warning('没有原型图');
+    this.visible = true;
   }
 }
 </script>
