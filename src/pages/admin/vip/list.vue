@@ -4,6 +4,7 @@
                   ref="table"
                   :columns-handler="columnsHandler"
                   :columns="columns"
+                  :columns-schema="columnsSchema"
                   :search-config="searchConfig"
                   :table-config="tableConfig">
     </sc-min-table>
@@ -25,12 +26,23 @@ const columns: ScTable.SetColumns = [
   ['会员金额', 'money'],
   ['会员类型', 'member_name'],
   ['创建时间', 'createtime'],
-  ['上级信息', 'none5'],
+  ['上级信息', 'level_agent|level_nickname'],
 ];
 
 @Component
 export default class SettingRoleList extends Vue {
   columns = this.$utils._SetTableColumns(columns);
+
+
+  columnsSchema: ScTable.ColumnsSchema = {
+    上级信息: {
+      formater: (row, col) => {
+        const [start, end] = this.$utils._DataTypeChange(col.prop, '|');
+        if (!(row[start] && row[end])) return '';
+        return [{ class: 'pre' }, `${row[start]}\n${row[end]}`];
+      },
+    },
+  };
 
   columnsHandler = ['del'];
 
