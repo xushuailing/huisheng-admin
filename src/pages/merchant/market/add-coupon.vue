@@ -16,10 +16,12 @@ import Time from './time.vue';
 import { _IsVirtual, _Shopid } from '../config';
 import { obj } from '@/lib/@types/sc-param.d';
 
+const propNums = ['one', 'two', 'three'];
+
 @Component
 export default class AddCoupon extends Vue {
   get api() {
-    return this.$api.merchant.market.show.coupon.entity;
+    return this.$api.merchant.market.update.coupon.entity;
   }
 
   isInit = false;
@@ -30,6 +32,7 @@ export default class AddCoupon extends Vue {
     return {
       width: '70%',
       'label-width': '130px',
+      formAttr: { 'label-position': 'right' },
       params: { id: this.$route.query.id, shopid: _Shopid },
       buttons: [{ mode: 'cancel', isHide: false, sort: 7 }, { mode: 'submit', text: '保存' }],
       rules: [
@@ -42,7 +45,7 @@ export default class AddCoupon extends Vue {
                 validator: (rule, value: SortItem[], callback) => {
                   if (!value) return callback(new Error('缺少限制条件'));
                   if (value.some((v: any) => !Object.keys(v).filter((e) => v[e]).length)) {
-                    return callback(new Error('请填写完整'));
+                    return callback(new Error('使用条件未填写完整'));
                   }
                   return callback();
                 },
@@ -55,9 +58,9 @@ export default class AddCoupon extends Vue {
               {
                 trigger: 'blur',
                 validator: (rule, value, callback) => {
-                  if (!value) return callback(new Error('请填写有效时间'));
-                  if (!(value.radio == 2 && value.date.length)) {
-                    return callback(new Error('请填写完整'));
+                  if (!value) return callback(new Error('请选择有效时间'));
+                  if (value.coupon_type && !value.date.length) {
+                    return callback(new Error('请选择有效时间'));
                   }
                   return callback();
                 },
@@ -76,6 +79,14 @@ export default class AddCoupon extends Vue {
           {
             label: '使用条件：',
             prop: 'condition',
+            handle: (data) => {
+              const condition = propNums.reduce((item, prop, i) => {
+                item[`num_${prop}`] = data[i] && data[i].num;
+                item[`coupon_price_${prop}`] = data[i] && data[i].coupon_price;
+                return item;
+              }, Object.create(null));
+              return condition;
+            },
             tag: { tagType: 'component', components: Condition },
           },
           {
@@ -89,9 +100,13 @@ export default class AddCoupon extends Vue {
           {
             label: '有效时间：',
             prop: 'coupon_type',
+            handle: (data) => {
+              const [strtime, endtime] = data.date;
+              return { coupon_type: data.coupon_type, strtime, endtime };
+            },
             handleEdit: (data, prop, allData) => {
               const time = {
-                radio: data,
+                coupon_type: data,
                 date: [allData.strtime, allData.endtime],
               };
               return time;
@@ -106,7 +121,11 @@ export default class AddCoupon extends Vue {
         ],
       ],
       handleSubmit: (data) => {
-        console.log('data :', data);
+        const formData = { ...data, ...data.condition, ...data.coupon_type };
+        delete formData.condition;
+        console.log('formData: ', formData);
+        // return {};
+        return formData;
       },
     };
   }
@@ -115,53 +134,31 @@ export default class AddCoupon extends Vue {
     const api = this.$api.merchant.market.show.coupon.entity;
     const params = { id: this.$route.query.id, shopid: _Shopid };
     const loading = this.$utils._Loading.show({ target: (this.$refs.form as any).$el });
-    // this.$http
-    //   .get(api, params)
-    //   .then((res) => {
-    // console.log('res.data: ', res.data);
+    this.$http
+      .get(api, params)
+      .then((res) => {
+        console.log('res.data: ', res.data);
+        const data: obj = res.data || {};
+        data.condition = propNums.map((prop) => {
+          const item: obj = {};
+          item.num = data[`num_${prop}`];
+          item.coupon_price = data[`coupon_price_${prop}`];
+          return item;
+        });
 
-    const re = {
-      status: true,
-      login_code: 1,
-      message: '请求成功',
-      data: {
-        id: 1, // 数据id
-        shopid: 1,
-        title: '满减优惠活动', // 数据id
-        num_one: 100, // 条件1满100
-        coupon_price_one: '10.00', // 减10
-        num_two: 300, // 条件2满300
-        coupon_price_two: '20.00', // 减20
-        num_three: 500, // 条件3满500 。最多三个条件
-        coupon_price_three: '30.00', // 减30
-        granttime: '2019-12-30 20:43:44', // 发放日期
-        coupon_type: 0, // 有效时间类型 0永久有效 1时间段有效
-        strtime: null, // 时间段有效，开始时间
-        endtime: null, // 时间段有效，结束时间
-        introduction: '这是满减活动', // 规则介绍
-        createtime: '2019-12-30 20:43:44', // 创建时间
-      },
-    };
-    const data: obj = re.data || {};
-    const propNums = ['one', 'two', 'three'];
-    data.condition = propNums.map((prop) => {
-      const item: obj = {};
-      item[`num_${prop}`] = data[`num_${prop}`];
-      item[`coupon_price_${prop}`] = data[`coupon_price_${prop}`];
-      return item;
-    });
-
-    this.config.data[0].forEach((item) => {
-      this.$set(item, 'default', data[item.prop]);
-    });
-    this.isInit = true;
-    // })
-    // .catch((error) => {
-    //   console.error('获取满减数据失败: ', error);
-    // })
-    // .finally(() => {
-    loading.close();
-    // });
+        this.config.data[0].forEach((item) => {
+          item.default = item.handleEdit ?
+            item.handleEdit(data[item.prop], item.prop, data) :
+            data[item.prop];
+        });
+        this.isInit = true;
+      })
+      .catch((error) => {
+        console.error('获取满减数据失败: ', error);
+      })
+      .finally(() => {
+        loading.close();
+      });
   }
 
   mounted() {

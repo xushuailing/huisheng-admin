@@ -263,7 +263,7 @@ export default {
       statistics: `${url}/admin/NowTimeData`,
       account: {
         index: `${url}/admin/AccountingOfficeShow`,
-        // export: `${url}/admin/DiscountRecord`,
+        export: `${url}/admin/AccountingOfficeShowExeclExport`,
       },
     },
 
@@ -288,7 +288,7 @@ export default {
       show: {
         discount: `${url}/admin/getDiscount`,
         coupon: {
-          entity: `${url}/admin/getAnalysis`,
+          entity: `${url}/admin/getCoupon`,
           virtual: `${url}/admin/getCouponXu`,
         },
       },

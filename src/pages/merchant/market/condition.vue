@@ -1,5 +1,5 @@
 <template>
-  <div class="add-coupon-condition pb-15 pl-15 pr-15 border-radius-8">
+  <div class="add-coupon-condition border-radius-8">
     <el-checkbox v-model="checked"
                  disabled>限制条件</el-checkbox>
     <div class="bg-border-color-extra-light p-15 border-radius-8">
@@ -59,11 +59,11 @@ export default class ActvSortsAdd extends Vue {
 
   @Ref('elForm') elForm!: ElForm[];
 
-  checked = false;
+  checked = true;
 
   data = [this.temp()];
 
-  @Watch('value')
+  @Watch('value', { immediate: true, deep: true })
   onValueChange(val: any) {
     console.log('value: ', val);
     if (val) {
@@ -85,26 +85,24 @@ export default class ActvSortsAdd extends Vue {
     let flag = false;
     const validate = (el: ElForm) => {
       el.validate((valid) => {
-        console.log('valid: ', valid);
-
+        // console.log('valid: ', valid);
         flag = valid;
       });
     };
 
     for (let i = 0; i < this.elForm.length; i++) {
       const form = this.elForm[i];
-
       validate(form);
-      console.log('form: ', form);
       if (!flag) break;
     }
-
     return flag;
   }
 
   handleAdd() {
-    console.log('this.validate(): ', this.validate());
-
+    if (this.data.length >= 3) {
+      this.$message.error('使用条件不可超过 3 个');
+      return;
+    }
     if (this.validate()) {
       this.data.push(this.temp());
     }

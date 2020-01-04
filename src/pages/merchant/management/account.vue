@@ -1,12 +1,14 @@
 <template>
   <div class='manage-account'>
-    <el-radio-group v-model="currentTab"
-                    size="medium"
-                    @change="onTabChange">
-      <el-radio-button v-for="(item,i) in tabs"
-                       :key="i"
-                       :label="item.value">{{item.label}}</el-radio-button>
-    </el-radio-group>
+    <el-tabs class="sc-tabs"
+             v-model="currentTab"
+             @tab-click="onTabChange">
+      <el-tab-pane v-for="(item,i) in tabs"
+                   :label="item.label"
+                   :key="i"
+                   :name="item.value">
+      </el-tab-pane>
+    </el-tabs>
 
     <sc-min-table stripe
                   ref="table"
@@ -14,7 +16,6 @@
                   :columns="columns"
                   :search-config="searchConfig"
                   :table-config="tableConfig"
-                  :columns-handler="columnsHandler"
                   @table-emitTableHandlerClick="onTableHandlerClick">
     </sc-min-table>
   </div>
@@ -23,14 +24,7 @@
 import { Component, Vue, Prop, Ref } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
-import { _Shopid } from '../config';
-
-const columns: ScTable.SetColumns = [
-  ['日期', 'date'],
-  ['支出项目', 'name'],
-  ['本月交易额', 'price'],
-  ['项目类别', 'type'],
-];
+import { _Shopid, _AccountType } from '../config';
 
 @Component
 export default class ManagementAccount extends Vue {
@@ -39,15 +33,15 @@ export default class ManagementAccount extends Vue {
   userInfo = this.$utils._Storage.get('user_info');
 
   tabs = [
-    { label: '账户日汇总', value: 1 },
-    { label: '账户月汇总', value: 2 },
-    { label: '账户年汇总', value: 3 },
+    { label: '账户日汇总', value: '1' },
+    { label: '账户月汇总', value: '2' },
+    { label: '账户年汇总', value: '3' },
   ];
 
   currentTab = this.tabs[0].value;
 
-  onTabChange(tab: number) {
-    this.tableConfig.index.typetime = tab;
+  onTabChange(tab: any) {
+    this.tableConfig.index!.typetime = tab.name;
     this.$table.setDataTable({});
   }
 
@@ -64,28 +58,33 @@ export default class ManagementAccount extends Vue {
       prop: 'money',
       formater: (row, col) => (row[col.prop] ? `￥ ${row[col.prop]}` : ''),
     },
-    { label: '项目类别', prop: 'type' },
+    {
+      label: '项目类别',
+      prop: 'type',
+      formater: (row, col) => (_AccountType as obj)[row[col.prop]] || '',
+    },
   ];
 
-  // TODO：没数据
+  // TODO：导出按钮没有了
   tableConfig = {
     api: this.$api.merchant.manage.account,
     index: { shopid: _Shopid, classify: 1, typetime: 1 },
   };
 
-  columnsHandler: ScTable.ColumnsHandler = [{ name: 'export', title: '导出' }];
-
   searchConfig: ScTable.Search = {
     handleSubmit: (data: any) => {
-      data.classify = 2;
-      if (data.createtime) {
-        const [start, end] = data.createtime.split(',');
-        data.firsttime = start;
-        data.lasttime = end;
+      if (data) {
+        data.classify = 2;
+        if (data.createtime) {
+          const [start, end] = data.createtime.split(',');
+          data.firsttime = start;
+          data.lasttime = end;
+          delete data.createtime;
+        }
       }
       return data;
     },
-    attr: { 'label-width': 'auto', 'label-position': 'right' },
+    attr: { 'label-width': '82px', 'label-position': 'right' },
     data: [
       {
         label: '日期',
@@ -100,15 +99,15 @@ export default class ManagementAccount extends Vue {
           },
         },
       },
-      // {
-      //   label: '项目类别：',
-      //   prop: 'type',
-      //   tag: {
-      //     tagType: 'select',
-      //     options: [],
-      //     attr: { 'label-width': '100px', placeholder: '请选择订单类型' },
-      //   },
-      // },
+      {
+        label: '项目类别：',
+        prop: 'type',
+        tag: {
+          tagType: 'select',
+          options: Object.entries(_AccountType).map(([k, v]) => ({ label: v, value: k })),
+          attr: { 'label-width': '100px', placeholder: '请选择订单类型' },
+        },
+      },
     ],
   };
 
@@ -118,16 +117,16 @@ export default class ManagementAccount extends Vue {
     }
   }
 
-  setSearchStyle() {
-    const content = document.querySelectorAll('.el-form-item__content');
-    const lastItem = content[content.length - 1];
-    lastItem && ((lastItem as any).style['margin-left'] = '83px');
-  }
+  // setSearchStyle() {
+  //   const content = document.querySelectorAll('.el-form-item__content');
+  //   const lastItem = content[content.length - 1];
+  //   lastItem && ((lastItem as any).style['margin-left'] = '83px');
+  // }
 
-  mounted() {
-    setTimeout(() => {
-      this.setSearchStyle();
-    }, 100);
-  }
+  // mounted() {
+  //   setTimeout(() => {
+  //     this.setSearchStyle();
+  //   }, 100);
+  // }
 }
 </script>
