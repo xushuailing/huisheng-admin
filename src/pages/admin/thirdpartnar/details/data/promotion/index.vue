@@ -7,12 +7,12 @@
       <el-button size="small"
                  type="primary">上传数据</el-button>
     </div>
-    <el-tabs v-model="activeName"
-             type="card"
-             :lazy="true">
+    <el-tabs class="sc-tabs"
+             v-model="activeName">
       <el-tab-pane v-for="tab in tabs"
                    :key="tab.name"
                    :label="tab.label"
+                   lazy
                    :name="tab.name">
         <component v-if="tab.component"
                    :is="tab.component"
@@ -44,12 +44,12 @@ export default class TpPromotion extends Vue {
 }
 </script>
 <style lang="scss" scoped>
-  .tp-promotion {
-    position: relative;
-    &__header {
-      position: absolute;
-      top: 0;
-      right: 0;
-    }
+.tp-promotion {
+  position: relative;
+  &__header {
+    position: absolute;
+    top: 0;
+    right: 0;
   }
+}
 </style>

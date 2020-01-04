@@ -1,7 +1,6 @@
 <template>
   <div class='sc-min-table'>
-    <div v-if="breadcrumbButtons.length"
-         class="pb-30">
+    <div v-if="breadcrumbButtons.length">
       <sc-breadcrumb>
         <el-button icon="el-icon-refresh"
                    v-if="isRefresh&&breadcrumbButtons.includes('refresh')"

@@ -22,10 +22,12 @@ export default class ScBreadcrumb extends Vue {
 </script>
 <style lang="scss" scoped>
 .sc-breadcrumb {
-  height: 40px;
+  // height: 40px;
+  margin-bottom: 20px;
 }
 .el-breadcrumb {
+  height: 40px;
   font-size: 18px;
-  line-height: 30px;
+  line-height: 40px;
 }
 </style>

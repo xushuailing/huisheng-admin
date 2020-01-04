@@ -3,7 +3,8 @@
     <sc-breadcrumb>
       <el-button @click="onAddTemplate">添加</el-button>
     </sc-breadcrumb>
-    <el-tabs v-model="activeName">
+    <el-tabs class="sc-tabs"
+             v-model="activeName">
       <el-tab-pane label="好评模板"
                    lazy
                    name="1">

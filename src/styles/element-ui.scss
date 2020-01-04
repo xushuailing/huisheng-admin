@@ -1,1 +1,39 @@
 //覆盖一些element-ui样式
+.sc-tabs {
+  .el-tabs__nav-wrap.is-top:after {
+    display: none;
+  }
+  .el-tabs__nav.is-top {
+    background: #fff;
+    border-radius: 40px;
+    .el-tabs__active-bar.is-top {
+      display: none;
+    }
+    .el-tabs__item {
+      color: $--color-primary;
+      padding: 0 20px;
+      &.is-active {
+        box-sizing: content-box;
+        background: $--color-primary;
+        color: #fff;
+        border-radius: 40px;
+        border-color: $--color-primary-light-7;
+        border-width: 3px;
+        border-style: solid;
+        border-right-width: 5px;
+        border-left-width: 5px;
+      }
+    }
+  }
+}
+
+.el-table__header {
+  tr {
+    height: 70px;
+    .cell{
+      color: $--color-text-primary;
+      font-weight: bold;
+      font-size: 15px;
+    }
+  }
+}

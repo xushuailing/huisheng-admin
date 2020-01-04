@@ -46,6 +46,8 @@ import Info from '@/components/img-name';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
 
+const service_status = ['等待运营', '在服务'];
+
 @Component
 export default class TpIndex extends Vue {
   @Ref('table') table!: ScTable;
@@ -73,13 +75,17 @@ export default class TpIndex extends Vue {
     {
       label: '店铺状况',
       prop: 'service_status',
-      formater: (row, col) => [{ class: 'sc-font-primary' }, row[col.prop]],
+      formater: (row, col) => [{ class: 'sc-font-primary' }, service_status[row[col.prop]]],
     },
   ];
 
   columnsHandler: ScTable.ColumnsHandler = [
     { name: 'detail', title: '查看' },
-    { name: 'service', title: '去服务' },
+    {
+      name: 'service',
+      title: '去服务',
+      handler: ({ row }) => row.service_status != 1,
+    },
   ];
 
   tableConfig: ScTable.TableConfig = {
@@ -144,7 +150,6 @@ export default class TpIndex extends Vue {
   }
 
   mounted() {
-    this.getShops();
   }
 
   getShops() {
@@ -165,7 +170,7 @@ export default class TpIndex extends Vue {
 
   onTableHandlerClick({ row, type }: { row: obj; type: string }) {
     if (type === 'detail') {
-      this.$router.push({ name: '运营客服详情', query: { id: row.id } });
+      this.$router.push({ path: 'service-detail', query: { id: row.id } });
     } else {
       this.getShops();
       this.dislogVisible = true;

@@ -3,17 +3,18 @@
     <sc-min-table stripe
                   ref="table"
                   :columns-handler="columnsHandler"
+                  :columns-schema="columnsSchema"
                   :columns="columns"
                   :search-config="searchConfig"
                   :table-config="tableConfig"
                   @table-emitTableHandlerClick="onTableHandlerClick">
     </sc-min-table>
 
-    <sc-add-form :visible.sync="passForm.visible"
+    <!-- <sc-add-form :visible.sync="passForm.visible"
                  :api="passForm.addFormApi"
                  @emitAddComplete="passForm.onAddComplete"
                  :config="passForm.formAddConfig">
-    </sc-add-form>
+    </sc-add-form> -->
   </div>
 </template>
 <script lang='ts'>
@@ -21,34 +22,40 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
 
 const columns: ScTable.SetColumns = [
-  ['头像', 'none1', null, null, 'img'],
-  ['名称', 'none2'],
-  ['会员级别', 'none4'],
-  ['创建时间', 'created_at'],
-  ['状态', 'none5'],
+  ['头像', 'avatarurl', 100, null, 'img'],
+  ['名称', 'nickname'],
+  ['会员级别', 'level_name'],
+  ['创建时间', 'time'],
+  ['状态', 'sh_status'],
 ];
 
 @Component
 export default class SettingRoleList extends Vue {
   columns = this.$utils._SetTableColumns(columns);
 
-  columnsHandler = [{ name: 'pass', title: '通过' }, { name: 'reject', title: '驳回' }];
+  columnsHandler = [
+    { name: 'pass', title: '通过' },
+    { name: 'reject', title: '驳回', type: 'danger' },
+  ];
 
-  // TODO: 缺少接口
+  columnsSchema: ScTable.ColumnsSchema = {
+    头像: {
+      propsHandler: (prop) => ({ ...prop, height: 50, width: 50 }),
+    },
+    状态: {
+      formater: (row, col) => (row[col.prop] == 0 ? '待审核' : '未知'),
+    },
+  };
+
   tableConfig = {
-    api: this.$api.test,
-    // breadcrumbButtons: ['add'],
+    api: this.$api.admin.vip.check,
   };
 
   searchConfig = {
-    num: 4,
-    param: {},
-    // attr: { 'label-width': '120px' },
     data: [
       {
         label: '会员名称：',
-        prop: 'none2',
-        default: '',
+        prop: 'nickname',
         tag: {
           attr: {
             placeholder: '请输入会员名称',
@@ -57,7 +64,7 @@ export default class SettingRoleList extends Vue {
       },
       {
         label: '会员类型：',
-        prop: 'none4',
+        prop: 'level_id',
         tag: {
           tagType: 'select',
           options: [
@@ -77,12 +84,12 @@ export default class SettingRoleList extends Vue {
       },
       {
         label: '创建时间：',
-        prop: 'created_at',
+        prop: 'time',
         tag: {
           tagType: 'date-picker',
           attr: {
             type: 'datetime',
-            placeholder: '开始时间',
+            placeholder: '创建时间',
           },
         },
       },
@@ -116,8 +123,9 @@ export default class SettingRoleList extends Vue {
     onAddComplete() {},
   };
 
-  onTableHandlerClick({ row, type }:ScTable.Event.TableHandlerClick) {
+  onTableHandlerClick({ row, type }: ScTable.Event.TableHandlerClick) {
     console.log('type', type);
+
     if (type === 'pass') {
       this.passForm.visible = true;
       //   this.editConfig.data.forEach((v) => {

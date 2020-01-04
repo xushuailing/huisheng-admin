@@ -5,8 +5,8 @@
                class="tp-detail__send"
                size="small"
                type="primary">发送感谢信</el-button>
-    <el-tabs v-model="activeName"
-             type="card">
+    <el-tabs class="sc-tabs"
+             v-model="activeName">
       <el-tab-pane lazy
                    v-for="tab in tabs"
                    :key="tab.name"

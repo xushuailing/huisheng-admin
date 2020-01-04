@@ -3,7 +3,6 @@
     <sc-min-table stripe
                   ref="table"
                   :columns-handler="columnsHandler"
-                  :columns-schema="columnsSchema"
                   :columns="columns"
                   :search-config="searchConfig"
                   :table-config="tableConfig">
@@ -35,16 +34,6 @@ export default class SettingRoleList extends Vue {
 
   columnsHandler = ['del'];
 
-
-  columnsSchema: ScTable.ColumnsSchema = {
-    // level_id: {
-    //   formater: (row, col) => {
-    //     const item = level_id.find((v) => row[col.prop] == v.value);
-    //     return item && item.label;
-    //   },
-    // },
-  };
-
   // TODO: 缺少删除接口
   tableConfig = {
     api: this.$api.admin.vip.level,
@@ -55,7 +44,7 @@ export default class SettingRoleList extends Vue {
     data: [
       {
         label: '会员名称：',
-        prop: 'name',
+        prop: 'nickname',
         tag: {
           attr: {
             placeholder: '请输入会员名称',
