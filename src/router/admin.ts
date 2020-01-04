@@ -331,27 +331,27 @@ export default [
   },
   // 资金管理
   {
-    path: '/management',
+    path: '/money',
     name: '资金管理',
-    redirect: '/management/data',
+    redirect: '/money/data',
     component: layoutView,
     children: [
       {
         path: 'data',
         name: '平台成交额',
-        component: () => import('../pages/admin/management/data.vue'),
+        component: () => import('../pages/admin/money/data.vue'),
         meta: { breadcrumb: [{ title: '资金管理' }, { title: '平台成交额' }] },
       },
       {
         path: 'record',
         name: '账房',
-        component: () => import('../pages/admin/management/record.vue'),
+        component: () => import('../pages/admin/money/record.vue'),
         meta: { breadcrumb: [{ title: '资金管理' }, { title: '账房' }] },
       },
       {
         path: 'check',
         name: '提现审核',
-        component: () => import('../pages/admin/management/check.vue'),
+        component: () => import('../pages/admin/money/check.vue'),
         meta: { breadcrumb: [{ title: '资金管理' }, { title: '提现审核' }] },
       },
     ],
