@@ -94,7 +94,7 @@ export default class OrderReturn extends Mixins(Mixin) {
     data: [
       {
         label: '订单编号：',
-        prop: 'id',
+        prop: 'ordernumber',
         tag: { attr: { placeholder: '请输入订单号' } },
       },
       {

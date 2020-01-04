@@ -135,7 +135,7 @@ const router: RouteConfig[] = [
     component: layoutView,
     children: [
       {
-        path: 'data1',
+        path: 'data',
         name: '实时数据',
         component: () => import('../pages/merchant/management/data.vue'),
         meta: { breadcrumb: [{ title: '经营管理' }, { title: '实时数据' }] },
