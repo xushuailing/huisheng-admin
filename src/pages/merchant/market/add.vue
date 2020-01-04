@@ -226,17 +226,24 @@ export default class MarketAdd extends Vue {
   }
 
   getDetail() {
+    const api = this.$api.merchant.market.show.discount;
+    const params = { id: this.$route.query.id, shopid: _Shopid };
+    const loading = this.$utils._Loading.show({ target: (this.$refs.form as any).$el });
     this.$http
-      .post(this.$api.merchant.product.show, { gid: this.id, shopid: _Shopid })
+      .get(api, params)
       .then((res) => {
-        console.log('res: ', res);
+        console.log('res.data: ', res.data);
+      })
+      .catch((error) => {
+        console.error('获取满减数据失败: ', error);
+      })
+      .finally(() => {
+        loading.close();
       });
   }
 
   mounted() {
-    if (this.isDetail) {
-      this.getDetail();
-    }
+    this.getDetail();
   }
 }
 </script>

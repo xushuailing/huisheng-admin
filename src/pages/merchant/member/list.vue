@@ -29,13 +29,14 @@ export default class SettingRoleList extends Vue {
     获得佣金: {
       formater: (row, col) => {
         const value = row[col.prop];
-        return [{ class: 'font-primary' }, value ? `+${value}` : value];
+        return [{ class: 'font-primary' }, `+${value}`];
+        // return [{ class: 'font-primary' }, value ? `+${value}` : value];
       },
     },
   };
 
   tableConfig = {
-    api: this.$api.merchant.member.list,
+    api: this.$api.merchant.member.member.list,
     index: { uid: _Uid },
   };
 

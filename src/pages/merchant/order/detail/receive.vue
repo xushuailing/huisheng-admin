@@ -141,57 +141,7 @@ export default class OrderReceiveDetail extends Mixins(Mixin) {
     Loading.close();
   }
 
-  logistics = {
-    data: [
-      {
-        time: '2019-06-15 12:02:05',
-        ftime: '2019-06-15 12:02:05',
-        context: '快件由【华东绍兴枢纽】发往【SN杭州城站】',
-      },
-      {
-        time: '2019-06-15 09:33:55',
-        ftime: '2019-06-15 09:33:55',
-        context:
-          '客官，您的快件已签收，签收人【门卫】，如有任何疑问，请联系【18969974306】/【SN杭州上城复兴路快递站18314895580】或致电总部服务热线4001888888。风里来雨里去，快递小哥不容易！【天天小哥诚邀您点亮五颗星哦】',
-      },
-      {
-        time: '2019-06-15 08:29:40',
-        ftime: '2019-06-15 08:29:40',
-        context: '【SN杭州上城复兴路快递站18314895580】的赵志永18969974306正在派件',
-      },
-      {
-        time: '2019-06-15 07:51:08',
-        ftime: '2019-06-15 07:51:08',
-        context: '快件到达【SN杭州上城复兴路快递站18314895580】',
-      },
-      {
-        time: '2019-06-14 11:54:32',
-        ftime: '2019-06-14 11:54:32',
-        context: '快件到达【华东绍兴枢纽】',
-      },
-      {
-        time: '2019-06-13 10:15:30',
-        ftime: '2019-06-13 10:15:30',
-        context: '快件由【华北廊坊枢纽】发往【华东绍兴枢纽】',
-      },
-      {
-        time: '2019-06-13 10:08:14',
-        ftime: '2019-06-13 10:08:14',
-        context: '快件到达【华北廊坊枢纽】',
-      },
-      {
-        time: '2019-06-13 09:16:16',
-        ftime: '2019-06-13 09:16:16',
-        context: '快件由【SN北京市场部4001888888】发往【华北廊坊枢纽】',
-      },
-      {
-        time: '2019-06-13 08:57:09',
-        ftime: '2019-06-13 08:57:09',
-        context: '【SN北京市场部4001888888】的恒信纸业巴枪二已收件',
-      },
-    ],
-    expresstitle: '天天快递',
-  };
+  logistics = {};
 
   getLogistics() {
     const loading = this.$utils._Loading.show({ target: this.$refs.logistics.$el });
@@ -215,16 +165,13 @@ export default class OrderReceiveDetail extends Mixins(Mixin) {
   }
 
   getDetail() {
-    const loading = this.$utils._Loading.show();
     const api = this.$api.merchant.order.show;
     const param = { uid: _Uid, oid: this.id };
+    const loading = this.$utils._Loading.show();
     this.$http
       .get(api, param)
       .then((res) => {
         this.data = res.data || {};
-      })
-      .catch((err) => {
-        this.$utils._ResponseError(err);
       })
       .finally(() => {
         loading.close();
@@ -233,7 +180,7 @@ export default class OrderReceiveDetail extends Mixins(Mixin) {
 
   mounted() {
     this.getDetail();
-    // this.getLogistics();
+    this.getLogistics();
   }
 }
 </script>

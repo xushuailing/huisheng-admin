@@ -91,16 +91,13 @@ export default class OrderReply extends Mixins(Mixin) {
   }
 
   getDetail() {
-    const loading = this.$utils._Loading.show();
     const api = this.$api.merchant.order.comment.show;
     const param = { id: this.id, oid: this.oid };
+    const loading = this.$utils._Loading.show();
     this.$http
       .get(api, param)
       .then((res) => {
         this.data = res.data || {};
-      })
-      .catch((err) => {
-        this.$utils._ResponseError(err);
       })
       .finally(() => {
         loading.close();

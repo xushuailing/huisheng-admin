@@ -1,12 +1,13 @@
 <template>
-  <div class="add-coupon-condition pb-15 pl-15 pr-15 border-radius-8">
-    <el-checkbox v-model="form.checked">限制条件</el-checkbox>
+  <div class="add-coupon-condition border-radius-8">
+    <el-checkbox v-model="checked"
+                 disabled>限制条件</el-checkbox>
     <div class="bg-border-color-extra-light p-15 border-radius-8">
-      <template v-for="(item,i) in form.data">
+      <template v-for="(item,i) in data">
         <el-form ref="elForm"
                  :key="i"
                  :model="item"
-                 :disabled="!form.checked"
+                 :disabled="!checked"
                  label-position="left"
                  label-width="40px"
                  class="mb-30">
@@ -14,7 +15,7 @@
           <el-form-item label="满"
                         prop="num"
                         :rules="{required: true, message: '请输入金额', trigger: 'blur'}">
-            <el-input v-model.number="form.data[i].num"
+            <el-input v-model.number="data[i].num"
                       type="number"
                       placeholder="请输入金额">
             </el-input>
@@ -23,7 +24,7 @@
           <el-form-item label="减"
                         prop="coupon_price"
                         :rules="{required: true, message: '请输入金额', trigger: 'blur'}">
-            <el-input v-model.number="form.data[i].coupon_price"
+            <el-input v-model.number="data[i].coupon_price"
                       type="number"
                       placeholder="请输入金额">
             </el-input>
@@ -34,7 +35,7 @@
 
       <el-button type="primary"
                  size="small"
-                 :disabled="!form.checked"
+                 :disabled="!checked"
                  @click="handleAdd">
         添加条件
       </el-button>
@@ -47,43 +48,36 @@ import { ElForm } from 'element-ui/types/form';
 import { obj } from '@/lib/@types/sc-param.d';
 
 export interface SortItem {
-  checked: boolean;
-  data: { num: string; coupon_price: string }[];
+  num: string;
+  coupon_price: string;
 }
 
 @Component
 export default class ActvSortsAdd extends Vue {
-  @Prop([Object])
-  readonly value!: SortItem | undefined;
+  @Prop(Array)
+  readonly value!: SortItem[] | undefined;
 
   @Ref('elForm') elForm!: ElForm[];
 
-  checked = false;
+  checked = true;
 
-  form = {
-    checked: false,
-    data: [this.temp()],
-  };
+  data = [this.temp()];
 
-  @Watch('value')
+  @Watch('value', { immediate: true, deep: true })
   onValueChange(val: any) {
     console.log('value: ', val);
     if (val) {
-      this.form = typeof val === 'string' ? JSON.parse(val) : val;
+      this.data = val;
     }
   }
 
-  @Watch('form', { deep: true })
-  onFormChange(val: any) {
-    console.log('form: ', val, this.form.checked);
-    if (this.form.checked) {
-      this.$emit('update:value', val);
-    } else {
-      this.$emit('upadte:value', null);
-    }
+  @Watch('data', { deep: true })
+  onDataChange(val: any) {
+    console.log('data: ', val);
+    this.$emit('update:value', val);
   }
 
-  temp(): SortItem['data'][0] {
+  temp(): SortItem {
     return { num: '', coupon_price: '' };
   }
 
@@ -91,28 +85,26 @@ export default class ActvSortsAdd extends Vue {
     let flag = false;
     const validate = (el: ElForm) => {
       el.validate((valid) => {
-        console.log('valid: ', valid);
-
+        // console.log('valid: ', valid);
         flag = valid;
       });
     };
 
     for (let i = 0; i < this.elForm.length; i++) {
       const form = this.elForm[i];
-
       validate(form);
-      console.log('form: ', form);
       if (!flag) break;
     }
-
     return flag;
   }
 
   handleAdd() {
-    console.log('this.validate(): ', this.validate());
-
+    if (this.data.length >= 3) {
+      this.$message.error('使用条件不可超过 3 个');
+      return;
+    }
     if (this.validate()) {
-      this.form.data.push(this.temp());
+      this.data.push(this.temp());
     }
   }
 }

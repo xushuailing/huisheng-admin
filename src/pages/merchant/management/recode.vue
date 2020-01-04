@@ -18,48 +18,24 @@ export default class ManagementRecode extends Vue {
   userInfo = this.$utils._Storage.get('user_info');
 
   columns: ScTable.Columns = [
-    { label: '头像', prop: 'none1' },
-    { label: '用户名', prop: 'none2' },
-    { label: '店铺名称', prop: 'none3' },
     {
       label: '提现金额',
       prop: 'money',
-      // formater: (row, col) => {
-      //   const isNegative = row[col.prop].includes('-');
-      //   const style = isNegative ? 'font-danger' : 'font-primary';
-      //   const value = row[col.prop].replace('-', '');
-      //   const operate = isNegative ? '-' : '+';
-      //   return [{ class: style }, `${operate}￥${value}`];
-      // },
+      formater: (row, col) => {
+        const value = row[col.prop].replace('-', '');
+        return [{ class: 'font-danger' }, `-￥${value}`];
+      },
     },
-    { label: '申请日期', prop: 'time' },
+    { label: '创建时间', prop: 'time' },
   ];
 
   tableConfig = {
-    api: this.$api.merchant.manage.record,
+    api: this.$api.merchant.manage,
     index: { shopid: _Shopid },
   };
 
   searchConfig: ScTable.Search = {
     data: [
-      {
-        label: '用户名',
-        prop: 'none2',
-        tag: {
-          attr: {
-            placeholder: '用户名',
-          },
-        },
-      },
-      {
-        label: '店铺名称',
-        prop: 'none3',
-        tag: {
-          attr: {
-            placeholder: '店铺名称',
-          },
-        },
-      },
       {
         label: '创建时间',
         prop: 'time',

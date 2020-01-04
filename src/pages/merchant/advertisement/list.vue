@@ -32,7 +32,7 @@ export default class Advertisement extends Vue {
   }
 
   toDetail(id: string) {
-    this.$router.push({ path: 'banner-detail', query: { id } });
+    this.$router.push({ path: 'buy', query: { id } });
   }
 
   mounted() {

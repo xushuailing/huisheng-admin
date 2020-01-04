@@ -77,16 +77,13 @@ export default class OrderReceiveDetail extends Mixins(Detail, GetValue) {
   };
 
   getDetail() {
-    const loading = this.$utils._Loading.show();
     const api = this.$api.merchant.order.show;
     const param = { uid: _Uid, oid: this.id };
+    const loading = this.$utils._Loading.show();
     this.$http
       .get(api, param)
       .then((res) => {
         this.data = res.data || {};
-      })
-      .catch((err) => {
-        this.$utils._ResponseError(err);
       })
       .finally(() => {
         loading.close();

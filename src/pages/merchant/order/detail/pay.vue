@@ -74,15 +74,21 @@ export default class OrderPayDetail extends Mixins(Mixin) {
   getDetail() {
     const api = this.$api.merchant.order.show;
     const param = { uid: _Uid, oid: this.id };
-    this.$http.get(api, param).then((res) => {
-      const data = res.data || {};
-      this.data = data;
-      if (data.order) {
-        Object.keys(this.form).forEach((k) => {
-          this.form[k] = data.order[k];
-        });
-      }
-    });
+    const loading = this.$utils._Loading.show();
+    this.$http
+      .get(api, param)
+      .then((res) => {
+        const data = res.data || {};
+        this.data = data;
+        if (data.order) {
+          Object.keys(this.form).forEach((k) => {
+            this.form[k] = data.order[k];
+          });
+        }
+      })
+      .finally(() => {
+        loading.close();
+      });
   }
 
   async handlePay() {

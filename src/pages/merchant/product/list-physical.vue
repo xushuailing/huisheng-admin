@@ -1,8 +1,7 @@
 <template>
   <div class='products'>
-    <sc-breadcrumb class="w100 flex-je pr-30 mb-10">
+    <sc-breadcrumb class="w100 flex-je">
       <el-button type="primary"
-                 class="mr-10"
                  @click="handleAdd">发布宝贝</el-button>
     </sc-breadcrumb>
     <el-radio-group v-model="currentTab"
@@ -33,13 +32,18 @@ import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
 import { _Shopid } from '../config';
 
+interface Shelves {
+  gid: string;
+  status: string;
+}
+
 const columns: ScTable.SetColumns = [
   ['商品图片', 'image', 100, null, 'img'],
   ['商品名称', 'title'],
   ['价格', 'price'],
   ['商品类型', 'type'],
   ['商品类别', 'typetitle'],
-  ['发货公司', 'nickname'],
+  ['发货公司', 'company'],
 ];
 
 @Component
@@ -71,12 +75,14 @@ export default class MerchantInject extends Vue {
     },
   };
 
-  paginationConfig = {
-    slotAttr: {
-      isCheckbox: true,
-      text: '全部下架',
-    },
-  };
+  get paginationConfig() {
+    return {
+      slotAttr: {
+        isCheckbox: true,
+        text: this.currentTab ? '全部上架' : '全部下架',
+      },
+    };
+  }
 
   tableConfig: ScTable.TableConfig = {
     api: this.$api.merchant.product,
@@ -90,15 +96,15 @@ export default class MerchantInject extends Vue {
         prop: 'title',
         tag: { attr: { placeholder: '请输入商品名称' } },
       },
-      {
-        label: '商品类型：',
-        prop: 'type',
-        tag: {
-          tagType: 'select',
-          options: [],
-          attr: { placeholder: '请选择商品类型' },
-        },
-      },
+      // {
+      //   label: '商品类型：',
+      //   prop: 'type',
+      //   tag: {
+      //     tagType: 'select',
+      //     options: [],
+      //     attr: { placeholder: '请选择商品类型' },
+      //   },
+      // },
       {
         label: '商品类别：',
         prop: 'pid',
@@ -108,11 +114,11 @@ export default class MerchantInject extends Vue {
           attr: { filterable: true, placeholder: '请选择商品类别' },
         },
       },
-      {
-        label: '发货公司：',
-        prop: '',
-        tag: { attr: { placeholder: '请输入发货公司' } },
-      },
+      // {
+      //   label: '发货公司：',
+      //   prop: '',
+      //   tag: { attr: { placeholder: '请输入发货公司' } },
+      // },
     ],
   };
 
@@ -123,8 +129,12 @@ export default class MerchantInject extends Vue {
         params: { detail: 'true', id: row.id },
         query: { detail: 'true', id: row.id },
       });
-    } else {
+    } else if (type === 'unshelve') {
       console.log('下架: ');
+      this.handleShelves([{ gid: row.id, status: row.status }]);
+    } else if (type === 'shelves') {
+      console.log('上架: ');
+      this.handleShelves([{ gid: row.id, status: row.status }]);
     }
   }
 
@@ -132,15 +142,25 @@ export default class MerchantInject extends Vue {
     this.$router.push('add-physical');
   }
 
+  handleShelves(list: Shelves[]) {
+    const api = this.$api.merchant.product.shelves;
+    const params = { shopid: _Shopid, list };
+    this.$http.post(api, params).then((res) => {
+      console.log('res.data: ', res.data);
+    });
+  }
+
   onSlotClick() {
-    console.log('1', 1);
+    const data = this.$table.selectTableData;
+    const list: Shelves[] = data.map((v) => ({ gid: v.id, status: v.status }));
+    this.handleShelves(list);
   }
 
   async getGoodsType() {
     const api = this.$api.merchant.product.types;
     const res = await this.$http.get(api, { limit: 10e5 });
     const options = res.data || [];
-    this.searchConfig.data![2].tag!.options = options.map((o: obj) => ({
+    this.searchConfig.data![1].tag!.options = options.map((o: obj) => ({
       label: o.title,
       value: o.id,
     }));

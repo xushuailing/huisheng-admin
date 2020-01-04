@@ -244,27 +244,35 @@ export default {
       /** 客服 */
       service: {
         index: `${url}/admin/CustomerServiceList`,
+        create: `${url}/admin/addCustomerService`,
         delete: `${url}/admin/deleteCustomerService`,
       },
     },
 
     /** 会员管理 */
     member: {
-      index: `${url}/admin/OfflineMember`,
-      list: {
-        index: `${url}/admin/AccountingOfficeShow`,
+      index: `${url}/admin/Member_tail_List`,
+      member: {
+        statistics: `${url}/admin/MemberHead`,
+        list: {
+          index: `${url}/admin/membershipDetailsList`,
+        },
+      },
+      agent: {
+        statistics: `${url}/admin/agentHead`,
+        list: {
+          index: `${url}/admin/agentDetailsList`,
+        },
       },
     },
 
     /**  经营管理 */
     manage: {
       index: `${url}/admin/DiscountRecord`,
+      statistics: `${url}/admin/NowTimeData`,
       account: {
-        index: `${url}/admin/DiscountRecord`,
-        // export: `${url}/admin/DiscountRecord`,
-      },
-      record: {
-        index: `${url}/admin/DiscountRecord`,
+        index: `${url}/admin/AccountingOfficeShow`,
+        export: `${url}/admin/AccountingOfficeShowExeclExport`,
       },
     },
 
@@ -276,16 +284,37 @@ export default {
       update: `${url}/admin/doAddGoods`,
       delete: `${url}/admin/delGoods`,
       types: `${url}/admin/getType`,
+      shelves: `${url}/admin/saveGoodsStatus`,
       goodsType: `${url}/admin/getGoodsType`,
     },
 
     /** 营销管理 */
     market: {
-      index: `${url}/admin/getCouponList`,
+      index: {
+        entity: `${url}/admin/getMarketing`,
+        virtual: `${url}/admin/getMarketingXu`,
+      },
+      show: {
+        discount: `${url}/admin/getDiscount`,
+        coupon: {
+          entity: `${url}/admin/getCoupon`,
+          virtual: `${url}/admin/getCouponXu`,
+        },
+      },
+      update: {
+        discount: `${url}/admin/doDiscount`,
+        coupon: {
+          entity: `${url}/admin/doCoupon`,
+          virtual: `${url}/admin/doCouponXu`,
+        },
+      },
+      mine: {
+        entity: `${url}/admin/getYouhuiquna`,
+      },
+      analysis: `${url}/admin/getAnalysis`,
       addGoods: `${url}/admin/addGoodsCoupon`,
-      show: `${url}/admin/getGoodsdetail`,
-      update: `${url}/admin/doAddCoupon`,
-      delete: `${url}/admin/delCoupon`,
+      discountGoods: `${url}/admin/getDiscountgoods`,
+      delete: `${url}/admin/delYouhuiquna`,
     },
 
     /** 订单管理 */
@@ -325,7 +354,7 @@ export default {
       index: `${url}/admin/AdvertisingPromotion`,
       user: `${url}/admin/userPromotion`,
       create: `${url}/admin/userAddBanner`,
-      detail: `${url}/admin/AdvertisingPromotion`,
+      detail: `${url}/admin/getPromotionDetail`,
       buyPromotion: `${url}/admin/buyPromotion`,
       buyActivity: `${url}/admin/buyActivity`,
       bannerDetail: `${url}/admin/getUserBannerLook`,
