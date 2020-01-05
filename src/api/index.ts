@@ -319,9 +319,7 @@ export default {
           virtual: `${url}/admin/doCouponXu`,
         },
       },
-      mine: {
-        entity: `${url}/admin/getYouhuiquna`,
-      },
+      mine: `${url}/admin/getYouhuiquna`,
       analysis: `${url}/admin/getAnalysis`,
       addGoods: `${url}/admin/addGoodsCoupon`,
       discountGoods: `${url}/admin/getDiscountgoods`,

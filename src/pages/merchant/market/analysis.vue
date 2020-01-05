@@ -150,11 +150,12 @@ export default class MarketAnalysis extends Vue {
       },
     },
     settings: {
-      labelMap: { week: '类别', num: '今日订购量' },
+      labelMap: { week: '类别', num: '订购量' },
     },
     data: {
       columns: ['type', 'num'],
       rows: [
+        { type: '今日订购量', num: 10, prop: 'status1' },
         { type: '待付款', num: 0, prop: 'status2' },
         { type: '已付款', num: 0, prop: 'status3' },
         { type: '已退货', num: 0, prop: 'status4' },

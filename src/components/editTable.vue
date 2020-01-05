@@ -72,6 +72,7 @@
         <!-- 表格内容列 -->
         <template v-for="col in columnsRender">
           <el-table-column :key="col.prop"
+                           v-if="!col.isHide"
                            v-bind="getColBind(col)">
             <template slot-scope="{ row, column, $index }">
               <el-form-item v-if="isEditable(col)"

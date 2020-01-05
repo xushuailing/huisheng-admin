@@ -68,7 +68,7 @@ import { obj } from '@/lib/@types/sc-param.d';
 import EditTable from '@/components/editTable.vue';
 import { ScEditTable } from '@/components/@types/sc-edit-table.d';
 import { _GetTableSpan, _ObjectSpanMethod, TableColumns, MergeKey } from '@/utils/handleTableSpan';
-import { _Shopid } from '../config';
+import { _Shopid, _IsVirtual } from '../config';
 import EffectTime from './time.vue';
 
 interface Form extends obj {
@@ -85,12 +85,12 @@ interface Goods extends obj {
   id: number;
   gid: number;
   shopid: number;
-  num_one: number;
-  discount_price_one: string;
-  num_two: number;
-  discount_price_two: string;
-  num_three: number;
-  discount_price_three: string;
+  // num_one: number;
+  // discount_price_one: string;
+  // num_two: number;
+  // discount_price_two: string;
+  // num_three: number;
+  // discount_price_three: string;
   createtime: string;
   goods: {
     id: number;
@@ -108,7 +108,8 @@ const _MergeKeys: MergeKey = {
   index: ['id', 'handler'],
 };
 
-const propNums = ['one', 'two', 'three'];
+const _PropNums = ['one', 'two', 'three'];
+const _PreferentialWay = _IsVirtual ? 'coupon' : 'discount';
 
 @Component({ components: { EditTable, EffectTime } })
 export default class MarketAdd extends Vue {
@@ -136,12 +137,14 @@ export default class MarketAdd extends Vue {
     introduction: '',
   };
 
+  // TODO: 验证规则待完善
   rules = {
-    // size: [
-    //   { required: true, message: '请输入商品规格', trigger: ['blur', 'change'] },
-    //   { validator: this.checkSize, trigger: ['blur', 'change'] },
-    // ],
-    // granttime: [{ required: true, message: '请选择发货时间', trigger: ['blur', 'change'] }],
+    size: [
+      { required: true, message: '请输入商品规格', trigger: ['blur', 'change'] },
+      { validator: this.checkSize, trigger: ['blur', 'change'] },
+    ],
+    granttime: [{ required: true, message: '请选择发放日期', trigger: ['blur', 'change'] }],
+    effectTime: [{ required: true, message: '请选择有效期', trigger: ['blur', 'change'] }],
   };
 
   checkSize(rule: obj, value: string[][], callback: Function) {
@@ -236,7 +239,14 @@ export default class MarketAdd extends Vue {
       'show-overflow-tooltip': false,
     },
     {
-      label: '满（金额）',
+      label: '价格',
+      prop: 'price',
+      isHide: _IsVirtual,
+      editable: false,
+      formater: (row, col) => `￥ ${row[col.prop]}`,
+    },
+    {
+      label: _IsVirtual ? '满（金额）' : '满几件（数量）',
       prop: 'num',
       tag: {
         tagType: 'input-number',
@@ -244,11 +254,11 @@ export default class MarketAdd extends Vue {
       },
     },
     {
-      label: '减（金额）',
-      prop: 'discount_price',
+      label: _IsVirtual ? '减（金额）' : '折扣',
+      prop: `${_PreferentialWay}_price`,
       tag: {
-        // tagType: 'input-number',
-        attr: { class: 'w100' },
+        tagType: _IsVirtual ? 'input-number' : 'input',
+        attr: { min: 0, controls: false, class: 'w100' },
       },
     },
   ];
@@ -286,12 +296,15 @@ export default class MarketAdd extends Vue {
   }
 
   async submit() {
-    const api = this.$api.merchant.market.update.discount;
-    const params = this.handleSubmitData();
-    console.log('params: ', params);
+    const apis = this.$api.merchant.market.update;
+    const api = _IsVirtual ? apis.coupon.virtual : apis.discount;
+    const formData = this.handleSubmitData();
+    console.log('formData: ', formData);
+
     const loading = this.$utils._Loading.show();
     try {
-      const { status } = await this.$http.post(api, { ...this.form });
+      const { status } = await this.$http.post(api, formData);
+      this.$message.success('保存成功！');
     } catch (error) {
       console.log('保存折扣（实物）失败: ', error);
     }
@@ -300,14 +313,14 @@ export default class MarketAdd extends Vue {
 
   handleSubmitData() {
     const { effectTime } = this.form;
-    const { strtime, endtime } = effectTime || {};
+    const [strtime = '', endtime = ''] = effectTime.date || [];
 
-    const discountData = this.table || [];
-    const discount = _Chunk(discountData, 3).map((goods: obj[]) => {
+    const preferential = _Chunk(this.table || [], 3).map((goods: obj[]) => {
       const info = goods[0] || {};
-      const good = propNums.reduce((item, prop, i) => {
+      const good = _PropNums.reduce((item, prop, i) => {
         item[`num_${prop}`] = goods[i] && goods[i].num;
-        item[`coupon_price_${prop}`] = goods[i] && goods[i].discount_price;
+        item[`${_PreferentialWay}_price_${prop}`] =
+          goods[i] && goods[i][`${_PreferentialWay}_price`];
         return item;
       }, Object.create(null));
       return { gid: info.gid, ...good };
@@ -320,9 +333,9 @@ export default class MarketAdd extends Vue {
       ...effectTime,
       strtime,
       endtime,
-      goods_discount: discount,
+      [`goods_${_PreferentialWay}`]: preferential,
     };
-    return _Omit(data, ['sort', 'gid', 'size', 'effectTime']);
+    return _Omit(data, ['sort', 'gid', 'size', 'effectTime', 'date']);
   }
 
   /** 获取折扣商品信息 */
@@ -342,28 +355,31 @@ export default class MarketAdd extends Vue {
 
   /** 获取折扣/满减详情 */
   getDetail() {
-    const api = this.$api.merchant.market.show.discount;
+    const apis = this.$api.merchant.market.show;
+    const api = _IsVirtual ? apis.coupon.virtual : apis.discount;
     const params = { id: this.$route.query.id, shopid: _Shopid };
     const loading = this.$utils._Loading.show({ target: (this.$refs.form as any).$el });
     this.$http
       .get(api, params)
       .then((res) => {
-        const { discount, goods_discount } = res.data || {};
-        discount.effectTime = _Pick(discount, ['coupon_type', 'strtime', 'endtime']);
+        const data = res.data || {};
+        const info = data[_PreferentialWay];
+        const discount = data[`goods_${_PreferentialWay}`];
+        const { coupon_type, strtime, endtime } = info;
+        info.effectTime = { coupon_type, date: [strtime || '', endtime || ''] };
+
         Object.keys(this.form).forEach((k) => {
-          if (k in discount) {
-            this.form[k] = discount[k];
-          }
+          k in info && (this.form[k] = info[k]);
         });
 
-        const goodsList = goods_discount.map((goods: Goods, index: number) => {
+        const goodsList = discount.map((goods: Goods, index: number) => {
           this.form.size.push(goods.gid);
           const commonProps = ['id', 'index', 'gid', 'goodstitle', 'image', 'price]'];
           const commonData = _Pick({ index, ...goods, ...goods.goods }, commonProps);
-          return propNums.map((prop) => {
+          return _PropNums.map((prop) => {
             const num = goods[`num_${prop}`];
-            const discount_price = goods[`discount_price_${prop}`];
-            return { ...commonData, num, discount_price };
+            const price = goods[`${_PreferentialWay}_price_${prop}`];
+            return { ...commonData, num, [`${_PreferentialWay}_price`]: price };
           });
         });
         if (goodsList.length) {

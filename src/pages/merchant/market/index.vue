@@ -16,10 +16,48 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Mixins } from 'vue-property-decorator';
-import mixin from './mixin';
+import { _Shopid, _IsVirtual } from '../config';
+import { obj } from '@/lib/@types/sc-param.d';
+
+interface CouponsItem {
+  id: string;
+  type: 'discount' | 'coupon';
+  title: string;
+  desc?: string;
+}
 
 @Component
-export default class Market extends Mixins(mixin) {}
+export default class Market extends Vue {
+  list: CouponsItem[] = [];
+
+  onOpen({ id, type }: CouponsItem) {
+    const path = type === 'discount' || _IsVirtual ? 'add' : 'add-discount';
+    this.$router.push({ path, query: { id } });
+  }
+
+  getList() {
+    const loading = this.$utils._Loading.show();
+    const api = _IsVirtual ? 'virtual' : 'entity';
+    this.$http
+      .get(this.$api.merchant.market.index[api], { shopid: _Shopid })
+      .then((res) => {
+        let { discount = [], coupon = [] } = res.data || {};
+        discount = discount.map((e: obj) => ({ ...e, type: 'discount' }));
+        coupon = coupon.map((e: obj) => ({ ...e, type: 'coupon' }));
+        this.list = [...discount, ...coupon];
+      })
+      .catch((err) => {
+        this.$utils._ResponseError(err);
+      })
+      .finally(() => {
+        loading.close();
+      });
+  }
+
+  mounted() {
+    this.getList();
+  }
+}
 </script>
 
 <style lang="scss" scoped>
