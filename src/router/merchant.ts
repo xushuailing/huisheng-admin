@@ -116,7 +116,7 @@ const router: RouteConfig[] = [
     children: [
       {
         path: 'member',
-        name: '会员管理页',
+        name: '会员管理',
         meta: { breadcrumb: [{ title: '会员管理' }] },
         component: () => import('../pages/merchant/member/index.vue'),
       },
@@ -313,7 +313,10 @@ const router: RouteConfig[] = [
         path: 'today-detail',
         name: '今日上新详情',
         component: () => import('../pages/merchant/advertisement/today-detail.vue'),
-        meta: { breadcrumb: [{ title: '广告管理' }, { title: '广告推广' }, { title: '详情' }] },
+        meta: {
+          breadcrumbHide: true,
+          breadcrumb: [{ title: '广告管理' }, { title: '广告推广' }, { title: '详情' }],
+        },
       },
     ],
   },

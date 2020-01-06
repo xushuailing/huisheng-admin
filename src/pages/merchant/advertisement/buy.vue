@@ -35,7 +35,8 @@ export default class BuyBanner extends Vue {
 
   @Prop({ type: [String, Number] }) id!: string | number;
 
-  @Prop({ type: String, default: 'banner' }) type!: string;
+  /** 0 广告，1 活动 */
+  @Prop({ type: String }) type!: string;
 
   @Prop({ type: String, default: '' }) price!: string;
 
@@ -59,10 +60,9 @@ export default class BuyBanner extends Vue {
 
   async onConfirm() {
     try {
-      console.log('this.id :', this.id);
       const apis = this.$api.merchant.ads;
-      const api = this.type === 'banner' ? apis.buyPromotion : apis.buyActivity;
-      const idProp = this.type === 'banner' ? 'bannerid' : 'activity_id';
+      const api = this.type === '0' ? apis.buyPromotion : apis.buyActivity;
+      const idProp = this.type === '0' ? 'bannerid' : 'activity_id';
       await this.$http.get(api, { shopid: _Shopid, [idProp]: this.id, num: this.value });
       this.$message.success('已提交申请');
     } catch (error) {

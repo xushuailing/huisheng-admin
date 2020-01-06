@@ -18,7 +18,7 @@
       </el-col>
     </el-row>
     <buy :visible.sync="dialogVisible"
-         :type="buy.type"
+         :type="type"
          :id="buy.id"
          :price="buy.price"></buy>
   </div>
@@ -32,9 +32,9 @@ import Buy from './buy.vue';
 export default class Advertisement extends Vue {
   data: obj[] = [];
 
+  type = '0';
+
   buy: obj = {
-    // type: this.$route.path.includes('banner') ? 'banner' : 'activity',
-    type: 'banner',
     id: '',
     price: '',
   };
@@ -42,19 +42,23 @@ export default class Advertisement extends Vue {
   dialogVisible = false;
 
   handleBuy(item: obj) {
-    this.buy = item;
+    this.buy.price = item.price;
+    this.buy.id = this.type === '0' ? item.id : this.$route.query.id;
     this.dialogVisible = true;
   }
 
   async getList() {
+    const loading = this.$utils._Loading.show();
     const api = this.$api.merchant.ads.detail;
     const res = await this.$http.get(api, { id: this.$route.query.id });
     const data = res.data || {};
+    this.type = data.type;
     this.data = [
       { id: data.id, title: data.title, introduction: data.introduction },
       ...(data.banner_list || []),
     ];
     console.log('data: ', this.data);
+    loading.close();
   }
 
   mounted() {

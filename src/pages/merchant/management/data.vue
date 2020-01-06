@@ -161,14 +161,14 @@ export default class ManagementData extends Vue {
     { label: '店铺支出', value: 'expenditure' },
   ];
 
+  trendType: keyof WeekData = 'Total';
+
   trendData: WeekData = { Total: [], income: [], expenditure: [] };
 
   @Watch('trendData', { deep: true })
   onTrendDataChange(data: obj) {
     this.histogram.chartData.rows = data[this.trendType];
   }
-
-  trendType: keyof WeekData = 'Total';
 
   onTrendTypeChange() {
     this.histogram.chartData.rows = this.trendData[this.trendType];

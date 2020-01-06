@@ -1,11 +1,11 @@
 <template>
-  <div class="today-detail bg-white border-radius-8">
+  <div class="today-detail border-radius-8">
     <sc-breadcrumb class="w100 flex-je pr-30 mb-10">
       <el-button type="primary"
                  @click="toEdit"
                  class="mr-10">编辑</el-button>
     </sc-breadcrumb>
-    <div class="pl-25 pr-25">
+    <div class="container bg-white pl-25 pr-25">
       <el-row :gutter="20">
         <el-col v-for="item in data"
                 :key="item.id"
@@ -63,7 +63,9 @@ export default class Advertisement extends Vue {
 </script>
 <style lang="scss" scoped>
   .today-detail {
-    min-height: 80vh;
+    .container {
+      min-height: 80vh;
+    }
     &__image {
       width: 100px;
       height: 100px;

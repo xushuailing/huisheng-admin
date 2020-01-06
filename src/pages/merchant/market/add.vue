@@ -36,7 +36,8 @@
         </div>
       </el-form-item>
       <el-form-item label="发放日期："
-                    prop="granttime">
+                    prop="granttime"
+                    class="mt-20">
         <el-date-picker v-model="form.granttime"
                         placeholder="请选择发放日期"></el-date-picker>
       </el-form-item>
@@ -137,20 +138,11 @@ export default class MarketAdd extends Vue {
     introduction: '',
   };
 
-  // TODO: 验证规则待完善
   rules = {
-    size: [
-      { required: true, message: '请输入商品规格', trigger: ['blur', 'change'] },
-      { validator: this.checkSize, trigger: ['blur', 'change'] },
-    ],
+    size: [{ required: true, message: '请输入商品规格', trigger: ['blur', 'change'] }],
     granttime: [{ required: true, message: '请选择发放日期', trigger: ['blur', 'change'] }],
     effectTime: [{ required: true, message: '请选择有效期', trigger: ['blur', 'change'] }],
   };
-
-  checkSize(rule: obj, value: string[][], callback: Function) {
-    console.log('value: ', value);
-    return callback();
-  }
 
   /** 折扣表格渲染 */
 
@@ -163,26 +155,28 @@ export default class MarketAdd extends Vue {
   handleAdd() {
     this.$form.validateField('gid', async (errmsg: string) => {
       const value = this.form.gid;
+      if (errmsg) return;
 
-      if (!errmsg) {
-        this.form.size.push(value);
-        this.form.gid = '';
-        const goods = await this.getDiscountGoods(value);
-        const row = {
-          index: this.form.size.length,
-          id: value,
-          gid: value,
-          goodstitle: goods.title,
-          image: goods.image,
-          price: goods.price,
-        };
-        this.table = [...this.table, ...new Array(3).fill(row)];
-        this.$table.setValue(this.table);
-      }
+      const goods = await this.getDiscountGoods(value);
+      if (!goods) return;
+
+      this.form.size.push(value);
+      this.form.gid = '';
+      const row = {
+        index: this.form.size.length,
+        id: value,
+        gid: value,
+        goodstitle: goods.title,
+        image: goods.image,
+        price: goods.price,
+      };
+      this.table = [...this.table, ...new Array(3).fill(row)];
+      this.$table.setValue(this.table);
     });
   }
 
   handleMinus(index: number) {
+    this.form.size.splice(index, 1);
     this.table.splice(index, 3);
     this.$table.setValue(this.table);
   }
@@ -287,11 +281,9 @@ export default class MarketAdd extends Vue {
     this.sizeRules = {};
     await this.$nextTick();
     this.$form.validate((valid, error) => {
-      console.log('valid: ', valid, error);
+      // console.log('valid: ', valid, error);
       this.sizeRules = this.getSizeRules();
-      if (valid) {
-        this.submit();
-      }
+      if (valid) this.submit();
     });
   }
 
@@ -299,8 +291,6 @@ export default class MarketAdd extends Vue {
     const apis = this.$api.merchant.market.update;
     const api = _IsVirtual ? apis.coupon.virtual : apis.discount;
     const formData = this.handleSubmitData();
-    console.log('formData: ', formData);
-
     const loading = this.$utils._Loading.show();
     try {
       const { status } = await this.$http.post(api, formData);
@@ -345,12 +335,12 @@ export default class MarketAdd extends Vue {
     try {
       const { data } = await this.$http.get(api, { id });
       loading.close();
-      return data || {};
+      return data;
     } catch (error) {
       console.log('error: ', error);
     }
     loading.close();
-    return {};
+    return null;
   }
 
   /** 获取折扣/满减详情 */

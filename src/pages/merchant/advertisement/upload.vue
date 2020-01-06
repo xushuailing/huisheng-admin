@@ -21,6 +21,7 @@ export default class SettingRoleList extends Vue {
   config: ScForm.Edit = {
     'label-width': '120px',
     params: { id: '' },
+    requestMethod: 'get',
     buttons: [{ mode: 'cancel', isHide: true }, { mode: 'submit', isHide: false, text: ' 上传' }],
     rules: [
       {

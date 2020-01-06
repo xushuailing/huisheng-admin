@@ -3,8 +3,9 @@
     <el-row :gutter="20">
       <el-col v-for="item in data"
               :key="item.id"
-              :span="12">
-        <div class="bg-white border-radius-8 p-15 mt-20 banner pt-30">
+              :span="12"
+              class="mb-20">
+        <div class="ads-detail-item bg-white border-radius-8 p-15 banner pt-30">
           <div v-for="row in list"
                :key="row.label">
             <div v-if="isShow(item,row)"
@@ -21,12 +22,12 @@
             </div>
           </div>
           <div class="text-c">
-            <el-button v-if="showDetailButton"
+            <el-button v-if="showDetailButton(item)"
                        class="mb-20"
                        type="primary"
                        @click="toDetail(item)">查看</el-button>
             <el-button v-else
-                       class="mb-20"
+                       class="mt-30"
                        type="primary"
                        @click="onUpload(item)">上传信息</el-button>
           </div>
@@ -69,7 +70,7 @@ export default class Advertisement extends Vue {
     {
       label: '有效期：',
       prop: 'startime',
-      handle: (data) => `${data.startime}——${data.endtime}`,
+      handle: (data) => `${data.startime} — ${data.endtime}`,
     },
     { label: 'banner图片：', prop: 'image', type: 'image' },
     { label: '商品ID：', prop: 'bannerid' },
@@ -98,10 +99,12 @@ export default class Advertisement extends Vue {
   }
 
   async getList() {
+    const loading = this.$utils._Loading.show();
     const api = this.$api.merchant.ads.user;
     const res = await this.$http.get(api, { shopid: _Shopid, limit: 10e5 });
     this.data = res.data;
     console.log('res.data: ', res.data);
+    loading.close();
   }
 
   mounted() {
@@ -123,6 +126,9 @@ export default class Advertisement extends Vue {
 </script>
 <style lang="scss" scoped>
   .ads-detail {
+    &-item {
+      min-height: 490px;
+    }
     .banner {
       // display: flex;
       // justify-content: center;
