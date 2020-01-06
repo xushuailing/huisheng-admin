@@ -115,14 +115,26 @@ const router: RouteConfig[] = [
     component: layoutView,
     children: [
       {
-        path: 'index',
+        path: 'member',
         name: '会员管理页',
         meta: { breadcrumb: [{ title: '会员管理' }] },
         component: () => import('../pages/merchant/member/index.vue'),
       },
       {
-        path: 'list',
+        path: 'member-detail',
         name: '收益明细',
+        meta: { breadcrumb: [{ title: '会员管理' }, { title: '收益明细' }] },
+        component: () => import('../pages/merchant/member/list.vue'),
+      },
+      {
+        path: 'agent',
+        name: '代理',
+        meta: { breadcrumb: [{ title: '会员管理' }] },
+        component: () => import('../pages/merchant/member/index.vue'),
+      },
+      {
+        path: 'agent-detail',
+        name: '代理明细',
         meta: { breadcrumb: [{ title: '会员管理' }, { title: '收益明细' }] },
         component: () => import('../pages/merchant/member/list.vue'),
       },
@@ -280,7 +292,7 @@ const router: RouteConfig[] = [
         meta: { breadcrumb: [{ title: '广告管理' }, { title: '广告推广' }, { title: '详情' }] },
       },
       {
-        path: 'mine-banner',
+        path: 'mine',
         name: '我的推广',
         component: () => import('../pages/merchant/advertisement/mine-banner.vue'),
         meta: { breadcrumb: [{ title: '广告管理' }, { title: '我的推广' }] },

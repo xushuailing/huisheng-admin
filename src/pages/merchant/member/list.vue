@@ -1,44 +1,83 @@
 <template>
-  <sc-min-table stripe
+  <sc-min-table v-if="isInit"
+                stripe
                 ref="table"
                 :columns="columns"
-                :columns-schema="columnsSchema"
                 :search-config="searchConfig"
                 :table-config="tableConfig">
   </sc-min-table>
 </template>
 <script lang='ts'>
-import { Component, Vue, Prop } from 'vue-property-decorator';
+import { Component, Vue, Prop, Ref, Watch } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { _Uid } from '../config';
 
-const columns: ScTable.SetColumns = [
-  ['会员头像', 'avatarurl', 100, null, 'img'],
-  ['名称', 'nickname'],
-  ['会员类型', 'member_name'],
-  ['创建时间', 'createtime'],
-  ['佣金比例', 'divide_comparisons'],
-  ['获得佣金', 'money'],
-];
-
 @Component
-export default class SettingRoleList extends Vue {
-  columns = this.$utils._SetTableColumns(columns);
+export default class MemberDetail extends Vue {
+  @Ref('table') $table!: ScTable;
 
-  columnsSchema: ScTable.ColumnsSchema = {
-    获得佣金: {
-      formater: (row, col) => {
-        const value = row[col.prop];
-        return [{ class: 'font-primary' }, `+${value}`];
-        // return [{ class: 'font-primary' }, value ? `+${value}` : value];
+  isInit = false;
+
+  memberType: 'agent' | 'member' = 'member';
+
+  get isAgent() {
+    return this.memberType === 'agent';
+  }
+
+  @Watch('route')
+  onRouteChange() {
+    this.isInit = false;
+    this.init();
+  }
+
+  init() {
+    this.memberType = this.$route.path.includes('agent') ? 'agent' : 'member';
+    this.columns = this.setColumns();
+    this.$nextTick(() => {
+      this.isInit = true;
+    });
+  }
+
+  setColumns(): ScTable.Columns {
+    return [
+      { label: '会员头像', prop: 'avatarurl', width: 100, special: 'img' },
+      { label: '名称', prop: 'nickname' },
+      { label: '会员类型', prop: 'member_name' },
+      {
+        label: '会员费用',
+        prop: 'agent_money',
+        isHide: !this.isAgent,
+        formater: (row, col) => (row[col.prop] ? `￥${row[col.prop]}` : ''),
       },
-    },
-  };
+      { label: '创建时间', prop: 'createtime' },
+      {
+        label: '佣金比例',
+        prop: 'divide_comparisons',
+        isHide: this.isAgent,
+        formater: (row, col) => `${row[col.prop]}%`,
+      },
+      {
+        label: this.isAgent ? '获得返利' : '获得佣金',
+        prop: 'money',
+        formater: (row, col) => {
+          const value = row[col.prop];
+          return [
+            { class: this.isAgent ? '' : 'font-primary' },
+            this.isAgent ? `+￥${row[col.prop]}` : `+${value}`,
+          ];
+        },
+      },
+    ];
+  }
 
-  tableConfig = {
-    api: this.$api.merchant.member.member.list,
-    index: { uid: _Uid },
-  };
+  columns: ScTable.Columns = [];
+
+  get tableConfig(): ScTable.TableConfig {
+    return {
+      api: this.$api.merchant.member[this.memberType].list,
+      index: { uid: _Uid },
+    };
+  }
 
   searchConfig: ScTable.Search = {
     data: [
@@ -49,7 +88,7 @@ export default class SettingRoleList extends Vue {
       },
       {
         label: '会员类型：',
-        prop: 'level_type',
+        prop: 'type',
         tag: {
           tagType: 'select',
           options: [
@@ -70,5 +109,9 @@ export default class SettingRoleList extends Vue {
       },
     ],
   };
+
+  created() {
+    this.init();
+  }
 }
 </script>

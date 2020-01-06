@@ -1,41 +1,43 @@
 <template>
-  <div class="">
+  <div class="member">
     <el-row :gutter="20">
       <el-col :span="8">
-        <div class="bg-white border-radius-8 p-15">
-          <div class="font-22">{{info.name}}</div>
+        <div class="member-info bg-white border-radius-8 p-15">
+          <div class="font-22">{{info.member_name}}</div>
           <div class="mt-20 flex-jsb">
-            <span class="font-20">本月收益：&yen;{{info.income}}</span>
+            <span class="font-20">本月收益：&yen;{{info.month_money}}</span>
             <el-button class="font-primary"
                        type="text"
                        @click="showDetail">查看明细</el-button>
           </div>
           <div class="mt-10 pt-5 border-top">
-            <div class="mt-10">
-              <span class="mr-30">剩余黄金会员：</span>
-              <span><b class="font-primary">{{info.gold}}</b>/20</span>
-            </div>
-            <div class="mt-10">
-              <span class="mr-30">剩余钻石会员：</span>
-              <span><b class="font-primary">{{info.diamond}}</b>/20</span>
-            </div>
-            <div class="mt-10">
-              <span class="mr-30">剩余铂金会员：</span>
-              <span><b class="font-primary">{{info.platinum}}</b>/20</span>
-            </div>
-            <div v-if="isAgent"
-                 class="mt-10">
-              <span class="font-info mr-30">我的上级代理：</span>
-              <span>{{info.agent}}</span>
-            </div>
+            <template v-if="isAgent">
+              <div v-for="(item,i) in info.quota"
+                   :key="i"
+                   class="mt-10">
+                <span class="mr-30">剩余{{item.name}}：</span>
+                <span><b class="font-primary">{{item.surplus_quota}}</b>/{{item.total_quota}}</span>
+              </div>
+            </template>
+            <template v-if="!isAgent">
+              <div class="mt-10">
+                <span class="mr-30">剩余下线名额：</span>
+                <span><b class="font-primary">{{info.surplus_quota}}</b>/{{info.total_quota}}</span>
+              </div>
+              <div class="mt-10">
+                <span class="font-info mr-30">我的上级代理：</span>
+                <span>{{info.superior_agent_name}} — {{info.superior_agent_user_name}}</span>
+              </div>
+            </template>
           </div>
         </div>
       </el-col>
       <el-col :span="16">
         <div class="bg-white border-radius-8 p-15">
-          <el-radio-group v-model="trendType"
-                          size="mini">
-            <el-radio-button v-for="(item,i) in trendOptions"
+          <el-radio-group v-model="moneyType"
+                          size="mini"
+                          @change="onMoneyTypeChange">
+            <el-radio-button v-for="(item,i) in moneyOptions"
                              :key="i"
                              :label="item.value">{{item.label}}</el-radio-button>
           </el-radio-group>
@@ -57,26 +59,32 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
+import { Component, Vue, Prop, Watch, Ref } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { _Uid } from '../config';
+import { obj } from '../../../lib/@types/sc-param';
+
+type MoneyKey = 'day' | 'week' | 'month';
+
+type MoneyData = {
+  [k in MoneyKey]: { money: number; time: string }[];
+};
 
 @Component
 export default class Vip extends Vue {
+  @Ref('table') $table!: ScTable;
+
   userInfo = this.$utils._Storage.get('user_info');
 
-  isAgent = true;
+  memberType: 'agent' | 'member' = 'member';
 
-  info = {
-    name: '黄金会员',
-    income: '4587.00',
-    gold: '10',
-    diamond: '10',
-    platinum: '10',
-    agent: '一级代理 — 哎呦喂',
-  };
+  get isAgent() {
+    return this.memberType === 'agent';
+  }
 
-  histogram = {
+  info = {};
+
+  histogram: obj = {
     extend: {
       grid: {
         left: '20',
@@ -87,26 +95,33 @@ export default class Vip extends Vue {
       },
       yAxis: { show: true },
     },
+    settings: {
+      labelMap: { time: '日期', money: '成交额' },
+    },
     chartData: {
-      columns: ['日期', '访问用户'],
-      rows: [
-        { 日期: '1/1', 访问用户: 1393 },
-        { 日期: '1/2', 访问用户: 3530 },
-        { 日期: '1/3', 访问用户: 2923 },
-        { 日期: '1/4', 访问用户: 1723 },
-        { 日期: '1/5', 访问用户: 3792 },
-        { 日期: '1/6', 访问用户: 4593 },
-      ],
+      columns: ['time', 'money'],
+      rows: [],
     },
   };
 
-  trendOptions = [
-    { label: '日成交额', value: '0' },
-    { label: '周成交额', value: '1' },
-    { label: '月成交额', value: '2' },
+  moneyOptions = [
+    { label: '日成交额', value: 'day' },
+    { label: '周成交额', value: 'week' },
+    { label: '月成交额', value: 'month' },
   ];
 
-  trendType = '0';
+  moneyType: keyof MoneyData = 'day';
+
+  moneyData: MoneyData = { day: [], week: [], month: [] };
+
+  @Watch('moneyData', { deep: true })
+  onMoneyDataChange(data: obj) {
+    this.histogram.chartData.rows = data[this.moneyType];
+  }
+
+  onMoneyTypeChange(type: MoneyKey) {
+    this.histogram.chartData.rows = this.moneyData[type];
+  }
 
   get columns(): ScTable.Columns {
     return [
@@ -121,6 +136,7 @@ export default class Vip extends Vue {
       {
         label: '佣金比例',
         prop: 'divide_comparisons',
+        isHide: this.isAgent,
         formater: (row, col) => `${row[col.prop]}%`,
       },
       { label: '创建时间', prop: 'createtime' },
@@ -130,10 +146,34 @@ export default class Vip extends Vue {
   tableConfig: ScTable.TableConfig = {
     api: this.$api.merchant.member,
     index: { uid: _Uid },
+    disableDefaultRequest: true,
   };
 
+  async getStatistics() {
+    const api = this.$api.merchant.member[this.memberType].statistics;
+    const loading = this.$utils._Loading.show();
+    const res = await this.$http.get(api, { uid: _Uid });
+    const data = res.data || { user_info: {}, MembershipData: { day: [], week: [], month: [] } };
+    loading.close();
+    this.info = data.user_info;
+    this.moneyData = data.MembershipData;
+  }
+
   showDetail() {
-    this.$router.push('list');
+    this.$router.push(`${this.memberType}-detail`);
+  }
+
+  created() {
+    this.memberType = this.$route.path.includes('agent') ? 'agent' : 'member';
+    this.$table.setDataTable({});
+    this.getStatistics();
   }
 }
 </script>
+<style lang="scss" scoped>
+  .member {
+    &-info {
+      height: 258px;
+    }
+  }
+</style>
