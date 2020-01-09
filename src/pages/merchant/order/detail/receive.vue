@@ -4,13 +4,15 @@
             :time="order.time"
             :id="id"></status>
 
-    <el-radio-group v-model="currentTab"
-                    size="medium"
-                    class="mt-20">
-      <el-radio-button v-for="(item,i) in tabs"
-                       :key="i"
-                       :label="item.value">{{item.label}}</el-radio-button>
-    </el-radio-group>
+    <el-tabs class="sc-tabs mt-30"
+             v-model="currentTab"
+             @tab-click="onTabChange">
+      <el-tab-pane v-for="(item,i) in tabs"
+                   :label="item.label"
+                   :key="i"
+                   :name="item.value">
+      </el-tab-pane>
+    </el-tabs>
 
     <div class="info-container border-primary border-radius-4 mt-20 p-20">
       <order-info v-show="currentTab==='detail'"
@@ -22,25 +24,26 @@
                   :freight="price.freight"></order-info>
       <div v-show="currentTab==='logistics'">
         <div class="font-16">物流信息</div>
-        <div class="mt-20">
+        <div ref="logistics"
+             class="mt-20">
           <order-address title=" "
                          :data="address"
                          style="margin-top:0"></order-address>
-          <!-- TODO: 只有实物有 -->
-          <div class="mt-10">运送方式：{{logistics.expresstitle}}</div>
-          <div v-if="logistics.data"
-               ref="logistics"
-               class="mt-30">
-            <div v-for="(item,i) in logistics.data"
-                 :key="i"
-                 :class="['logistics-item flex',i?'font-info':'font-primary']">
-              <span :class="['font-16',i?'':'font-bold']">
-                {{i==logistics.data.length-1?'已发货':'运输中'}}
-              </span>
-              <span class="ml-30">{{item.time}}</span>
-              <span class="flex-1 ml-30">{{item.context}}</span>
+          <template v-if="isEntity">
+            <div class="mt-10">运送方式：{{logistics.expresstitle}}</div>
+            <div v-if="logistics.data"
+                 class="mt-30">
+              <div v-for="(item,i) in logistics.data"
+                   :key="i"
+                   :class="['logistics-item flex',i?'font-info':'font-primary']">
+                <span :class="['font-16',i?'':'font-bold']">
+                  {{i==logistics.data.length-1?'已发货':'运输中'}}
+                </span>
+                <span class="ml-30">{{item.time}}</span>
+                <span class="flex-1 ml-30">{{item.context}}</span>
+              </div>
             </div>
-          </div>
+          </template>
         </div>
       </div>
     </div>
@@ -49,7 +52,7 @@
 <script lang="ts">
 import { Component, Vue, Mixins } from 'vue-property-decorator';
 import { obj } from '@/lib/@types/sc-param.d';
-import { _Uid, _PayType } from '../../config';
+import { _Uid, _IsVirtual, _PayType } from '../../config';
 import Mixin from './mixin';
 import Status from './components/status.vue';
 import OrderInfo from './components/order-info.vue';
@@ -61,9 +64,21 @@ export default class OrderReceiveDetail extends Mixins(Mixin) {
     logistics: any;
   };
 
+  isEntity = !_IsVirtual;
+
   tabs = [{ label: '订单详情', value: 'detail' }, { label: '收货与物流信息', value: 'logistics' }];
 
   currentTab = this.tabs[0].value;
+
+  logisticsInit = false;
+
+  onTabChange(tab: obj) {
+    if (tab.name === 'logistics' && !this.logisticsInit) {
+      setTimeout(() => {
+        this.getLogistics();
+      }, 500);
+    }
+  }
 
   get userInfo() {
     const { username = '', phone = '', address_provinces = '', address_city = '' } =
@@ -144,16 +159,14 @@ export default class OrderReceiveDetail extends Mixins(Mixin) {
   logistics = {};
 
   getLogistics() {
-    const loading = this.$utils._Loading.show({ target: this.$refs.logistics.$el });
+    this.logisticsInit = true;
+    const loading = this.$utils._Loading.show({ target: this.$refs.logistics });
     const api = this.$api.merchant.order.logistics;
     const param = { oid: this.id };
     this.$http
       .get(api, param)
       .then((res) => {
         const logistics = res.data || {};
-        if (logistics.data) {
-          logistics.data = logistics.data.receive();
-        }
         this.logistics = logistics;
       })
       .catch((err) => {
@@ -180,7 +193,6 @@ export default class OrderReceiveDetail extends Mixins(Mixin) {
 
   mounted() {
     this.getDetail();
-    this.getLogistics();
   }
 }
 </script>

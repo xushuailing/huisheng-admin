@@ -1,12 +1,15 @@
 <template>
   <div class="Order">
-    <el-radio-group v-model="currentTab"
-                    size="medium"
-                    @change="onTabChange">
-      <el-radio-button v-for="(item,i) in tabs"
-                       :key="i"
-                       :label="item.value">{{item.label}}</el-radio-button>
-    </el-radio-group>
+    <el-tabs class="sc-tabs"
+             v-model="currentTab"
+             @tab-click="onTabChange">
+      <el-tab-pane v-for="(item,i) in tabs"
+                   :label="item.label"
+                   :key="i"
+                   :name="item.value">
+      </el-tab-pane>
+    </el-tabs>
+
     <o-table ref="table"
              :thead="thead"
              :table-config="tableConfig"
@@ -84,24 +87,30 @@ export default class Order extends Mixins(Mixin) {
   @Ref('table') $table!: ScTable;
 
   tabs = [
-    { label: '全部订单', value: 0 },
-    { label: '待付款', value: 1 },
-    { label: '待发货', value: 2 },
-    { label: '待收货', value: 3 },
+    { label: '全部订单', value: '0' },
+    { label: '待付款', value: '1' },
+    { label: '待发货', value: '2' },
+    { label: '待收货', value: '3' },
   ];
 
-  currentTab = 0;
+  currentTab = this.tabs[0].value;
+
+  onTabChange() {
+    this.$nextTick(() => {
+      this.$table.setDataTable({ pagination: { page: 1 } });
+    });
+  }
 
   get thead() {
     const price = [2, 3];
-    const selectAll = this.currentTab === 2 ? [{ label: '', type: 'checked', width: 10 }] : [];
+    const selectAll = this.currentTab === '2' ? [{ label: '', type: 'checked', width: 10 }] : [];
     return [
       ...selectAll,
       { label: '商品信息' },
       { label: '单价' },
       { label: '数量' },
       { label: '买家信息' },
-      { label: price.includes(this.currentTab) ? '实收款' : '状态' },
+      { label: price.includes(Number(this.currentTab)) ? '实收款' : '状态' },
       { label: '操作' },
     ];
   }
@@ -164,11 +173,7 @@ export default class Order extends Mixins(Mixin) {
     const send = {
       // slotAttr: { isCheckbox: true, text: ' 批量发货' },
     };
-    return this.currentTab === 2 ? send : {};
-  }
-
-  onTabChange() {
-    this.$table.setDataTable({ pagination: { page: 1 } });
+    return this.currentTab === '2' ? send : {};
   }
 
   handleSendAll() {
@@ -214,3 +219,8 @@ export default class Order extends Mixins(Mixin) {
   }
 }
 </script>
+<style lang="scss" scoped>
+  .sc-tabs .el-tabs__nav.is-top {
+    border: 1px solid #409eff;
+  }
+</style>
