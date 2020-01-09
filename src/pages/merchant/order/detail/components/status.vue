@@ -23,6 +23,9 @@ export default class OrderStatus extends Mixins(Mixin) {
 
   @Prop([Number, String]) status!: number | string;
 
+  // @Prop([Number, String]) time!: number;
+  time = 5;
+
   get isPay() {
     return this.status == 1;
   }
@@ -30,8 +33,6 @@ export default class OrderStatus extends Mixins(Mixin) {
   get tips() {
     return this.isPay ? '未付款，系统将自动取消订单' : '未收货，系统将自动确认收货';
   }
-
-  @Prop([Number, String]) time!: number;
 
   remainTime = this.time;
 
@@ -42,11 +43,7 @@ export default class OrderStatus extends Mixins(Mixin) {
   @Watch('time', { immediate: true })
   onTimeChange(time: number) {
     this.remainTime = this.time;
-    this.handleTimeout();
-
-    if (time) {
-      this.timeDown();
-    }
+    time && this.timeDown();
   }
 
   timer: any = null;
@@ -69,26 +66,27 @@ export default class OrderStatus extends Mixins(Mixin) {
   /** 自动发货/收货 */
   handleTimeout() {
     if (!this.time) return;
+    console.log('this.time: ', this.time);
 
-    const apis = this.$api.merchant.order;
-    const api = this.status == 1 ? apis.close : apis.confirm;
-    const message = this.isPay ?
-      '该订单超过24小时未支付，已自动关闭！' :
-      '该订单超过7天未确认收货，系统已自动收货！';
+    // const apis = this.$api.merchant.order;
+    // const api = this.status == 1 ? apis.close : apis.confirm;
+    // const message = this.isPay ?
+    //   '该订单超过24小时未支付，已自动关闭！' :
+    //   '该订单超过7天未确认收货，系统已自动收货！';
 
-    this.$http
-      .spGet(api)
-      .then((res) => {
-        if (res.status) {
-          this.$message.error(message);
-          const path = this.isPay ? 'send-detail' : 'finish-detail';
-          this.$router.push({ path, query: { id: String(this.id) } });
-        }
-      })
-      .catch((err) => {
-        this.$utils._ResponseError(err);
-        this.$router.push('order');
-      });
+    // this.$http
+    //   .spGet(api)
+    //   .then((res) => {
+    //     if (res.status) {
+    //       this.$message.error(message);
+    //       const path = this.isPay ? 'send-detail' : 'finish-detail';
+    //       this.$router.push({ path, query: { id: String(this.id) } });
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     this.$utils._ResponseError(err);
+    //     this.$router.push('order');
+    //   });
   }
 
   destroyed() {
