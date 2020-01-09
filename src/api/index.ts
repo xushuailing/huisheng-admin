@@ -13,6 +13,7 @@ export default {
   login: `${url}/admin/admin_login`,
   files: {
     upload: `${url}/api/insert_img`,
+    setImg: `${url}/admin/setImg`,
   },
 
   /** 管理的接口 */

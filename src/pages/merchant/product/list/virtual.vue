@@ -18,15 +18,10 @@
   </div>
 </template>
 <script lang='ts'>
-import { Component, Vue, Prop, Ref } from 'vue-property-decorator';
+import { Component, Vue, Prop, Ref, Mixins } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
-import { obj } from '@/lib/@types/sc-param.d';
-import { _Shopid } from '../config';
-
-interface Shelves {
-  gid: string;
-  status: string;
-}
+import { _Shopid } from '../../config';
+import mixin from './mixin';
 
 const columns: ScTable.SetColumns = [
   ['产品图片', 'image', 100, null, 'img'],
@@ -38,9 +33,7 @@ const columns: ScTable.SetColumns = [
 ];
 
 @Component
-export default class MerchantInject extends Vue {
-  @Ref('table') $table!: ScTable;
-
+export default class MerchantInject extends Mixins(mixin) {
   userInfo = this.$utils._Storage.get('user_info');
 
   columns = this.$utils._SetTableColumns(columns);
@@ -68,41 +61,5 @@ export default class MerchantInject extends Vue {
     api: this.$api.merchant.product,
     index: { shopid: _Shopid },
   };
-
-  onTableHandlerClick({ row, type }: { row: obj<string>; type: string }) {
-    if (type === 'detail') {
-      this.$router.push({ path: 'add', query: { id: row.id } });
-    } else if (type === 'unshelve') {
-      this.handleShelves([{ gid: row.id, status: row.status }]);
-    } else if (type === 'shelves') {
-      this.handleShelves([{ gid: row.id, status: row.status }]);
-    }
-  }
-
-  handleShelves(list: Shelves[]) {
-    const api = this.$api.merchant.product.shelves;
-    const params = { shopid: _Shopid, list };
-    const loading = this.$utils._Loading.show();
-    this.$http
-      .post(api, params)
-      .then(() => {
-        this.$table.setDataTable({});
-      })
-      .finally(() => {
-        loading.close();
-      });
-  }
-
-  handleAdd() {
-    this.$router.push('add');
-  }
-
-  onSlotClick() {
-    const data = this.$table.selectTableData;
-    const list: Shelves[] = data
-      .filter((v) => !v.status)
-      .map((v) => ({ gid: v.id, status: v.status }));
-    this.handleShelves(list);
-  }
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white border-radius-4 p-30">
+  <div class="product-add bg-white border-radius-4 p-30">
     <el-form ref="form"
              :model="form"
              :rules="isDetail?{}:rules"
@@ -25,7 +25,7 @@
             <el-form-item v-for="(name, index) in form.name"
                           :key="index"
                           :prop="`name.${index}`"
-                          :rules="{required: true, message: '请输入规格名称', trigger: 'blur'}"
+                          :rules="sizeRules"
                           label-width="auto">
               <el-input v-model="form.name[index]"
                         :placeholder="`请输入规格${form.name.length>1?index+1:''}名称`"></el-input>
@@ -54,7 +54,8 @@
       </el-form-item>
       <el-form-item label="商品详情："
                     prop="content">
-        <div class="font-info">仅支持尺寸1:1、jpg格式</div>
+        <div v-if="!isDetail"
+             class="font-info">仅支持尺寸1:1、jpg格式</div>
         <el-input v-if="isDetail"
                   :value="form.content"
                   type="textarea"
@@ -67,8 +68,8 @@
         </sc-editor>
       </el-form-item>
       <el-form-item label="发货时间："
-                    prop="delivery_time">
-        <el-checkbox v-model="form.delivery_time"
+                    prop="delivery_type">
+        <el-checkbox v-model="form.delivery_type"
                      :disabled="isDetail">三天内发货</el-checkbox>
       </el-form-item>
       <el-form-item>
@@ -80,10 +81,9 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue, Watch, Mixins } from 'vue-property-decorator';
+import { Component, Vue, Watch, Prop } from 'vue-property-decorator';
 import EditTable from '@/components/editTable.vue';
-import { _Shopid } from '../config';
-import AddMixin from './add-mixin';
+import { _Shopid } from '../../config';
 import { _GetTableSpan, _ObjectSpanMethod, TableColumns, MergeKey } from '@/utils/handleTableSpan';
 import { ScEditTable } from '@/components/@types/sc-edit-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
@@ -93,7 +93,7 @@ interface Form {
   name: string[];
   size: string[];
   content: string;
-  delivery_time: boolean;
+  delivery_type: 0 | 1;
 }
 
 interface Option {
@@ -106,18 +106,29 @@ const _MergeKeys: MergeKey = {
 };
 
 @Component({ components: { EditTable } })
-export default class ProductAdd extends Mixins(AddMixin) {
+export default class Virtual extends Vue {
   $refs!: {
     table: any;
     form: any;
   };
 
-  get id() {
-    return this.$route.query.id;
-  }
+  @Prop([Number, String]) id!: number | string;
 
-  get isDetail() {
-    return !!this.$route.query.id;
+  @Prop({ type: Boolean, default: false }) isDetail!: boolean;
+
+  @Prop(Array) sorts!: Option[];
+
+  @Prop(Object) data!: obj | null;
+
+  @Watch('data')
+  onDataChange(data: obj | null) {
+    if (data) {
+      Object.keys(data).forEach((key) => {
+        if (key in this.form) {
+          (this.form as obj)[key] = data[key];
+        }
+      });
+    }
   }
 
   form: Form = {
@@ -125,7 +136,7 @@ export default class ProductAdd extends Mixins(AddMixin) {
     name: [''],
     size: [],
     content: '',
-    delivery_time: true,
+    delivery_type: 0,
   };
 
   rules = {
@@ -134,31 +145,43 @@ export default class ProductAdd extends Mixins(AddMixin) {
       { validator: this.checkSize, trigger: ['blur', 'change'] },
     ],
     content: [{ required: true, message: '请输入商品详情', trigger: ['blur', 'change'] }],
-    delivery_time: [{ required: true, message: '请选择发货时间', trigger: ['blur', 'change'] }],
+    delivery_type: [{ required: true, message: '请选择发货时间', trigger: ['blur', 'change'] }],
   };
-
-  sorts: Option[] = [];
 
   size: string[][] = [[], []];
 
   @Watch('form.size')
   onSizeChange(size: string[][]) {
-    const data = size.map((name, row) => {
+    const data = size.map((title, row) => {
       const item = this.table[row];
       return {
         index: row,
-        name,
+        title,
         price: (item && item.price) || '',
-        image: (item && item.price) || '',
-        aging: (item && item.aging) || '',
+        image: (item && item.image) || '',
+        day: (item && item.day) || '',
       };
     });
     this.$refs.table.setValue(data.flat());
   }
 
-  checkSize(rule: obj, value: string[][], callback: Function) {
-    console.log('value: ', value);
+  sizeRules: obj = this.getSizeRules();
 
+  getSizeRules() {
+    return { required: true, message: '请输入规格名称', trigger: 'blur' };
+  }
+
+  checkSize(rule: obj, hasSize: string[][], callback: Function) {
+    if (hasSize) {
+      if (this.table.length) {
+        this.$refs.table.validate().then((res: boolean) => {
+          if (res) return callback();
+          return callback(new Error('请将规格信息补充完整'));
+        });
+      } else {
+        return callback(new Error('请录入商品规格'));
+      }
+    }
     return callback();
   }
 
@@ -193,7 +216,7 @@ export default class ProductAdd extends Mixins(AddMixin) {
   columns: ScEditTable.Columns = [
     {
       label: '规格名称',
-      prop: 'name',
+      prop: 'title',
       editable: false,
       'show-overflow-tooltip': false,
     },
@@ -215,7 +238,7 @@ export default class ProductAdd extends Mixins(AddMixin) {
     },
     {
       label: '时效（日）',
-      prop: 'aging',
+      prop: 'day',
       tag: {
         tagType: 'input-number',
         attr: { min: 0, precision: 0, controls: false, class: 'w100' },
@@ -226,7 +249,7 @@ export default class ProductAdd extends Mixins(AddMixin) {
   tableRules = {
     price: { value: [{ required: true, message: '请输入价格', trigger: 'blur' }] },
     image: { value: [{ required: true, message: '请上传图片', trigger: ['blur', 'change'] }] },
-    aging: { value: [{ required: true, message: '请输入时效', trigger: 'blur' }] },
+    day: { value: [{ required: true, message: '请输入时效', trigger: 'blur' }] },
   };
 
   get mergeKeys() {
@@ -239,15 +262,15 @@ export default class ProductAdd extends Mixins(AddMixin) {
     return _ObjectSpanMethod(tableObj, this.mergeKeys, this.rowspanObj);
   }
 
-  handleSubmit() {
-    this.$refs.form.validate((valid: boolean) => {
+  async handleSubmit() {
+    this.sizeRules = {};
+    await this.$nextTick();
+    this.$refs.form.validate((valid: boolean, object: any) => {
+      console.log('valid: ', valid, object);
       if (valid) {
-        this.$refs.table.validate().then((res: boolean) => {
-          if (res) {
-            this.submit();
-          }
-        });
+        this.submit();
       } else {
+        this.sizeRules = this.getSizeRules();
         this.validateError();
       }
     });
@@ -258,34 +281,16 @@ export default class ProductAdd extends Mixins(AddMixin) {
   }
 
   submit() {
-    console.log('%c提交', 'color:#fff;background:#40b883;border-radius:5px;padding:2px 5px;');
     const api = this.$api.merchant.product.update;
-    const param = { gid: this.id, shopid: _Shopid };
+    const param = { shopid: _Shopid, ...this.form };
+    console.log(
+      '%c提交',
+      'color:#fff;background:#40b883;border-radius:5px;padding:2px 5px;',
+      param,
+    );
     // this.$http.post(api, param).then((res) => {
     //   console.log('res: ', res);
     // });
-  }
-
-  async getDetail() {
-    const api = this.$api.merchant.product.show;
-    const res = await this.$http.get(api, { gid: this.id, shopid: _Shopid });
-    const data = res.data || {};
-    Object.keys(this.form).forEach((key) => {
-      if (key in data) {
-        (this.form as obj)[key] = data[key];
-      }
-    });
-  }
-
-  async getGoodsType() {
-    const api = this.$api.merchant.product.goodsType;
-    const res = await this.$http.get(api, { shopid: _Shopid });
-    this.sorts = res.data || [];
-  }
-
-  mounted() {
-    this.getGoodsType();
-    this.getDetail();
   }
 }
 </script>

@@ -559,7 +559,9 @@ export default class EditTable extends Vue {
         })
         .catch((err) => {
           resolve(err);
-          this.$message.error(`${this.toolbar.title || ''}表格数据填写错误，请先修正再新增`);
+          if (this.tableConfig.validMsg !== false) {
+            this.$message.error(`${this.toolbar.title || ''}表格数据填写错误，请先修正再新增`);
+          }
         });
     });
   }
@@ -750,17 +752,32 @@ export default class EditTable extends Vue {
     }
     .el-form-item {
       margin-top: 18px;
+      &__error {
+        text-align: center;
+        width: 100%;
+      }
     }
   }
+  $num: 40px;
   .sc-edit-table {
     .sc-upload .img-uploader .el-upload--picture-card {
-      width: 40px;
-      height: 40px;
-      line-height: 40px;
+      width: $num;
+      height: $num;
+      line-height: $num;
     }
     .sc-upload .img-uploader .el-upload-list__item {
-      width: 40px;
-      height: 40px;
+      width: $num;
+      height: $num;
+    }
+    .sc-upload .el-progress__text{
+      font-size: 12px
+    }
+    .el-progress {
+      svg {
+        height: $num;
+        width: $num;
+        padding: 5px;
+      }
     }
     .el-upload-list--picture-card .el-upload-list__item {
       margin: 0;

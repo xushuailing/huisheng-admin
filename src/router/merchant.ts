@@ -40,27 +40,24 @@ const router: RouteConfig[] = [
     children: [
       {
         path: 'list',
-        name: '商品列表',
-        component: () => import('../pages/merchant/product/list.vue'),
-        meta: { breadcrumbHide: true, breadcrumb: [{ title: '商品管理' }, { title: '全部商品' }] },
+        name: '商品列表（虚拟）',
+        component: () => import('../pages/merchant/product/list/list.vue'),
+        meta: { breadcrumbHide: true, breadcrumb: [{ title: '产品列表' }, { title: '全部产品' }] },
       },
       {
         path: 'list-physical',
-        name: '商品列表',
-        component: () => import('../pages/merchant/product/list-physical.vue'),
-        meta: { breadcrumbHide: true, breadcrumb: [{ title: '商品管理' }, { title: '全部商品' }] },
+        name: '商品列表（实体）',
+        component: () => import('../pages/merchant/product/list/list.vue'),
+        meta: {
+          breadcrumbHide: true,
+          breadcrumb: [{ title: '商品列表' }, { title: '已上架商品' }],
+        },
       },
       {
         path: 'add',
         name: '发布宝贝',
-        component: () => import('../pages/merchant/product/add.vue'),
+        component: () => import('../pages/merchant/product/add/add.vue'),
         meta: { breadcrumb: [{ title: '商品管理' }, { title: '发布宝贝' }] },
-      },
-      {
-        path: 'add-physical',
-        name: '发布宝贝',
-        component: () => import('../pages/merchant/product/add-physical.vue'),
-        meta: { breadcrumb: [{ title: '商品管理' }, { title: '发布宝贝-实体' }] },
       },
     ],
   },
@@ -273,12 +270,6 @@ const router: RouteConfig[] = [
         component: () => import('../pages/merchant/advertisement/list.vue'),
         meta: { breadcrumb: [{ title: '广告管理' }, { title: '广告推广' }] },
       },
-      // {
-      //   path: 'banner-active',
-      //   name: '活动banner',
-      //   component: () => import('../pages/merchant/advertisement/banner-active.vue'),
-      //   meta: { breadcrumb: [{ title: '广告管理' }, { title: '活动banner' }] },
-      // },
       {
         path: 'buy',
         name: 'banner购买',

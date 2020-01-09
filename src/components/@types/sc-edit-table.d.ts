@@ -160,6 +160,11 @@ export namespace ScEditTable {
      * 默认: `false`
      */
     disabled?: boolean;
+
+    /**
+     * 是否提示验证信息，默认提示
+     */
+    validMsg?: boolean;
   }
 
   /** 表单配置项 */

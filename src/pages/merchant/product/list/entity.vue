@@ -29,10 +29,11 @@
   </div>
 </template>
 <script lang='ts'>
-import { Component, Vue, Prop, Ref } from 'vue-property-decorator';
+import { Component, Vue, Prop, Ref, Mixins } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
-import { _Shopid } from '../config';
+import { _Shopid } from '../../config';
+import mixin from './mixin';
 
 interface Shelves {
   gid: string;
@@ -49,10 +50,8 @@ const columns: ScTable.SetColumns = [
 ];
 
 @Component
-export default class MerchantInject extends Vue {
+export default class MerchantInject extends Mixins(mixin) {
   @Ref('table') $table!: ScTable;
-
-  userInfo = this.$utils._Storage.get('user_info');
 
   tabs = [{ label: '已上架', value: '0' }, { label: '已下架', value: '1' }];
 
@@ -61,6 +60,7 @@ export default class MerchantInject extends Vue {
   onTabChange(tab: obj) {
     this.tableConfig.index!.status = tab.name;
     this.$table.setDataTable({});
+    // 清空选项
   }
 
   columns = this.$utils._SetTableColumns(columns);
@@ -81,7 +81,7 @@ export default class MerchantInject extends Vue {
     return {
       slotAttr: {
         isCheckbox: true,
-        text: this.currentTab ? '全部上架' : '全部下架',
+        text: this.currentTab === '1' ? '全部上架' : '全部下架',
       },
     };
   }
@@ -109,36 +109,6 @@ export default class MerchantInject extends Vue {
       },
     ],
   };
-
-  onTableHandlerClick({ row, type }: { row: obj; type: string }) {
-    if (type === 'detail') {
-      this.$router.push({ path: 'add', query: { detail: 'true', id: row.id } });
-    } else if (type === 'unshelve') {
-      console.log('下架: ');
-      this.handleShelves([{ gid: row.id, status: row.status }]);
-    } else if (type === 'shelves') {
-      console.log('上架: ');
-      this.handleShelves([{ gid: row.id, status: row.status }]);
-    }
-  }
-
-  handleAdd() {
-    this.$router.push('add');
-  }
-
-  handleShelves(list: Shelves[]) {
-    const api = this.$api.merchant.product.shelves;
-    const params = { shopid: _Shopid, list };
-    this.$http.post(api, params).then((res) => {
-      console.log('res.data: ', res.data);
-    });
-  }
-
-  onSlotClick() {
-    const data = this.$table.selectTableData;
-    const list: Shelves[] = data.map((v) => ({ gid: v.id, status: v.status }));
-    this.handleShelves(list);
-  }
 
   async getGoodsType() {
     const api = this.$api.merchant.product.types;

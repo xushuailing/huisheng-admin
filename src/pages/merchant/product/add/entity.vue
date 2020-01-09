@@ -25,6 +25,13 @@
                   style="width:50%"
                   :disabled="isDetail"></el-input>
       </el-form-item>
+      <el-form-item label="商品参数："
+                    prop="parameter">
+        <el-input v-model="form.parameter"
+                  placeholder="请输入商品参数"
+                  style="width:50%"
+                  :disabled="isDetail"></el-input>
+      </el-form-item>
       <el-form-item label="商品图片："
                     prop="image"
                     label-position="top">
@@ -35,7 +42,7 @@
                class="mr-10">
             <sc-upload v-model="form.image[i]"
                        :limit="1"
-                       class="inline-block"
+                       :class="['inline-block',!i?'main-image flex-column':'']"
                        :disabled="isDetail"></sc-upload>
             <div v-if="!i"
                  class="font-12 text-c">商品主图</div>
@@ -54,12 +61,11 @@
                     prop="video"
                     label-width="110px">
         <div class="flex">
-          <sc-upload v-model="form.video"
-                     :limit="1"
-                     :fileSize=".78"
-                     :disabled="isDetail">
-          </sc-upload>
-          <ol class="flex-1 m-0 ml-10 font-info"
+          <upload-video v-model="form.video"
+                        :limit="1"
+                        :disabled="isDetail"
+                        class="mt-5"></upload-video>
+          <ol class="flex-1 m-0 pl-30 font-info"
               style="list-style-type: decimal;">
             <li>尺寸：此处可使用1:1或16:9比例视频</li>
             <li>时长：≤60s，建议30秒以内短视频可优先展示</li>
@@ -69,34 +75,49 @@
       </el-form-item>
       <el-form-item label="商品规格："
                     prop="is_specifications"
-                    label-position="top">
+                    label-position="top"
+                    class="mb-0">
         <el-radio-group v-model="form.is_specifications"
                         :disabled="isDetail">
-          <el-radio :label="true">需要规格</el-radio>
-          <el-radio :label="false">不需要规格</el-radio>
+          <el-radio :label="0">需要规格</el-radio>
+          <el-radio :label="1">不需要规格</el-radio>
         </el-radio-group>
-        <div v-show="form.is_specifications"
-             class="mt-10 pt-20 pl-30 pr-30 pb-30 bg-background-color-base border-radius-4">
+      </el-form-item>
+      <el-form-item>
+        <div v-show="!form.is_specifications"
+             class="mt-10 pt-20 pl-30 pr-30 pb-20 bg-background-color-base border-radius-4">
           <div v-if="!isDetail">
             <div class="mb-10">添加规格：</div>
-            <el-form-item v-for="(name, index) in form.name"
-                          :key="index"
-                          :prop="`name.${index}`"
-                          :rules="sizeRules"
-                          label-width="auto">
-              <el-input v-model="form.name[index]"
-                        :placeholder="`请输入规格${index+1}名称`"></el-input>
-              <el-input v-for="(item,i) in form.size[index]"
-                        :key="i"
-                        v-model="form.size[index][i]"
-                        class="ml-10"></el-input>
-              <el-button icon="el-icon-plus"
-                         class="ml-10"
-                         @click="handleAdd(index)"></el-button>
-            </el-form-item>
+            <div v-for="(name, index) in form.arry"
+                 :key="index"
+                 class="flex">
+              <el-form-item :prop="`arry.${index}`"
+                            :rules="sizeFirstRules"
+                            label-width="auto">
+                <el-input v-model="form.arry[index]"
+                          :placeholder="`请输入规格${index+1}名称`"></el-input>
+              </el-form-item>
+              <el-form-item v-for="(item,i) in form.size[index]"
+                            :key="i"
+                            :prop="`size.${index}.${i}`"
+                            :rules="sizeSecondRules"
+                            label-width="auto"
+                            class="ml-10">
+                <el-input v-model="form.size[index][i]"></el-input>
+              </el-form-item>
+              <div class="ml-10">
+                <el-button v-show="form.size[index].length>1"
+                           icon="el-icon-minus"
+                           class="mr-10"
+                           @click="handleMinus(index)"></el-button>
+                <el-button icon="el-icon-plus"
+                           class="ml-0"
+                           @click="handleAdd(index)"></el-button>
+              </div>
+            </div>
           </div>
           <div>
-            <span>{{isDetail?'商品规格':'宝贝销售价格：'}}</span>
+            <span>{{isDetail?'':'宝贝销售价格：'}}</span>
             <span v-if="!isDetail"
                   class="font-info">在标题栏中输入或选择内容可以进行筛选和批量填充</span>
           </div>
@@ -109,25 +130,21 @@
                       :rules="tableRules"
                       :span-method="spanMethod"
                       @emitDeleteComplete="handleMinus"></edit-table>
+          <el-form-item prop="size"></el-form-item>
         </div>
       </el-form-item>
       <el-form-item label="商品详情："
                     prop="content">
         <div v-if="!isDetail"
              class="font-info">仅支持尺寸1:1、jpg格式</div>
-        <el-input v-if="isDetail"
-                  :value="form.content"
-                  type="textarea"
-                  disabled
-                  autosize></el-input>
+        <div v-if="isDetail"
+             v-html="form.content"
+             class="p-20 border-solid border-radius-4"></div>
         <sc-editor v-else
                    v-model="form.content"
                    ref="scEditor"
                    class="mt-10">
         </sc-editor>
-        <!-- <pre v-else
-             v-html="form.content"
-             class="border-solid border-radius-4 p-15"></pre> -->
       </el-form-item>
       <el-form-item label="售后信息设置："
                     prop="after_sale"
@@ -136,22 +153,24 @@
         <span class="mr-20"
               style="margin-left:-80px">售后服务</span>
         <el-checkbox v-model="form.after_sale"
-                     :label="true"
+                     :true-label="1"
+                     :false-label="0"
                      :disabled="isDetail">7天无理由退货</el-checkbox>
       </el-form-item>
       <el-form-item label="发货时间："
-                    prop="isThreeDays">
-        <el-radio-group v-model="form.isThreeDays"
+                    prop="delivery_type">
+        <el-radio-group v-model="form.delivery_type"
                         :disabled="isDetail">
-          <el-radio :label="true">三天内发货</el-radio>
-          <el-radio :label="false">预订单</el-radio>
+          <el-radio :label="0">三天内发货</el-radio>
+          <el-radio :label="1">预订单</el-radio>
         </el-radio-group>
-        <div v-show="!form.isThreeDays"
+        <div v-show="form.delivery_type"
              class="bg-info-lighter border-radius-8 pt-20 pl-20 pr-20 pb-5">
           <el-form-item label="填写发货时间："
-                        prop="deliveryTime">
-            <el-input v-model="form.deliveryTime"
-                      :disabled="isDetail"></el-input>
+                        prop="delivery_time">
+            <el-date-picker v-model="form.delivery_time"
+                            placeholder="请选择发货时间"
+                            :disabled="isDetail"></el-date-picker>
           </el-form-item>
         </div>
       </el-form-item>
@@ -164,46 +183,87 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue, Watch, Mixins } from 'vue-property-decorator';
+import { Component, Vue, Watch, Prop } from 'vue-property-decorator';
 import EditTable from '@/components/editTable.vue';
 import { ScEditTable } from '@/components/@types/sc-edit-table.d';
 import { _GetTableSpan, _ObjectSpanMethod, TableColumns, MergeKey } from '@/utils/handleTableSpan';
 import { obj } from '@/lib/@types/sc-param.d';
-import AddMixin from './add-mixin';
-import { _Shopid } from '../config';
-import { ScForm } from '../../../lib/@types/sc-form';
+import { _Shopid } from '../../config';
+import { ScForm } from '@/lib/@types/sc-form.d';
+import UploadVideo from './upload-video.vue';
 
-interface Form extends obj {
+interface Form<T = string> extends obj {
   pid: string;
-  name: string[];
+  arry: T[];
   size: string[][];
 }
 
+interface Size {
+  guige_title: string;
+  guige_val: string[];
+}
+
+interface Option {
+  name: string;
+  id: string;
+}
+
 const _MergeKeys: MergeKey = {
-  index: ['pid', 'handler'],
+  index: ['sku_title', 'handler'],
 };
 
-@Component({ components: { EditTable } })
-export default class ProductAdd extends Mixins(AddMixin) {
+const _GroupBy = require('lodash/groupBy');
+const _Pick = require('lodash/pick');
+
+@Component({ components: { EditTable, UploadVideo } })
+export default class Entity extends Vue {
   $refs!: {
     table: any;
     form: any;
   };
 
-  userInfo = this.$utils._Storage.get('user_info');
+  @Prop([Number, String]) id!: number | string;
 
-  form: Form = {
+  @Prop({ type: Boolean, default: false }) isDetail!: boolean;
+
+  @Prop(Array) sorts!: Option[];
+
+  @Prop(Object) data!: obj | null;
+
+  @Watch('data')
+  onDataChange(data: obj | null) {
+    if (data) {
+      Object.keys(data).forEach((key) => {
+        if (key in this.form) {
+          if (key === 'image') {
+            this.form.image[0] = data[key];
+          } else if (key === 'goods_thumb' && data[key]) {
+            data[key].forEach((url: string, i: number) => {
+              this.form.image[i + 1] = url;
+            });
+          } else {
+            (this.form as obj)[key] = data[key];
+          }
+        }
+      });
+    }
+  }
+
+  form = {
     pid: '',
     title: '',
+    parameter: '',
     image: ['', '', '', '', ''],
+    goods_thumb: [],
     video_ratio: '1',
-    video: '',
-    is_specifications: true,
-    name: ['', ''],
-    size: [[], []],
+    video: [],
+    is_specifications: 0,
+    arry: ['', ''],
+    size: [[''], ['']],
     content: '',
-    isThreeDays: false,
-    deliveryTime: '',
+    after_sale: 0,
+    delivery_type: 0,
+    delivery_time: '',
   };
 
   rules = {
@@ -220,71 +280,77 @@ export default class ProductAdd extends Mixins(AddMixin) {
       },
     ],
     is_specifications: [
-      { required: true, message: '请输入商品规格', trigger: ['blur', 'change'] },
-      { validator: this.checkSize, trigger: ['blur', 'change'] },
+      { required: true, message: '请选择是否需要规格', trigger: ['blur', 'change'] },
     ],
+    size: [{ validator: this.checkSize, trigger: ['blur', 'change'] }],
     content: [{ required: true, message: '请输入商品详情', trigger: ['blur', 'change'] }],
-    isThreeDays: [{ required: true, message: '请选择发货时间', trigger: ['blur', 'change'] }],
+    delivery_type: [{ required: true, message: '请选择发货时间', trigger: ['blur', 'change'] }],
+    delivery_time: [{ validator: this.checkTime, trigger: ['blur', 'change'] }],
   };
 
-  @Watch('form.size')
+  @Watch('form.size', { immediate: true })
   onSizeChange(size: string[][]) {
     const [rows, cols] = size;
-    const data = rows.map((pid, row) =>
-      // eslint-disable-next-line implicit-arrow-linebreak
-      cols.map((name, col) => {
+    const data = rows.map((sku_title, row) => {
+      const columns = cols.map((title, col) => {
         const item = this.table[row + col];
         return {
           index: row,
-          pid,
-          name,
+          sku_title,
+          title,
           price: (item && item.price) || '',
-          image: (item && item.price) || '',
+          img: (item && item.price) || '',
         };
-      }));
-    this.$refs.table.setValue(data.flat());
+      });
+      return columns;
+    });
+    this.$nextTick(() => {
+      this.$refs.table.setValue(data.flat());
+    });
   }
 
-  sizeRules = this.getSizeRules();
+  sizeFirstRules: obj = this.getRules('first');
 
-  getSizeRules() {
-    return [
-      {
+  sizeSecondRules: obj = this.getRules('second');
+
+  getRules(num: 'first' | 'second') {
+    if (num === 'first') {
+      return {
         validator: (rules: obj, value: string[], cb: Function) => {
           if (value[0]) cb();
           cb(new Error('请输入规格名称'));
         },
         trigger: ['blur', 'change'],
-      },
-    ];
+      };
+    }
+    return { required: true, message: '请输入规格名称', trigger: ['blur', 'change'] };
   }
 
-  checkSize(rule: obj, hasSize: string[][], callback: Function) {
-    if (hasSize) {
+  async checkSize(rule: obj, value: any, callback: Function) {
+    if (!this.form.is_specifications) {
       if (this.table.length) {
-        this.$refs.table.validate().then((res: boolean) => {
-          if (res) return callback();
-          return callback(new Error('请将规格信息补充完整'));
-        });
-      } else {
-        return callback(new Error('请录入商品规格'));
+        const res = await this.$refs.table.validate();
+        if (res) return callback();
+        return callback(new Error('请将规格信息补充完整'));
       }
+      return callback(new Error('请录入商品规格'));
+    }
+    return callback();
+  }
+
+  checkTime(rule: obj, value: string, callback: Function) {
+    if (this.form.delivery_type && !value) {
+      return callback(new Error('请输入发货时间'));
     }
     return callback();
   }
 
   handleAdd(index: number) {
-    this.$refs.form.validateField(`name.${index}`, (errmsg: string) => {
-      if (!errmsg) {
-        this.form.size[index].push(this.form.name[index]);
-        this.form.name[index] = '';
-      }
-    });
+    this.form.size[index].push('');
   }
 
   handleMinus(index: number) {
-    const [rows] = this.form.size;
-    rows.splice(index, 1);
+    this.form.size[index].pop();
   }
 
   table: obj[] = [];
@@ -294,10 +360,16 @@ export default class ProductAdd extends Mixins(AddMixin) {
     this.rowspanObj = _GetTableSpan(_MergeKeys, data);
   }
 
-  toolbar: ScEditTable.Toolbar = { add: false, delete: true };
+  toolbar: ScEditTable.Toolbar = { title: '商品规格', add: false, delete: false };
 
   get tableConfig(): ScEditTable.TableConfig {
-    return { emptyRows: 0, showRequired: true, inputAlign: 'center', disabled: !!this.isDetail };
+    return {
+      emptyRows: 0,
+      showRequired: true,
+      inputAlign: 'center',
+      validMsg: false,
+      disabled: !!this.isDetail,
+    };
   }
 
   formConfig: ScEditTable.FormConfig = { attr: { 'status-icon': false } };
@@ -305,13 +377,13 @@ export default class ProductAdd extends Mixins(AddMixin) {
   columns: ScEditTable.Columns = [
     {
       label: '规格名称',
-      prop: 'pid',
+      prop: 'sku_title',
       editable: false,
       'show-overflow-tooltip': false,
     },
     {
       label: '规格名称',
-      prop: 'name',
+      prop: 'title',
       editable: false,
       'show-overflow-tooltip': false,
     },
@@ -325,7 +397,7 @@ export default class ProductAdd extends Mixins(AddMixin) {
     },
     {
       label: '图片',
-      prop: 'image',
+      prop: 'img',
       tag: {
         tagType: 'upload-img',
         attr: { limit: 1, fileSize: 10000, custom: { timeout: 2000000 } },
@@ -335,7 +407,7 @@ export default class ProductAdd extends Mixins(AddMixin) {
 
   tableRules = {
     price: { value: [{ required: true, message: '请输入价格', trigger: 'blur' }] },
-    image: { value: [{ required: true, message: '请上传图片', trigger: ['blur', 'change'] }] },
+    img: { value: [{ required: true, message: '请上传图片', trigger: ['blur', 'change'] }] },
   };
 
   get mergeKeys() {
@@ -349,17 +421,20 @@ export default class ProductAdd extends Mixins(AddMixin) {
   }
 
   async handleSubmit() {
-    console.log('submit: ');
-    this.sizeRules = [];
+    if (this.form.is_specifications) {
+      this.sizeFirstRules = {};
+      this.sizeSecondRules = {};
+    }
     await this.$nextTick();
     this.$refs.form.validate((valid: boolean, object: any) => {
-      console.log('valid: ', valid, object);
       if (valid) {
         this.submit();
       } else {
-        this.sizeRules = this.getSizeRules();
         this.validateError();
       }
+
+      this.sizeFirstRules = this.getRules('first');
+      this.sizeSecondRules = this.getRules('second');
     });
   }
 
@@ -368,24 +443,48 @@ export default class ProductAdd extends Mixins(AddMixin) {
   }
 
   submit() {
-    const data = this.$utils._Clone(this.form);
+    const data: obj = this.$utils._Clone(this.form);
     data.img1 = data.image[1];
     data.img2 = data.image[2];
     data.img3 = data.image[3];
     data.img4 = data.image[4];
     data.image = data.image[0];
+    data.video = data.video[0];
+
+    if (data.is_specifications) {
+      data.arry = [];
+      data.arr = [];
+    } else {
+      data.arry = data.arry.map((guige_title: string, i: number) => ({
+        guige_title,
+        guige_val: data.size[i],
+      }));
+      const arrProps = ['title', 'price', 'img'];
+      const size = _GroupBy(this.table, 'sku_title');
+      data.arr = Object.entries(size).map(([sku_title, row]: [string, any]) => {
+        const sku_val = row.map((item: obj) => _Pick(item, arrProps));
+        return { sku_title, sku_val };
+      });
+    }
+
+    delete data.goods_thumb;
+    delete data.size;
 
     const api = this.$api.merchant.product.update;
     const param = { shopid: _Shopid, ...data };
+
     console.log(
       '%c提交',
       'color:#fff;background:#40b883;border-radius:5px;padding:2px 5px;',
       param,
     );
 
-    // this.$http.post(api, param).then((res) => {
-    //   console.log('res: ', res);
-    // });
+    this.$http.post(api, param).then((res) => {
+      console.log('res: ', res);
+      setTimeout(() => {
+        this.$router.push('list');
+      }, 500);
+    });
   }
 }
 </script>
