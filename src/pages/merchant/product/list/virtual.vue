@@ -25,7 +25,7 @@ import mixin from './mixin';
 
 const columns: ScTable.SetColumns = [
   ['产品图片', 'image', 100, null, 'img'],
-  ['产品规格', 'parameter'],
+  ['产品规格', 'sku_title'],
   ['产品分类', 'typetitle'],
   ['价格', 'price'],
   ['商品类型', 'type'],
@@ -58,7 +58,7 @@ export default class MerchantInject extends Mixins(mixin) {
   };
 
   tableConfig: ScTable.TableConfig = {
-    api: this.$api.merchant.product,
+    api: this.$api.merchant.product.list,
     index: { shopid: _Shopid },
   };
 }

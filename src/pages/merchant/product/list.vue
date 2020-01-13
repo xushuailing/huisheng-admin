@@ -65,7 +65,7 @@ export default class MerchantInject extends Vue {
   };
 
   tableConfig: ScTable.TableConfig = {
-    api: this.$api.merchant.product,
+    api: this.$api.merchant.product.list,
     index: { shopid: _Shopid },
   };
 
