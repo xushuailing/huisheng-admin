@@ -19,7 +19,7 @@ interface ResponseData {
 }
 
 const errorMessage = (message: string) => {
-  Message({ type: 'error', message, duration: 2000 });
+  if (message) Message({ type: 'error', message, duration: 2000 });
 };
 
 const Token = (): object => {

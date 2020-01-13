@@ -289,10 +289,18 @@ export default {
 
     /** 商品管理 */
     product: {
-      index: `${url}/admin/getGoodsList`,
+      list: {
+        index: `${url}/admin/getGoodsList`,
+      },
       show: `${url}/admin/getGoodsdetail`,
-      create: `${url}/admin/doAddGoods`,
-      update: `${url}/admin/doAddGoods`,
+      create: {
+        entity: `${url}/admin/doAddGoods`,
+        virtual: `${url}/admin/doAddGoodsXu`,
+      },
+      update: {
+        entity: `${url}/admin/doAddGoods`,
+        virtual: `${url}/admin/doAddGoodsXu`,
+      },
       delete: `${url}/admin/delGoods`,
       types: `${url}/admin/getType`,
       shelves: `${url}/admin/saveGoodsStatus`,

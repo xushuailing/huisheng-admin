@@ -45,7 +45,7 @@ const router: RouteConfig[] = [
         meta: { breadcrumbHide: true, breadcrumb: [{ title: '产品列表' }, { title: '全部产品' }] },
       },
       {
-        path: 'list-physical',
+        path: 'list-entity',
         name: '商品列表（实体）',
         component: () => import('../pages/merchant/product/list/list.vue'),
         meta: {

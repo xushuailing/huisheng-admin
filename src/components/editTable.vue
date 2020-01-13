@@ -760,23 +760,24 @@ export default class EditTable extends Vue {
   }
   $num: 40px;
   .sc-edit-table {
-    .sc-upload .img-uploader .el-upload--picture-card {
-      width: $num;
-      height: $num;
-      line-height: $num;
-    }
-    .sc-upload .img-uploader .el-upload-list__item {
-      width: $num;
-      height: $num;
-    }
-    .sc-upload .el-progress__text{
-      font-size: 12px
-    }
-    .el-progress {
-      svg {
-        height: $num;
-        width: $num;
-        padding: 5px;
+    .sc-upload {
+      .img-uploader {
+        .el-upload--picture-card {
+          width: $num;
+          height: $num;
+          line-height: $num;
+        }
+        .el-upload-list__item {
+          width: $num;
+          height: $num;
+        }
+        .el-progress svg {
+          height: $num;
+          width: $num;
+        }
+      }
+      .el-progress__text {
+        font-size: 12px !important;
       }
     }
     .el-upload-list--picture-card .el-upload-list__item {

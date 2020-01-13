@@ -80,7 +80,7 @@ export default class ShopBaseInfo extends Vue {
           },
           {
             label: '证件号码：',
-            prop: 'card_number',
+            prop: 'certificate',
             tag: { attr: { placeholder: '请输入证件号码' } },
           },
           {
@@ -150,7 +150,7 @@ export default class ShopBaseInfo extends Vue {
         const { positive, back } = data.card || {};
         data.card_positive = positive;
         data.card_back = back;
-        delete data.card_number;
+        delete data.certificate;
         delete data.card;
         delete data.id;
         console.log('data: ', data);
