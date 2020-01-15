@@ -8,6 +8,16 @@ import merchantRouter from './merchant';
 
 Vue.use(Router);
 
+const errView = [
+  {
+    path: '/login',
+    component: () => import(/* webpackChunkName: "login" */ '@/pages/login/login.vue'),
+  },
+  { path: '/401', component: () => import(/* webpackChunkName: "401" */ '@/pages/error/401.vue') },
+  { path: '/404', component: () => import(/* webpackChunkName: "404" */ '@/pages/error/404.vue') },
+  { path: '*', component: () => import(/* webpackChunkName: "404" */ '@/pages/error/404.vue') },
+];
+
 const router = new Router({
   routes: [
     {
@@ -21,13 +31,10 @@ const router = new Router({
         },
       ],
     },
-    {
-      path: '/login',
-      component: () => import('../pages/login/login.vue'),
-    },
     ...commonRouter,
     ...adminRouter,
     ...merchantRouter,
+    ...errView,
   ],
 });
 

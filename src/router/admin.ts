@@ -16,7 +16,7 @@ export default [
       },
       {
         path: 'root-name',
-        name: '平台管理员账号',
+        name: '总账号管理',
         meta: {
           breadcrumb: [{ title: '系统管理' }, { title: '总账号管理' }],
         },
