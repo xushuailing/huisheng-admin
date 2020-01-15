@@ -38,13 +38,13 @@ export default class ProductAdd extends Vue {
     if (!this.id) return;
 
     const loading = this.$utils._Loading.show();
-    const api = this.$api.merchant.product.show;
+    const type = _IsVirtual ? 'virtual' : 'entity';
+    const api = this.$api.merchant.product.show[type];
     const params = { gid: this.id, shopid: _Shopid };
 
     try {
       const res = await this.$http.get(api, params);
       this.data = res.data || {};
-      console.log('data: ', this.data);
     } catch (error) {
       console.log('获取商品数据失败: ', error);
     } finally {
