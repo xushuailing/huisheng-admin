@@ -11,6 +11,7 @@ export default {
     show: `${url}/show`,
   },
   login: `${url}/admin/admin_login`,
+  menu: `${url}/admin/index`,
   files: {
     upload: `${url}/api/insert_img`,
     setImg: `${url}/admin/setImg`,

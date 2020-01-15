@@ -3,38 +3,38 @@
   <section v-if="item.children"
            class="menu-wrapper">
     <template v-if="hasOneShowingChild()">
-      <a :href="onlyOneChild.path"
+      <a :href="onlyOneChild.url"
          target="_blank"
-         @click="clickLink(onlyOneChild.path,$event)">
-        <el-menu-item :index="(onlyOneChild.path||'')">
+         @click="clickLink(onlyOneChild.url,$event)">
+        <el-menu-item :index="(onlyOneChild.url||'')">
           <item :icon="onlyOneChild.icon"
-                :title="onlyOneChild.name" />
+                :title="onlyOneChild.title" />
         </el-menu-item>
       </a>
     </template>
 
     <el-submenu v-else
-                :index="(item.id||'')">
+                :index="(item.id+''||'')">
       <template slot="title">
         <item :icon="item.icon"
-              :title="item.name" />
+              :title="item.title" />
       </template>
       <template v-for="child in item.children">
         <sidebar-item v-if="child.children&&child.children.length>0"
                       :is-nest="true"
                       :item="child"
-                      :key="child.path"
-                      :base-path="(child.path||'')"
+                      :key="child.url"
+                      :base-path="(child.url||'')"
                       class="nest-menu" />
 
         <a v-else
-           :href="child.path"
-           :key="child.path"
+           :href="child.url"
+           :key="child.url"
            target="_blank"
-           @click="clickLink(child.path,$event)">
-          <el-menu-item :index="(child.path||'')">
+           @click="clickLink(child.url,$event)">
+          <el-menu-item :index="(child.url||'')">
             <item :icon="child.icon"
-                  :title="child.name" />
+                  :title="child.title" />
           </el-menu-item>
         </a>
       </template>
@@ -48,11 +48,10 @@ import Item from './item.vue';
 
 interface menuChil {
   children?: Array<menuChil>;
-  name?: string;
+  title?: string;
   icon?: string;
-  id?: string;
+  id?: number;
   url?: string;
-  path?: string;
   [index: string]: any;
 }
 
@@ -66,7 +65,6 @@ export default class SidebarItem extends Vue {
   hasOneShowingChild(): boolean {
     const children: menuChil[] = this.item.children || [];
     const parent = this.item;
-
     if (children && children.length === 0) {
       this.onlyOneChild = parent;
       return true;
@@ -78,7 +76,7 @@ export default class SidebarItem extends Vue {
     const isExternalLink = this.$utils._ValidateURL(routePath);
     if (!isExternalLink) {
       e.preventDefault();
-      this.$router.push(`${this.item.path}/${routePath}`);
+      this.$router.push(`${routePath}`);
     }
   }
 }

@@ -6,12 +6,14 @@
         <div class="font-30 font-bold text-center mb-30 pt-20 pb-20">莱赶集管理后台</div>
         <el-form :model="form">
           <el-form-item prop="username">
-            <el-input class="w100" v-model="form.username"
+            <el-input class="w100"
+                      v-model="form.username"
                       placeholder="请输入账号"
                       clearable></el-input>
           </el-form-item>
           <el-form-item prop="password">
-            <el-input class="w100" show-password
+            <el-input class="w100"
+                      show-password
                       placeholder="请输入密码"
                       clearable
                       v-model="form.password"></el-input>
@@ -53,23 +55,39 @@ export default class Login extends Vue {
     };
   }
 
-  onSubmit() {
-    this.$http
-      .get<LoginDate>(this.$api.login, {
+  async onSubmit() {
+    try {
+      const res = await this.$http.get<LoginDate>(this.$api.login, {
         username: this.form.username,
         password: this.form.password,
-      })
-      .then((res) => {
-        this.$utils._Storage.set('user_token', res.data.access_token);
-        this.$utils._Storage.set('user_info', res.data);
-        this.$router.push('/');
-        if (this.form.memory) {
-          this.$utils._Storage.set('user_login_form', this.form);
-        }
-      })
-      .catch((err) => {
-        console.log('err', err);
       });
+      // .then((res) => {
+      this.$utils._Storage.set('user_token', res.data.access_token);
+      this.$utils._Storage.set('user_info', res.data);
+
+      const menu = await this.$http.get(this.$api.menu);
+      const home = {
+        url: '/',
+        title: '首页',
+        id: -1,
+        children: [],
+      };
+
+      const list = [home].concat(menu.data);
+
+      this.$utils._Storage.set('user_menu', list);
+
+      this.$router.push('/');
+      if (this.form.memory) {
+        this.$utils._Storage.set('user_login_form', this.form);
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+    // })
+    // .catch((err) => {
+    //   console.log('err', err);
+    // });
   }
 }
 </script>

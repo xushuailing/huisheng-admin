@@ -4,8 +4,7 @@
     <router-link to="/"
                  class="logo sc-bg-primary">
     </router-link>
-    <el-menu class="el-menu-vertical-demo"
-             :unique-opened="true"
+    <el-menu :unique-opened="true"
              :default-active="defaultActive">
       <sidebar-item v-for="route in routers"
                     :key="route.id"
@@ -22,24 +21,26 @@ import commonRouter from '@/router/common';
 
 @Component({ components: { SidebarItem } })
 export default class Aside extends Vue {
+  routers: any[] = [];
+
   get defaultActive() {
     return this.$route.path;
   }
 
-  get routers() {
-    // const routes = [].concat(commonRouter, merchantRouter, adminRouter);
-    return [];
-    // return commonRouter.concat(merchantRouter, adminRouter);
-  }
-
   mounted() {
-    console.log(this, 'this');
-    // console.log('adminRouter :', adminRouter);
+    this.routers = this.$utils._Storage.get<any[]>('user_menu') || [];
+    console.log('this.routers', this.routers);
   }
 }
 </script>
 
 <style lang='scss' scoped>
 .app-aside {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  .el-menu {
+    flex: 1;
+  }
 }
 </style>

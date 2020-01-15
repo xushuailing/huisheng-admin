@@ -5,9 +5,9 @@
     </el-header>
 
     <el-container>
-      <!-- <el-aside width="200px">
+      <el-aside width="200px">
         <Aside></Aside>
-      </el-aside> -->
+      </el-aside>
       <el-main class="flex-column">
         <template v-if="breadcrumb">
           <sc-breadcrumb></sc-breadcrumb>
@@ -37,8 +37,7 @@ export default class App extends Vue {
   height: 100%;
   overflow: auto;
 }
-.el-header,
-.el-aside {
+.el-header {
   background: $--color-primary;
 }
 .el-main {
