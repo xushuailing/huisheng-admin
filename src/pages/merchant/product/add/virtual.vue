@@ -67,12 +67,13 @@
         </div>
       </el-form-item>
       <el-form-item label="商品详情："
-                    prop="content">
+                    prop="content"
+                    label-width="82px">
         <div v-if="!isDetail"
              class="font-info font-12">仅支持尺寸1:1、jpg格式</div>
         <div v-if="isDetail"
              v-html="form.content"
-             class="p-20 border-solid border-radius-4"></div>
+             class="p-10 border-solid border-radius-4"></div>
         <sc-editor v-else
                    v-model="form.content"
                    ref="scEditor"
@@ -82,8 +83,8 @@
       <el-form-item label="发货时间："
                     prop="delivery_type">
         <el-checkbox v-model="form.delivery_type"
-                     :true-label="1"
-                     :false-label="0"
+                     true-label="1"
+                     false-label="0"
                      :disabled="isDetail">三天内发货</el-checkbox>
       </el-form-item>
       <el-form-item>
@@ -107,7 +108,7 @@ interface Form<T = string> extends obj {
   arry: T[];
   size: string[][];
   content: string;
-  delivery_type: 0 | 1;
+  delivery_type: '0' | '1';
 }
 
 interface Option {
@@ -142,9 +143,33 @@ export default class Virtual extends Vue {
     if (data) {
       Object.keys(data).forEach((key) => {
         if (key in this.form) {
-          (this.form as obj)[key] = data[key];
+          if (key === 'arry') {
+            data[key].forEach((item: obj, i: number) => {
+              this.form.arry[i] = item.guige_title;
+              this.form.size[i] = item.guige_val;
+            });
+          } else {
+            (this.form as obj)[key] = data[key];
+          }
         }
       });
+
+      // 移除默认行空图片
+      this.$refs.table.setValue([]);
+
+      const table: obj[] = [];
+      data.arr.forEach((item: obj) => {
+        const rowData = {
+          index: item.fid,
+          sku_title: item.sku_title,
+          title: item.title,
+          price: item.price,
+          img: item.img,
+          day: item.day,
+        };
+        table.push(rowData);
+      });
+      this.$refs.table.setValue(table);
     }
   }
 
@@ -153,7 +178,7 @@ export default class Virtual extends Vue {
     size: [['']],
     arry: [''],
     content: '',
-    delivery_type: 0,
+    delivery_type: '0',
   };
 
   @Watch('form.size', { immediate: true })
@@ -250,6 +275,20 @@ export default class Virtual extends Vue {
     {
       label: '图片',
       prop: 'img',
+      component: Vue.extend({
+        props: ['row', 'col'],
+        render(h) {
+          const { row, col } = this;
+          const icon = h('i', { class: 'el-icon-picture-outline font-20 font-info' });
+          const errorStyle = 'product-add__image flex-jc-ac bg-border-color-extra-light';
+          const error = h('div', { class: errorStyle, slot: 'error' }, [icon]);
+          return h(
+            'el-image',
+            { class: 'product-add__image', attrs: { src: row[col.prop], fit: 'cover' } },
+            [error],
+          );
+        },
+      }),
       tag: {
         tagType: 'upload-img',
         attr: { limit: 1, fileSize: 10000, custom: { timeout: 2e6 } },
@@ -322,14 +361,8 @@ export default class Virtual extends Vue {
 
     const api = this.$api.merchant.product.create.virtual;
     const param = { shopid: _Shopid, ...data };
-    console.log(
-      '%c提交',
-      'color:#fff;background:#40b883;border-radius:5px;padding:2px 5px;',
-      param,
-    );
 
     this.$http.post(api, param).then((res) => {
-      console.log('res: ', res);
       this.$message.success('发布成功');
       setTimeout(() => {
         this.$router.push('list');

@@ -292,7 +292,10 @@ export default {
       list: {
         index: `${url}/admin/getGoodsList`,
       },
-      show: `${url}/admin/getGoodsdetail`,
+      show: {
+        entity: `${url}/admin/getGoodsdetail`,
+        virtual: `${url}/admin/getGoodsdetailxuni`,
+      },
       create: {
         entity: `${url}/admin/doAddGoods`,
         virtual: `${url}/admin/doAddGoodsXu`,

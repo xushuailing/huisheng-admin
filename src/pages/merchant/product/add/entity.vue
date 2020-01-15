@@ -40,7 +40,8 @@
           <div v-for="(image,i) in form.image"
                :key="i"
                class="mr-10">
-            <sc-upload v-model="form.image[i]"
+            <sc-upload v-if="!initUpload && (!isDetail || (isDetail && form.image[i]))"
+                       v-model="form.image[i]"
                        :limit="1"
                        :class="['inline-block',!i?'main-image flex-column':'']"
                        :disabled="isDetail"></sc-upload>
@@ -161,14 +162,16 @@
                     prop="delivery_type">
         <el-radio-group v-model="form.delivery_type"
                         :disabled="isDetail">
-          <el-radio :label="0">三天内发货</el-radio>
-          <el-radio :label="1">预订单</el-radio>
+          <el-radio label="0">三天内发货</el-radio>
+          <el-radio label="1">预订单</el-radio>
         </el-radio-group>
-        <div v-show="form.delivery_type"
+        <div v-show="form.delivery_type === '1'"
              class="bg-info-lighter border-radius-8 pt-20 pl-20 pr-20 pb-5">
           <el-form-item label="填写发货时间："
                         prop="delivery_time">
             <el-date-picker v-model="form.delivery_time"
+                            value-format="yyyy-MM-dd HH:mm:ss"
+                            type="datetime"
                             placeholder="请选择发货时间"
                             :disabled="isDetail"></el-date-picker>
           </el-form-item>
@@ -230,6 +233,17 @@ export default class Entity extends Vue {
 
   @Prop(Object) data!: obj | null;
 
+  initUpload = false;
+
+  @Watch('isDetail')
+  onEditTypeChange(status: boolean) {
+    // 修改上传图片组件的 disabled
+    this.initUpload = true;
+    this.$nextTick(() => {
+      this.initUpload = false;
+    });
+  }
+
   @Watch('data')
   onDataChange(data: obj | null) {
     if (data) {
@@ -240,7 +254,6 @@ export default class Entity extends Vue {
               this.form.arry[i] = item.guige_title;
               this.form.size[i] = item.guige_val;
             });
-            console.log('this.form.arry: ', this.form.arry);
           } else if (key === 'image') {
             this.form.image[0] = data[key];
           } else if (key === 'goods_thumb' && data[key]) {
@@ -252,6 +265,9 @@ export default class Entity extends Vue {
           }
         }
       });
+
+      // 移除默认行空图片
+      this.$refs.table.setValue([]);
 
       const table: obj[] = [];
       data.arr.forEach((item: obj) => {
@@ -286,7 +302,7 @@ export default class Entity extends Vue {
     size: [[''], ['']],
     content: '',
     after_sale: 0,
-    delivery_type: 0,
+    delivery_type: '0',
     delivery_time: '',
   };
 
@@ -363,7 +379,7 @@ export default class Entity extends Vue {
   }
 
   checkTime(rule: obj, value: string, callback: Function) {
-    if (this.form.delivery_type && !value) {
+    if (this.form.delivery_type === '1' && !value) {
       return callback(new Error('请输入发货时间'));
     }
     return callback();
@@ -511,14 +527,7 @@ export default class Entity extends Vue {
     const api = this.$api.merchant.product.create.entity;
     const param = { shopid: _Shopid, ...data };
 
-    console.log(
-      '%c提交',
-      'color:#fff;background:#40b883;border-radius:5px;padding:2px 5px;',
-      param,
-    );
-
     this.$http.post(api, param).then((res) => {
-      console.log('res: ', res);
       this.$message.success('发布成功');
       setTimeout(() => {
         this.$router.push('list');
