@@ -20,6 +20,7 @@ import { Action, namespace } from 'vuex-class';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { State } from '@/store/common';
 import { _MerchantState } from '../data';
+import { ScSearch } from '../../../lib/@types/sc-search';
 
 const columns: ScTable.SetColumns = [
   ['门店名称', 'shopname'],
@@ -70,8 +71,16 @@ export default class MerchantShop extends Vue {
     api: this.$api.admin.merchant.shop,
   };
 
-  searchConfig = {
+  searchConfig: ScSearch.Config = {
     attr: { 'label-width': '120px' },
+    handleSubmit: (data) => {
+      if (data['strtime|endtime']) {
+        const [strtime, endtime] = this.$utils._DataTypeChange(data['strtime|endtime']);
+        delete data['strtime|endtime'];
+        Object.assign(data, { strtime, endtime });
+      }
+      return data;
+    },
     data: [
       {
         label: '门店名称：',
@@ -107,7 +116,7 @@ export default class MerchantShop extends Vue {
       },
       {
         label: '创建时间：',
-        prop: 'createtime',
+        prop: 'strtime|endtime',
         tag: {
           tagType: 'date-picker',
           attr: {
@@ -138,7 +147,7 @@ export default class MerchantShop extends Vue {
       const data = await this.getShopTypes();
       this.typeIds = data;
 
-      this.$set(this.searchConfig.data[1].tag, 'options', data);
+      this.$set(this.searchConfig.data![1].tag!, 'options', data);
     } catch (error) {
       console.log('error', error);
     }

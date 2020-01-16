@@ -166,7 +166,7 @@ export default class MerchantShopDetail extends Vue {
           }
         });
 
-        data.divide_comparisons = data.commission;
+        data.divide_comparisons = data.commission / 100;
 
         data.quota = _quota;
 

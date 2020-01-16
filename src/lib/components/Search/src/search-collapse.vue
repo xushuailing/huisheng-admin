@@ -82,10 +82,9 @@ export default {
           return p;
         }, {});
 
-      formData = handle ? await handle(formData, this) : formData;
-
+      formData = handle ? await handle(formData || {}, this) : formData;
       // 为 null 时, 为清空查询条件
-      if (!this.$utils._DataIsEmpty(formData) && formData !== null) return;
+      if (!this.$utils._DataIsEmpty(formData, ['{}']) && formData !== null) return;
 
       this.$emit('emitSearchSubmit', formData, 'searchForm');
     },

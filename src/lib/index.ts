@@ -42,7 +42,7 @@ const components = [
   // { com: SmallTable, name: SmallTable.name },
   { com: Table, name: Table.name },
   { com: AddForm, name: AddForm.name },
-  { com: FormTag, name: FormTag.name },
+  { com: FormTag, name: 'ScFormTag' },
   { com: Dialog, name: 'ScDialog' },
   // { com: Exports, name: Exports.name },
   // { com: Map, name: 'ScMap' },

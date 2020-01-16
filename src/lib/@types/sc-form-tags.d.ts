@@ -39,7 +39,7 @@ export default class ScTags<T = any> {
   attr?: TagsListenersOrAttr;
 
   /** 多个选项的标签时的数据,如:<select>(同 Element) */
-  options?: obj<T>[] | (() => Promise<obj<T>[]>);
+  options?: obj<T>[] | (() => Promise<obj<T>[]>) | any;
 
   /** 标签事件支持 Element 标签事件 */
   listeners?: TagsListenersOrAttr;

@@ -1,6 +1,6 @@
 import { VueConstructor } from 'vue';
 import ScTags from './sc-form-tags.d';
-import { Query } from './sc-param.d';
+import { Query, obj } from './sc-param.d';
 // eslint-disable-next-line import/no-cycle
 import { ScFilter } from './sc-filter.d';
 
@@ -41,7 +41,7 @@ interface SearchConfig {
   filter?: ScFilter.Config;
 
   /** 搜索提交前处理事件 */
-  handleSubmit?: (data: { exps: Query[] }[], vm?: VueConstructor) => { exps: Query[] }[] | false;
+  handleSubmit?: (data: obj, vm?: VueConstructor) => obj | false;
 }
 
 interface SearchConfigData {
