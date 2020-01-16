@@ -18,21 +18,21 @@ export default class SettingRoleList extends Vue {
 
   addConfig: ScForm.Add = {
     buttons: [{ mode: 'submit', text: ' 上传' }],
-    params: { gid: '' },
-    rules: [{ id: { value: [{ required: true, message: '请输入商品ID', trigger: 'blur' }] } }],
+    params: { id: '' },
+    rules: [{ gid: { value: [{ required: true, message: '请输入商品ID', trigger: 'blur' }] } }],
     data: [
       [
         {
           label: '添加商品：',
-          prop: 'id',
-          tag: { attr: { type: 'url', placeholder: '请输入商品ID' } },
+          prop: 'gid',
+          tag: { attr: { placeholder: '请输入商品ID' } },
         },
       ],
     ],
   };
 
   mounted() {
-    this.addConfig.params!.gid = this.$route.query.id;
+    this.addConfig.params!.id = this.$route.query.id;
   }
 }
 </script>

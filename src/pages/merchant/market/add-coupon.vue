@@ -4,7 +4,8 @@
     <sc-edit v-if="isInit"
              mode="page"
              :api="api"
-             :config="config">
+             :config="config"
+             @emitEditComplete="onEditComplete">
     </sc-edit>
   </div>
 </template>
@@ -124,11 +125,13 @@ export default class AddCoupon extends Vue {
       handleSubmit: (data) => {
         const formData = { ...data, ...data.condition, ...data.coupon_type };
         delete formData.condition;
-        console.log('formData: ', formData);
-        // return {};
         return formData;
       },
     };
+  }
+
+  onEditComplete({ status }: { status: boolean }) {
+    if (status) this.$router.go(-1);
   }
 
   getData() {
@@ -138,7 +141,6 @@ export default class AddCoupon extends Vue {
     this.$http
       .get(api, params)
       .then((res) => {
-        console.log('res.data: ', res.data);
         const data: obj = res.data || {};
         data.condition = propNums.map((prop) => {
           const num = data[`num_${prop}`];

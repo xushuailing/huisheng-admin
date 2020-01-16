@@ -1,18 +1,19 @@
 <template>
   <div class="Order">
-    <el-radio-group v-model="currentTab"
-                    size="medium"
-                    @change="onTabChange">
-      <el-radio-button v-for="(item,i) in tabs"
-                       :key="i"
-                       :label="item.value">{{item.label}}</el-radio-button>
-    </el-radio-group>
+    <el-tabs class="sc-tabs"
+             v-model="currentTab"
+             @tab-click="onTabChange">
+      <el-tab-pane v-for="(item,i) in tabs"
+                   :label="item.label"
+                   :key="i"
+                   :name="item.value">
+      </el-tab-pane>
+    </el-tabs>
     <o-table ref="table"
              :thead="thead"
              :table-config="tableConfig"
              :search-config="searchConfig"
              :paginationConfig="paginationConfig"
-             @pagination-onSlotClick="handleSendAll"
              @select-all="onSelectAll"
              @emitGetTableDataComplete="getTableData"
              class="mt-20">
@@ -65,13 +66,19 @@ export default class Order extends Mixins(Mixin) {
   @Ref('table') $table!: ScTable;
 
   tabs = [
-    { label: '全部订单', value: 0 },
-    { label: '待付款', value: 1 },
-    { label: '待评价', value: 4 },
-    { label: '已完成', value: 5 },
+    { label: '全部订单', value: '0' },
+    { label: '待付款', value: '1' },
+    { label: '待评价', value: '4' },
+    { label: '已完成', value: '5' },
   ];
 
-  currentTab = 0;
+  currentTab = this.tabs[0].value;
+
+  onTabChange() {
+    this.$nextTick(() => {
+      this.$table.setDataTable({ pagination: { page: 1 } });
+    });
+  }
 
   thead = [
     { label: '商品信息' },
@@ -135,21 +142,6 @@ export default class Order extends Mixins(Mixin) {
       },
     ],
   };
-
-  get paginationConfig() {
-    const send = {
-      // slotAttr: { isCheckbox: true, text: ' 批量发货' },
-    };
-    return this.currentTab === 2 ? send : {};
-  }
-
-  onTabChange() {
-    this.$table.setDataTable({});
-  }
-
-  handleSendAll() {
-    console.log('this.selection: ', this.selection);
-  }
 
   selection: any[] = [];
 

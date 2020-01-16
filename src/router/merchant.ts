@@ -176,12 +176,6 @@ const router: RouteConfig[] = [
         meta: { breadcrumb: [{ title: '订单管理' }, { title: '全部订单' }] },
       },
       {
-        path: 'index-virtual',
-        name: '全部订单',
-        component: () => import('../pages/merchant/order/virtual/index.vue'),
-        meta: { breadcrumb: [{ title: '订单管理' }, { title: '全部订单' }] },
-      },
-      {
         path: 'return',
         name: '退货管理',
         component: () => import('../pages/merchant/order/return.vue'),

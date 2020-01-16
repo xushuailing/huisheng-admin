@@ -184,7 +184,7 @@ export default class Virtual extends Vue {
   @Watch('form.size', { immediate: true })
   onSizeChange(size: string[][]) {
     const [rows, cols] = size;
-    const data = rows.map((sku_title, row) => {
+    const data = rows.flatMap((sku_title, row) => {
       const columns = (cols || ['']).map((title, col) => {
         const item = cols ? this.table[row + col] : this.table[row];
         return {
@@ -199,7 +199,7 @@ export default class Virtual extends Vue {
       return columns;
     });
     this.$nextTick(() => {
-      this.$refs.table.setValue(data.flat());
+      this.$refs.table.setValue(data);
     });
   }
 

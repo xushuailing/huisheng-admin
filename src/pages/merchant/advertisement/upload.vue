@@ -3,7 +3,8 @@
     <sc-edit v-if="isInit"
              mode="page"
              :api="api"
-             :config="config">
+             :config="config"
+             @emitEditComplete="onEditComplete">
     </sc-edit>
   </div>
 </template>
@@ -22,7 +23,10 @@ export default class SettingRoleList extends Vue {
     'label-width': '120px',
     params: { id: '' },
     requestMethod: 'get',
-    buttons: [{ mode: 'cancel', isHide: true }, { mode: 'submit', isHide: false, text: ' 上传' }],
+    buttons: [
+      { mode: 'cancel', isHide: true },
+      { mode: 'submit', isHide: false, text: ' 上传' },
+    ],
     rules: [
       {
         image: {
@@ -50,11 +54,12 @@ export default class SettingRoleList extends Vue {
         },
       ],
     ],
-    handleSubmit: (data) => {
-      console.log('data :', data);
-      return data.id ? data : {};
-    },
+    handleSubmit: (data) => (data.id ? data : {}),
   };
+
+  onEditComplete({ status }: { status: boolean }) {
+    if (status) this.$router.go(-1);
+  }
 
   isInit = false;
 
