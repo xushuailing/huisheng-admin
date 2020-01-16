@@ -331,7 +331,7 @@ export default class Entity extends Vue {
   @Watch('form.size', { immediate: true })
   onSizeChange(size: string[][]) {
     const [rows, cols] = size;
-    const data = rows.map((sku_title, row) => {
+    const data = rows.flatMap((sku_title, row) => {
       const columns = cols.map((title, col) => {
         const item = this.table[row + col];
         return {
@@ -345,7 +345,7 @@ export default class Entity extends Vue {
       return columns;
     });
     this.$nextTick(() => {
-      this.$refs.table.setValue(data.flat());
+      this.$refs.table.setValue(data);
     });
   }
 

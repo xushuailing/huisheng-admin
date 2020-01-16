@@ -39,10 +39,12 @@ export default class OrderStatus extends Mixins(Mixin) {
     return this.remainTime > 0 ? this.$utils._Dayjs(this.remainTime * 1000).format('HH:mm:ss') : '';
   }
 
-  @Watch('time', { immediate: true })
+  @Watch('time')
   onTimeChange(time: number) {
-    this.remainTime = this.getRemainTime(time);
-    this.time && this.timeDown();
+    if (time) {
+      this.remainTime = this.getRemainTime(time);
+      this.time && this.timeDown();
+    }
   }
 
   getRemainTime(time: number) {
@@ -74,13 +76,11 @@ export default class OrderStatus extends Mixins(Mixin) {
       '该订单超过24小时未支付，已自动关闭！' :
       '该订单超过7天未确认收货，系统已自动收货！';
 
-    this.$http
-      .spGet(api)
-      .finally(() => {
-        this.$message.error(message);
-        const path = this.isPay ? 'send-detail' : 'finish-detail';
-        this.$router.push({ path, query: { id: String(this.id) } });
-      });
+    this.$http.spGet(api).finally(() => {
+      this.$message.error(message);
+      const path = this.isPay ? 'send-detail' : 'finish-detail';
+      this.$router.push({ path, query: { id: String(this.id) } });
+    });
   }
 
   destroyed() {

@@ -154,6 +154,11 @@ export default class MarketAdd extends Vue {
 
   handleAdd() {
     this.$form.validateField('gid', async (errmsg: string) => {
+      if (~this.table.findIndex((row) => row.gid == this.form.gid)) {
+        this.$message.error('该活动商品已存在，不能重复添加');
+        return;
+      }
+
       const value = this.form.gid;
       if (errmsg) return;
 
@@ -295,6 +300,9 @@ export default class MarketAdd extends Vue {
     try {
       const { status } = await this.$http.post(api, formData);
       this.$message.success('保存成功！');
+      setTimeout(() => {
+        this.$router.go(-1);
+      }, 500);
     } catch (error) {
       console.log('保存折扣（实物）失败: ', error);
     }

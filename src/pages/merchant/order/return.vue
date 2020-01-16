@@ -83,7 +83,7 @@ export default class OrderReturn extends Mixins(Mixin) {
 
   searchConfig = {
     handleSubmit: (data: any) => {
-      if (data.createtime) {
+      if (data && data.createtime) {
         const [start, end] = data.createtime.split(',');
         data.strtime = start;
         data.endtime = end;
