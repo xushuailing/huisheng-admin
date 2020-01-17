@@ -1,8 +1,15 @@
 <template>
   <div class='ads-sorts-detail bg-white p-15 border-radius-8'>
-    <sc-add-form mode="page"
+    <sc-edit v-if="id"
+             mode="page"
+             :api="api"
+             :config="editConfig">
+    </sc-edit>
+    <sc-add-form v-else
+                 mode="page"
                  :api="api"
-                 :config="addConfig">
+                 :config="editConfig"
+                 @emitAddComplete="onAddComplete">
     </sc-add-form>
   </div>
 </template>
@@ -23,7 +30,7 @@ export default class ActvAdsSortsDetail extends Vue {
     return this.$api.admin.activity.adsSorts.create;
   }
 
-  addConfig: ScForm.Add = {
+  editConfig: ScForm.Edit = {
     'label-width': '140px',
     header: { title: '新增分类' },
     formAttr: { 'label-position': 'left' },
@@ -46,7 +53,7 @@ export default class ActvAdsSortsDetail extends Vue {
           label: '',
           prop: 'banner_list',
           inline: false,
-          default: '',
+          default: [],
           tag: {
             tagType: 'component',
             components: SortAdd,
@@ -73,6 +80,12 @@ export default class ActvAdsSortsDetail extends Vue {
     return false;
   }
 
+  onAddComplete({ status }: { status: boolean }) {
+    if (status) {
+      this.$router.back();
+    }
+  }
+
   getSortAddThis(validate: () => boolean) {
     this.sortAddValidate = validate;
   }
@@ -81,8 +94,8 @@ export default class ActvAdsSortsDetail extends Vue {
     this.id = id;
 
     this.$http.get(this.$api.admin.activity.adsSorts.show, { id }).then(({ data }: obj) => {
-      for (let i = 0; i < this.addConfig.data.length; i++) {
-        const item = this.addConfig.data[i];
+      for (let i = 0; i < this.editConfig.data.length; i++) {
+        const item = this.editConfig.data[i];
         for (let index = 0; index < item.length; index++) {
           const e = item[index];
           if (data[e.prop]) {

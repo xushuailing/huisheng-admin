@@ -170,7 +170,6 @@ export default {
       const allData = { ...data, ...params };
       const submitData = handleSubmit ? await handleSubmit(allData, this) : allData;
 
-
       if (!this.$utils._DataIsEmpty(submitData)) {
         this.emitEditCompleteFun(allData, false, 'prevent', null);
         if (this.config.isPreventClose) {
@@ -189,7 +188,11 @@ export default {
         submitForm = this.jsonToFromData(submitData);
       }
 
-      this.$http[requestMethod](this.api, submitForm)
+      this.$http[requestMethod](this.api, submitForm, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      })
         .then((res) => {
           const errmsg = (res.data && res.data.errmsg) || '修改成功';
 

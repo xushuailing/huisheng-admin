@@ -45,7 +45,7 @@ interface SortItem {
   price: string;
   // validity: string;
   introduction: string;
-  id: '';
+  id?: string;
 }
 
 @Component
@@ -68,9 +68,9 @@ export default class ActvSortsAdd extends Vue {
     }
   }
 
-  @Watch('form')
+  @Watch('form', { deep: true })
   onFormChange(val: any) {
-    this.$emit('upadte:value', val);
+    this.$emit('update:value', val);
   }
 
   mounted() {
@@ -105,7 +105,7 @@ export default class ActvSortsAdd extends Vue {
       title: '',
       price: '',
       introduction: '',
-      id: '',
+      id: undefined,
     };
   }
 }
