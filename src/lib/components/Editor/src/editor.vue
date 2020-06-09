@@ -1,56 +1,55 @@
 <template>
-  <div
-    :class="{ fullscreen: fullscreen }"
-    class="tinymce-container"
-    :style="{ width: containerWidth }"
-  >
-    <tinymce-editor :id="id" v-model="tinymceContent" :init="initOptions" />
+  <div :class="{ fullscreen: fullscreen }"
+       class="tinymce-container"
+       :style="{ width: containerWidth }">
+    <tinymce-editor :id="id"
+                    v-model="tinymceContent"
+                    tinymce-script-src="/tinymce/tinymce.min.js"
+                    :init="initOptions" />
     <div class="editor-custom-btn-container">
-      <editor-image-upload
-        class="editor-upload-btn"
-        @successCBK="imageSuccessCBK"
-      />
+      <editor-image-upload class="editor-upload-btn"
+                           @successCBK="imageSuccessCBK" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 // Docs: https://armour.github.io/vue-typescript-admin-docs/features/components/rich-editor.html#tinymce
-import 'tinymce/tinymce';
-import 'tinymce/themes/silver'; // Import themes
-import 'tinymce/themes/mobile';
-import 'tinymce/plugins/advlist'; // Any plugins you want to use has to be imported
-import 'tinymce/plugins/anchor';
-import 'tinymce/plugins/autolink';
-import 'tinymce/plugins/autosave';
-import 'tinymce/plugins/code';
-import 'tinymce/plugins/codesample';
-import 'tinymce/plugins/directionality';
-import 'tinymce/plugins/emoticons';
-import 'tinymce/plugins/fullscreen';
-import 'tinymce/plugins/hr';
-import 'tinymce/plugins/image';
-import 'tinymce/plugins/imagetools';
-import 'tinymce/plugins/insertdatetime';
-import 'tinymce/plugins/link';
-import 'tinymce/plugins/lists';
-import 'tinymce/plugins/media';
-import 'tinymce/plugins/nonbreaking';
-import 'tinymce/plugins/noneditable';
-import 'tinymce/plugins/pagebreak';
-import 'tinymce/plugins/paste';
-import 'tinymce/plugins/preview';
-import 'tinymce/plugins/print';
-import 'tinymce/plugins/save';
-import 'tinymce/plugins/searchreplace';
-import 'tinymce/plugins/spellchecker';
-import 'tinymce/plugins/tabfocus';
-import 'tinymce/plugins/table';
-import 'tinymce/plugins/template';
-import 'tinymce/plugins/textpattern';
-import 'tinymce/plugins/visualblocks';
-import 'tinymce/plugins/visualchars';
-import 'tinymce/plugins/wordcount';
+// import 'tinymce/tinymce';
+// import 'tinymce/themes/silver'; // Import themes
+// import 'tinymce/themes/mobile';
+// import 'tinymce/plugins/advlist'; // Any plugins you want to use has to be imported
+// import 'tinymce/plugins/anchor';
+// import 'tinymce/plugins/autolink';
+// import 'tinymce/plugins/autosave';
+// import 'tinymce/plugins/code';
+// import 'tinymce/plugins/codesample';
+// import 'tinymce/plugins/directionality';
+// import 'tinymce/plugins/emoticons';
+// import 'tinymce/plugins/fullscreen';
+// import 'tinymce/plugins/hr';
+// import 'tinymce/plugins/image';
+// import 'tinymce/plugins/imagetools';
+// import 'tinymce/plugins/insertdatetime';
+// import 'tinymce/plugins/link';
+// import 'tinymce/plugins/lists';
+// import 'tinymce/plugins/media';
+// import 'tinymce/plugins/nonbreaking';
+// import 'tinymce/plugins/noneditable';
+// import 'tinymce/plugins/pagebreak';
+// import 'tinymce/plugins/paste';
+// import 'tinymce/plugins/preview';
+// import 'tinymce/plugins/print';
+// import 'tinymce/plugins/save';
+// import 'tinymce/plugins/searchreplace';
+// import 'tinymce/plugins/spellchecker';
+// import 'tinymce/plugins/tabfocus';
+// import 'tinymce/plugins/table';
+// import 'tinymce/plugins/template';
+// import 'tinymce/plugins/textpattern';
+// import 'tinymce/plugins/visualblocks';
+// import 'tinymce/plugins/visualchars';
+// import 'tinymce/plugins/wordcount';
 import TinymceEditor from '@tinymce/tinymce-vue'; // TinyMCE vue wrapper
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import EditorImageUpload, { IUploadObject } from './components/EditorImage.vue';
@@ -84,8 +83,14 @@ export default class extends Vue {
 
   private fullscreen = false;
 
+  private isInit = false;
+
   // https://www.tiny.cloud/docs/configure/localization/#language
   // and also see langs files under public/tinymce/langs folder
+
+  get scriptSrc() {
+    return `${process.env.BASE_URL}tinymce/tinymce.min.js`;
+  }
 
   get tinymceContent() {
     return this.value;
@@ -93,6 +98,10 @@ export default class extends Vue {
 
   set tinymceContent(value) {
     this.$emit('input', value);
+  }
+
+  get API_KEY() {
+    return 'in319qy7qqusclkq8wov9drtgvho9nwvlqm6h8cajbgol8vt';
   }
 
   get containerWidth() {
@@ -115,7 +124,10 @@ export default class extends Vue {
       plugins,
       language,
       language_url: `${process.env.BASE_URL}tinymce/langs/${language}.js`,
-      skin_url: `${process.env.BASE_URL}tinymce/skins/`,
+      skin_url: `${process.env.BASE_URL}tinymce/skins/ui/oxide`,
+      theme_url: `${process.env.BASE_URL}tinymce/themes/silver/theme.min.js`,
+      suffix: '.min',
+      base_url: '/tinymce',
       emoticons_database_url: `${process.env.BASE_URL}tinymce/emojis.min.js`,
       end_container_on_empty_block: true,
       powerpaste_word_import: 'clean',
@@ -145,6 +157,25 @@ export default class extends Vue {
     };
   }
 
+  created() {
+    this.init();
+  }
+
+  init() {
+    // const tinymce = document.querySelector('#tinymce');
+    // if (tinymce) {
+    //   this.isInit = true;
+    //   return;
+    // }
+    // const script = document.createElement('script');
+    // script.id = 'tinymce';
+    // script.src = '/tinymce/tinymce.js';
+    // document.body.appendChild(script);
+    // script.onload = () => {
+    //   this.isInit = true;
+    // };
+  }
+
   private imageSuccessCBK(arr: IUploadObject[]) {
     const tinymce = (window as any).tinymce.get(this.id);
     arr.forEach((v) => {
@@ -165,6 +196,7 @@ export default class extends Vue {
 }
 
 .editor-custom-btn-container {
+  z-index: 999;
   position: absolute;
   right: 6px;
   top: 6px;
