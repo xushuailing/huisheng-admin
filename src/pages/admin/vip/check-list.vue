@@ -24,7 +24,7 @@ import { obj } from '../../../lib/@types/sc-param';
 import { ScForm } from '../../../lib/@types/sc-form';
 
 const columns: ScTable.SetColumns = [
-  ['头像', 'avatarurl', 100, null, 'img'],
+  ['头像', 'avatarurl', null, null, 'img'],
   ['名称', 'nickname'],
   ['会员级别', 'level_name'],
   ['创建时间', 'time'],

@@ -458,8 +458,8 @@ export default {
         props.col.width = 70;
       }
       if (type === 'img') {
-        props.width = 25;
-        props.height = 25;
+        props.width = 50;
+        props.height = 50;
       }
 
       return (handler && handler(props)) || props;
