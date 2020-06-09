@@ -98,10 +98,10 @@
 <script lang="ts">
 import { Component, Vue, Watch, Prop } from 'vue-property-decorator';
 import EditTable from '@/components/editTable.vue';
-import { _Shopid } from '../../config';
 import { _GetTableSpan, _ObjectSpanMethod, TableColumns, MergeKey } from '@/utils/handleTableSpan';
 import { ScEditTable } from '@/components/@types/sc-edit-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
+import { _Shopid } from '../../config';
 
 interface Form<T = string> extends obj {
   pid: string;

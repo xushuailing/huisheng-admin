@@ -6,8 +6,8 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import Mixin from '../../mixin';
 import { obj } from '@/lib/@types/sc-param.d';
+import Mixin from '../../mixin';
 
 @Component
 export default class OrderStatus extends Vue {

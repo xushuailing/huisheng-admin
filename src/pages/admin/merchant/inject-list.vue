@@ -25,8 +25,8 @@
 import { Component, Vue, Prop, Ref } from 'vue-property-decorator';
 import { namespace } from 'vuex-class';
 import { ScTable } from '@/lib/@types/sc-table.d';
-import { ScForm } from '../../../lib/@types/sc-form.d';
 import dialogTextarea from '@/components/dialogTextarea.vue';
+import { ScForm } from '../../../lib/@types/sc-form.d';
 import { State } from '../../../store/common';
 
 enum status {

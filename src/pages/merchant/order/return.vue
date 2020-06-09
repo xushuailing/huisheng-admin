@@ -56,9 +56,9 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Ref, Mixins } from 'vue-property-decorator';
-import Mixin from './mixin';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
+import Mixin from './mixin';
 import { _Uid, _Shopid, _PayType, _RefundStatus } from '../config';
 
 @Component

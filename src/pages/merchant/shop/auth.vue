@@ -47,9 +47,9 @@
 <script lang='ts'>
 import { Component, Vue, Mixins } from 'vue-property-decorator';
 import { namespace } from 'vuex-class';
-import { _Uid, _Shopid } from '../config';
 import { State } from '@/store/common';
 import { obj } from '@/lib/@types/sc-param.d';
+import { _Uid, _Shopid } from '../config';
 
 const STATUS = {
   1: '提交申请，审核中',

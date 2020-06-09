@@ -14,10 +14,10 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import SidebarItem from './sidebar-item.vue';
 import adminRouter from '@/router/admin';
 import merchantRouter from '@/router/merchant';
 import commonRouter from '@/router/common';
+import SidebarItem from './sidebar-item.vue';
 
 @Component({ components: { SidebarItem } })
 export default class Aside extends Vue {

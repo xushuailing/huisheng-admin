@@ -15,10 +15,10 @@
 </template>
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
-import SortAdd from './components/ads-sorts-add.vue';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { ScForm } from '@/lib/@types/sc-form.d';
 import { obj } from '@/lib/@types/sc-param.d';
+import SortAdd from './components/ads-sorts-add.vue';
 
 @Component
 export default class ActvAdsSortsDetail extends Vue {

@@ -22,14 +22,14 @@
 </template>
 <script lang='ts'>
 import { Component, Vue, Prop } from 'vue-property-decorator';
+import adminRouter from '@/router/admin';
+import commonRouter from '@/router/common';
+import merchantRouter from '@/router/merchant';
 import CStatisticsfrom from './components/statistics.vue';
 import CLine from './components/line.vue';
 import CHistogram from './components/histogram.vue';
 import CMessages from './components/messages.vue';
 import CAdminComponent from './components/admin-component.vue';
-import adminRouter from '@/router/admin';
-import commonRouter from '@/router/common';
-import merchantRouter from '@/router/merchant';
 
 @Component({ components: { CStatisticsfrom, CLine, CHistogram, CMessages, CAdminComponent } })
 export default class Home extends Vue {}

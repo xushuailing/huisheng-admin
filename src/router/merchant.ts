@@ -1,6 +1,6 @@
 import { RouteConfig } from 'vue-router/types/router.d';
-import layoutView from '../layout/index.vue';
 import _Storage from '@/utils/storage';
+import layoutView from '../layout/index.vue';
 
 const router: RouteConfig[] = [
   {

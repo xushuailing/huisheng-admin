@@ -8,9 +8,9 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Mixins } from 'vue-property-decorator';
+import { obj } from '@/lib/@types/sc-param.d';
 import Virtual from './virtual.vue';
 import Entity from './entity.vue';
-import { obj } from '@/lib/@types/sc-param.d';
 import { _Shopid, _IsVirtual } from '../../config';
 
 interface Option {

@@ -13,11 +13,11 @@
 <script lang='ts'>
 import { Component, Vue, Mixins } from 'vue-property-decorator';
 import { namespace } from 'vuex-class';
-import { _Uid, _Shopid } from '../config';
-import UploadCard from './upload-card.vue';
 import { ScForm } from '@/lib/@types/sc-form.d';
 import { State } from '@/store/common';
 import { obj } from '@/lib/@types/sc-param.d';
+import UploadCard from './upload-card.vue';
+import { _Uid, _Shopid } from '../config';
 
 @Component({ components: { UploadCard } })
 export default class ShopBaseInfo extends Vue {

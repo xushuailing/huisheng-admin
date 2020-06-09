@@ -6,11 +6,11 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Mixins } from 'vue-property-decorator';
+import { obj } from '@/lib/@types/sc-param.d';
 import Pay from './pay.vue';
 import Receive from './receive.vue';
 import Return from './return.vue';
 import Send from './send.vue';
-import { obj } from '@/lib/@types/sc-param.d';
 import { _Uid } from '../../config';
 
 const Components: obj = {

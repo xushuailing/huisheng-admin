@@ -11,9 +11,9 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import Cascader from './cascader.vue';
 import { ScForm } from '@/lib/@types/sc-form.d';
 import { obj } from '@/lib/@types/sc-param.d';
+import Cascader from './cascader.vue';
 import { _Uid } from '../config';
 
 @Component

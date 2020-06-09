@@ -13,8 +13,8 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
-import { _Shopid } from '../config';
 import GoodsInfo from '@/components/img-name';
+import { _Shopid } from '../config';
 
 const columns: ScTable.SetColumns = [
   ['用户信息', 'nickname'],

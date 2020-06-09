@@ -16,8 +16,8 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Mixins } from 'vue-property-decorator';
-import { _Shopid, _IsVirtual } from '../config';
 import { obj } from '@/lib/@types/sc-param.d';
+import { _Shopid, _IsVirtual } from '../config';
 
 interface CouponsItem {
   id: string;
