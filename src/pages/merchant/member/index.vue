@@ -165,15 +165,17 @@ export default class Vip extends Vue {
 
   created() {
     this.memberType = this.$route.path.includes('agent') ? 'agent' : 'member';
-    this.$table.setDataTable({});
+    this.$nextTick(() => {
+      this.$table.setDataTable({});
+    });
     this.getStatistics();
   }
 }
 </script>
 <style lang="scss" scoped>
-  .member {
-    &-info {
-      height: 258px;
-    }
+.member {
+  &-info {
+    height: 258px;
   }
+}
 </style>
