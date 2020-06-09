@@ -7,15 +7,12 @@ import _ from 'lodash';
 import App from './App.vue';
 import router from './router';
 import store from './store';
-import UI from './lib/index';
 import api from './api';
 import axios from './axios';
 import utils from './utils';
 import '@/styles/index.scss';
 import 'v-charts/lib/style.css';
 
-
-Vue.use(UI);
 Vue.use(ElementUI);
 Vue.use(VCharts as any);
 
