@@ -16,9 +16,9 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import { obj } from '@/lib/@types/sc-param.d';
 import contract from './contract.vue';
 import days from './days.vue';
-import { obj } from '@/lib/@types/sc-param.d';
 
 // TODO:  92、合同设置-列表，修改接口 91、代运营-列表，修改接口
 @Component

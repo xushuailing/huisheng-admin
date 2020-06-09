@@ -1,7 +1,7 @@
 import { Vue, Component, Ref } from 'vue-property-decorator';
 import { ScTable } from '@/lib/@types/sc-table.d';
-import { _Shopid } from '../../config';
 import { obj } from '@/lib/@types/sc-param.d';
+import { _Shopid } from '../../config';
 
 interface Shelves {
   gid: string;

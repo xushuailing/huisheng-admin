@@ -36,9 +36,9 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Mixins } from 'vue-property-decorator';
-import Mixin from './mixin';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
+import Mixin from './mixin';
 import { _Shopid } from '../config';
 
 @Component

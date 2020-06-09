@@ -67,8 +67,8 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
-import { _Uid, _IsVirtual } from '../config';
 import { obj } from '@/lib/@types/sc-param.d';
+import { _Uid, _IsVirtual } from '../config';
 
 interface WeekData {
   Total: number[];

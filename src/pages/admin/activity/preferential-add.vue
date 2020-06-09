@@ -8,8 +8,8 @@
 </template>
 <script lang='ts'>
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import EffectDate from './components/effective-date.vue';
 import { ScForm } from '@/lib/@types/sc-form.d';
+import EffectDate from './components/effective-date.vue';
 
 @Component
 export default class ActvPreferentialAdd extends Vue {

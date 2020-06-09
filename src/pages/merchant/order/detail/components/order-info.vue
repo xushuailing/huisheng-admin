@@ -26,8 +26,8 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import GoodsTable from '../../goods-table.vue';
 import { obj } from '@/lib/@types/sc-param.d';
+import GoodsTable from '../../goods-table.vue';
 
 @Component({ components: { GoodsTable } })
 export default class OrderInfo extends Vue {

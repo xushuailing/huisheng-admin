@@ -75,10 +75,10 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Ref, Mixins } from 'vue-property-decorator';
-import { _Uid, _Shopid } from '../../config';
-import Mixin from '../mixin';
 import { ScTable } from '@/lib/@types/sc-table.d';
 import { obj } from '@/lib/@types/sc-param.d';
+import { _Uid, _Shopid } from '../../config';
+import Mixin from '../mixin';
 
 const lodashArray = require('lodash/array');
 

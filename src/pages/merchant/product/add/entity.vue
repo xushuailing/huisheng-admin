@@ -191,8 +191,8 @@ import EditTable from '@/components/editTable.vue';
 import { ScEditTable } from '@/components/@types/sc-edit-table.d';
 import { _GetTableSpan, _ObjectSpanMethod, TableColumns, MergeKey } from '@/utils/handleTableSpan';
 import { obj } from '@/lib/@types/sc-param.d';
-import { _Shopid } from '../../config';
 import { ScForm } from '@/lib/@types/sc-form.d';
+import { _Shopid } from '../../config';
 import UploadVideo from './upload-video.vue';
 
 interface Form<T = string> extends obj {

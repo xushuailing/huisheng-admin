@@ -125,9 +125,9 @@
 <script lang='ts'>
 import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
 import { ElForm } from 'element-ui/types/form.d';
-import { COLUMN_PROPS, TYPES, BOOLEAN_KEYS } from '@/lib/config/table';
 import { obj } from '@/lib/@types/sc-param.d';
 import ScTags from '@/lib/@types/sc-form-tags.d';
+import { COLUMN_PROPS, TYPES, BOOLEAN_KEYS } from './config';
 import { ScEditTable } from './@types/sc-edit-table.d';
 
 // TODO: 显示部分时新增一行，会默认展开全部，否则只会验证显示行表单数据
