@@ -7,7 +7,7 @@ export const _RemoveToken = () => {
 
 /** 移除 用户信息 */
 export const _RemoveUserInfo = () => {
-  _Storage.remove('USER_INFO');
+  _Storage.remove('user_info');
 };
 
 /** 移除 用户访问过的菜单 */
