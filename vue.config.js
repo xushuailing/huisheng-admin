@@ -14,22 +14,24 @@ module.exports = {
       'vue-router': 'VueRouter',
       axios: 'axios',
       echarts: 'echarts',
+      "v-charts": "VeIndex",
       jquery: '$',
       'element-ui': 'ELEMENT',
     };
     config.output.libraryExport = 'default';
     config.externals = externals;
 
-    const libPath = '../assets';
+    const libPath = `${baseURI}`+'assets/js';
     const js = [
-      `${libPath}/js/vue/2.6.11/vue.js`,
-      `${libPath}/js/vuex/3.0.1/vuex.min.js`,
-      `${libPath}/js/vue-router/3.0.1/vue-router.min.js`,
-      `${libPath}/js/axios/0.18.0/axios.min.js`,
-      `${libPath}/js/jquery/3.3.1/jquery.min.js`,
-      `${libPath}/js/echarts/4.2.0-rc.2/echarts.min.js`,
-      //   `${libPath}/js/v-charts/1.19.0/index.min.js`,
-      `${libPath}/js/element-ui/2.13.0/element-ui.min.js`,
+      `${libPath}/vue/2.6.11/vue.min.js`,
+      `${libPath}/vuex/3.0.1/vuex.min.js`,
+      `${libPath}/vue-router/3.0.1/vue-router.min.js`,
+      `${libPath}/axios/0.18.0/axios.min.js`,
+      `${libPath}/jquery/3.3.1/jquery.min.js`,
+      `${libPath}/echarts/4.2.0-rc.2/echarts.min.js`,
+      `${libPath}/v-charts/1.19.0/index.min.js`,
+      `${libPath}/element-ui/2.13.0/element-ui.min.js`,
+      `${libPath}/sc/1.6.6/sc.min.js`,
     ].filter((v) => v);
     const css = [];
 
